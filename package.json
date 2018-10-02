@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "workspaces": [
+      "packages/*"
+    ],
+    "devDependencies": {
+      "husky": "^1.1.0",
+      "lerna": "^3.4.0",
+      "prettier": "^1.14.3",
+      "pretty-quick": "^1.7.0"
+    },
+    "scripts": {
+      "publish": "lerna publish",
+      "precommit": "pretty-quick --staged"
+    }
+  }
+  

@@ -1,0 +1,23 @@
+{
+  "name": "@ether-dream/simulator",
+  "version": "0.0.0",
+  "description": "Ether-Dream laser DAC simulator",
+  "license": "MIT",
+  "author": "Kees Kluskens <kees@volst.nl>",
+  "repository": "Volst/ether-dream-tools",
+  "keywords": [
+    "etherdream",
+    "laser",
+    "ether-dream",
+    "simulator"
+  ],
+  "engines": {
+    "node": ">=8.0"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "@ether-dream/core": "^0.0.0",
+    "ws": "^2.2.0"
+  }
+}
