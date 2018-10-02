@@ -64,7 +64,7 @@ const defaultColors = [
   '#F88',
   '#F66',
   '#F44',
-  '#022',
+  '#022'
 ];
 
 function hexToRgb(hex) {
@@ -78,7 +78,7 @@ function hexToRgb(hex) {
   return {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
+    b: parseInt(result[3], 16)
   };
 }
 
@@ -94,7 +94,7 @@ function parseColor(st) {
   return {
     r: Math.floor(MAX_VALUE * (rgb.r / 255)),
     g: Math.floor(MAX_VALUE * (rgb.g / 255)),
-    b: Math.floor(MAX_VALUE * (rgb.b / 255)),
+    b: Math.floor(MAX_VALUE * (rgb.b / 255))
   };
 }
 

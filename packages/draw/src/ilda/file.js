@@ -3,7 +3,7 @@ var SectionTypes = {
   TWO_DIMENSIONAL: 1,
   COLOR_TABLE: 2,
   TRUECOLOR_TABLE: 3,
-  UNKNOWN: 99,
+  UNKNOWN: 99
 };
 
 var Point = function() {
@@ -46,5 +46,5 @@ module.exports = {
   Section,
   File,
   BlankingBit,
-  LastBit,
+  LastBit
 };

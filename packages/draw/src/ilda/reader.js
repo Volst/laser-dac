@@ -4,7 +4,7 @@ const {
   Point,
   File,
   BlankingBit,
-  LastBit,
+  LastBit
 } = require('./file');
 const { parseColor } = require('./color');
 const { MAX_VALUE } = require('../constants');
