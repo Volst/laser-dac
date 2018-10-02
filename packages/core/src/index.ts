@@ -11,72 +11,73 @@ interface IDevice {
 }
 
 export class EtherDream {
-  static _find = function(limit, timeout, callback) {
+  static _find = function(limit: number, timeout: number) {
     const ips: string[] = [];
     const devices: IDevice[] = [];
 
     const server = dgram.createSocket('udp4');
 
-    const timeouttimer = setTimeout(function() {
-      server.close();
-      callback(devices);
-    }, timeout);
+    return new Promise(resolve => {
+      const timeouttimer = setTimeout(function() {
+        server.close();
+        resolve(devices);
+      }, timeout);
 
-    server.on('message', function(msg, rinfo) {
-      const ip = rinfo.address;
-      if (ips.indexOf(ip) != -1) return;
-      ips.push(ip);
+      server.on('message', function(msg, rinfo) {
+        const ip = rinfo.address;
+        if (ips.indexOf(ip) != -1) return;
+        ips.push(ip);
 
-      const name =
-        'EtherDream @ ' +
-        twohex(msg[0]) +
-        ':' +
-        twohex(msg[1]) +
-        ':' +
-        twohex(msg[2]) +
-        ':' +
-        twohex(msg[3]) +
-        ':' +
-        twohex(msg[4]) +
-        ':' +
-        twohex(msg[5]);
+        const name =
+          'EtherDream @ ' +
+          twohex(msg[0]) +
+          ':' +
+          twohex(msg[1]) +
+          ':' +
+          twohex(msg[2]) +
+          ':' +
+          twohex(msg[3]) +
+          ':' +
+          twohex(msg[4]) +
+          ':' +
+          twohex(msg[5]);
 
-      devices.push({
-        ip: ip,
-        port: 7765,
-        name: name,
-        hw_revision: msg[6],
-        sw_revision: msg[7]
+        devices.push({
+          ip: ip,
+          port: 7765,
+          name: name,
+          hw_revision: msg[6],
+          sw_revision: msg[7]
+        });
+
+        if (devices.length >= limit) {
+          server.close();
+          clearTimeout(timeouttimer);
+          resolve(devices);
+        }
       });
 
-      if (devices.length >= limit) {
-        server.close();
-        clearTimeout(timeouttimer);
-        callback(devices);
-      }
+      server.bind(7654);
+
+      // wait two seconds for data to come back...
     });
-
-    server.bind(7654);
-
-    // wait two seconds for data to come back...
   };
 
-  static find = function(callback) {
-    EtherDream._find(99, 2000, callback);
+  static find = function() {
+    return EtherDream._find(99, 2000);
   };
 
-  static findFirst = function(callback) {
-    EtherDream._find(1, 4000, callback);
+  static findFirst = function() {
+    return EtherDream._find(1, 4000);
   };
 
-  static connect = function(ip, port, callback) {
+  static connect = function(ip: string, port: number) {
     const conn = new EtherConn();
-    conn.connect(
-      ip,
-      port,
-      function(success) {
-        callback(success ? conn : null);
-      }
-    );
+    return conn
+      .connect(
+        ip,
+        port
+      )
+      .then(success => (success ? conn : null));
   };
 }

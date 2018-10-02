@@ -8,10 +8,18 @@ import {
 
 const STANDARD_RESPONSE_SIZE = 22;
 
+type HandlerCallbackFn = (data: any) => void;
+type StreamSourceFn = (
+  numpoints: number,
+  pointcallback: (points: any[]) => void
+) => void;
+type FrameSourceFn = (callback: (points: any[]) => void) => void;
+type NoOpFn = () => void;
+
 export class EtherConn {
   client?: net.Socket;
   inputqueue: any[] = [];
-  inputhandlerqueue: { size: number; callback: Function }[] = [];
+  inputhandlerqueue: { size: number; callback: HandlerCallbackFn }[] = [];
   timer = 0;
   acks = 0;
   fullness = 0;
@@ -23,11 +31,11 @@ export class EtherConn {
   valid = true;
   rate?: number;
   // TODO: add more exact typing
-  streamSource?: Function;
-  frameSource?: Function;
+  streamSource?: StreamSourceFn;
+  frameSource?: FrameSourceFn;
   frameBuffer?: any[];
 
-  _send(sendcommand) {
+  _send(sendcommand: string) {
     this.client!.write(new Buffer(sendcommand, 'binary'));
     this._popinputqueue();
   }
@@ -44,58 +52,60 @@ export class EtherConn {
     }
   }
 
-  connect(ip, port, callback) {
+  connect(ip: string, port: number) {
     const self = this;
 
     console.log('SOCKET: Connecting to ' + ip + ':' + port + ' ...');
 
-    this.client = net.connect(
-      {
-        host: ip,
-        port: port
-      },
-      function() {
-        //'connect' listener
-        console.log('SOCKET CONNECT: client connected');
-        // self.sendPing(function() {
-        //	callback(true);
-        // });
+    return new Promise((resolve, reject) => {
+      this.client = net.connect(
+        {
+          host: ip,
+          port: port
+        },
+        function() {
+          //'connect' listener
+          console.log('SOCKET CONNECT: client connected');
+          // self.sendPing(function() {
+          //	callback(true);
+          // });
 
-        self.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
-          const st = parseStandardResponse(data);
-          // console.log('got connect response', st);
-          self.handleStandardResponse(st);
-          callback(true);
-        });
+          self.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+            const st = parseStandardResponse(data);
+            // console.log('got connect response', st);
+            self.handleStandardResponse(st);
+            resolve(true);
+          });
 
-        // self._popqueue();
-        self._popinputqueue();
-      }
-    );
+          // self._popqueue();
+          self._popinputqueue();
+        }
+      );
 
-    this.client.on('data', function(data) {
-      // console.log('SOCKET got ' + data.length + ' bytes');
-      // console.log('SOCKET DATA:', data.toString(), data.length, self.currentcommand);
-      // console.log('\n\n');
-      for (let i = 0; i < data.length; i++) self.inputqueue.push(data[i]);
-      setTimeout(function() {
-        self._popinputqueue();
-      }, 0);
-    });
+      this.client.on('data', function(data) {
+        // console.log('SOCKET got ' + data.length + ' bytes');
+        // console.log('SOCKET DATA:', data.toString(), data.length, self.currentcommand);
+        // console.log('\n\n');
+        for (let i = 0; i < data.length; i++) self.inputqueue.push(data[i]);
+        setTimeout(function() {
+          self._popinputqueue();
+        }, 0);
+      });
 
-    this.client.on('error', function(data) {
-      console.log('SOCKET ERROR:', data.toString());
-      setTimeout(function() {
-        callback(false);
-      }, 0);
-    });
+      this.client.on('error', function(data) {
+        console.log('SOCKET ERROR:', data.toString());
+        setTimeout(function() {
+          resolve(false);
+        }, 0);
+      });
 
-    this.client.on('end', function() {
-      console.log('SOCKET END: client disconnected');
+      this.client.on('end', function() {
+        console.log('SOCKET END: client disconnected');
+      });
     });
   }
 
-  waitForResponse(size, callback) {
+  waitForResponse(size: number, callback: HandlerCallbackFn) {
     // console.log('Setting up responder for ' + size + ' bytes...');
     this.inputhandlerqueue.push({
       size: size,
@@ -104,7 +114,7 @@ export class EtherConn {
     this._popinputqueue();
   }
 
-  sendPrepare(callback) {
+  sendPrepare(callback: NoOpFn) {
     // console.log('send prepare command');
     const _this = this;
     const cmd = 'p';
@@ -117,7 +127,7 @@ export class EtherConn {
     });
   }
 
-  handleStandardResponse(data) {
+  handleStandardResponse(data: any) {
     this.fullness = data.status.buffer_fullness;
     this.playback_state = data.status.playback_state;
     this.valid = data.response == 'a';
@@ -128,7 +138,7 @@ export class EtherConn {
     }
   }
 
-  sendBegin(rate, callback) {
+  sendBegin(rate: number, callback: NoOpFn) {
     // console.log('send begin command');
     const _this = this;
     const lwm = 0;
@@ -142,7 +152,7 @@ export class EtherConn {
     });
   }
 
-  sendUpdate(rate, callback) {
+  sendUpdate(rate: number, callback: NoOpFn) {
     // console.log('send update command');
     const _this = this;
     const lwm = 0;
@@ -156,7 +166,7 @@ export class EtherConn {
     });
   }
 
-  sendStop(callback) {
+  sendStop(callback: NoOpFn) {
     // console.log('send stop command');
     const _this = this;
     const cmd = 's';
@@ -168,7 +178,7 @@ export class EtherConn {
     });
   }
 
-  sendEmergencyStop(callback) {
+  sendEmergencyStop(callback: NoOpFn) {
     const _this = this;
     const cmd = '\xFF';
     this._send(cmd);
@@ -179,7 +189,7 @@ export class EtherConn {
     });
   }
 
-  sendPing(callback) {
+  sendPing(callback: NoOpFn) {
     // console.log('send ping command');
     const _this = this;
     const cmd = '?';
@@ -191,7 +201,7 @@ export class EtherConn {
     });
   }
 
-  sendPoints(points, callback) {
+  sendPoints(points: any[], callback: NoOpFn) {
     // console.log('send points command, n=' + points.length);
     const _this = this;
     const batch = points.length;
@@ -215,7 +225,7 @@ export class EtherConn {
       if (_this.valid) {
         // console.log('points sent.');
         if (!_this.beginsent) {
-          _this.sendBegin(_this.rate, callback);
+          _this.sendBegin(_this.rate!, callback);
         } else {
           callback();
         }
@@ -225,7 +235,7 @@ export class EtherConn {
     });
   }
 
-  pollGotData(framedata) {
+  pollGotData(framedata: any[]) {
     const _this = this;
     // console.log('Send ' + framedata.length + ' points to DAC');
     if (framedata.length > 0) {
@@ -251,7 +261,7 @@ export class EtherConn {
     } else if (!this.valid) {
       setTimeout(function() {
         _this.sendPrepare(function() {
-          _this.sendBegin(_this.rate, function() {
+          _this.sendBegin(_this.rate!, function() {
             setTimeout(_this.pollStream.bind(_this), 0);
           });
         });
@@ -273,7 +283,7 @@ export class EtherConn {
     }
   }
 
-  streamPoints(rate, pointSource) {
+  streamPoints(rate: number, pointSource: StreamSourceFn) {
     const _this = this;
     this.streamSource = pointSource;
     this.rate = rate;
@@ -282,14 +292,14 @@ export class EtherConn {
     });
   }
 
-  streamFrames(rate, frameSource) {
+  streamFrames(rate: number, frameSource: FrameSourceFn) {
     const _this = this;
     this.frameSource = frameSource;
     this.frameBuffer = [];
 
-    function innerStream(numpoints, pointcallback) {
+    function innerStream(numpoints: number, pointcallback: Function) {
       if (_this.frameBuffer!.length < numpoints) {
-        _this.frameSource!(function(points) {
+        _this.frameSource!(function(points: any[]) {
           for (let i = 0; i < points.length; i++) {
             _this.frameBuffer!.push(points[i]);
           }

@@ -1,13 +1,13 @@
-function parseUInt16(c0, c1) {
+function parseUInt16(c0: number, c1: number) {
   return c1 * 256 + c0;
 }
 
-function parseUInt32(c0, c1, c2, c3) {
+function parseUInt32(c0: number, c1: number, c2: number, c3: number) {
   return c3 * 256 * 256 * 256 + c2 * 256 * 256 + c1 * 256 + c0;
 }
 
-export function parseStandardResponse(data) {
-  var st = {
+export function parseStandardResponse(data: number[]) {
+  var st: any = {
     // dac_response
     response: String.fromCharCode(data[0]),
     command: String.fromCharCode(data[1]),
@@ -36,8 +36,7 @@ export function parseStandardResponse(data) {
   return st;
 }
 
-// TODO: typings
-export function twohex(n) {
+export function twohex(n: number) {
   let s = n.toString(16);
   if (s.length == 1) s = '0' + s;
   return s;
