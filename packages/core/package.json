@@ -23,8 +23,15 @@
   "engines": {
     "node": ">=8.0"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "pvec": "^1.1.0"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run -s build"
   }
 }
