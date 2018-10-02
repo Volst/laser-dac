@@ -7,6 +7,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "strictFunctionTypes": false,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
   }
 }

@@ -1,18 +1,19 @@
-const fs = require('fs');
-const IldaReader = require('./ilda/reader');
-const { MAX_VALUE, RESOLUTION } = require('./constants');
+import * as fs from 'fs';
+import * as IldaReader from './ilda/reader';
+import { MAX_VALUE, RESOLUTION } from './constants';
+
+type Point = { x: number; y: number; r: number; g: number; b: number };
 
 class DrawingContext {
-  constructor() {
-    this.points = [];
-    this.red = 0;
-    this.green = 0;
-    this.blue = 0;
-    this.currentX = 0;
-    this.currentY = 0;
-  }
+  points: Point[] = [];
+  red = 0;
+  green = 0;
+  blue = 0;
+  currentX = 0;
+  currentY = 0;
+  constructor() {}
 
-  moveTo(x, y) {
+  moveTo(x: number, y: number) {
     this.currentX = x;
     this.currentY = y;
     const point = {
@@ -20,12 +21,12 @@ class DrawingContext {
       y: Math.floor(y * MAX_VALUE - MAX_VALUE / 2),
       r: 0,
       g: 0,
-      b: 0,
+      b: 0
     };
     this.points.push(point);
   }
 
-  lineTo(x, y) {
+  lineTo(x: number, y: number) {
     const distanceX = this.currentX - x;
     const distanceY = this.currentY - y;
     const distanceTotal = Math.sqrt(
@@ -44,7 +45,7 @@ class DrawingContext {
         y: Math.floor(stepY * MAX_VALUE - MAX_VALUE / 2),
         r: Math.floor(MAX_VALUE * this.red),
         g: Math.floor(MAX_VALUE * this.green),
-        b: Math.floor(MAX_VALUE * this.blue),
+        b: Math.floor(MAX_VALUE * this.blue)
       });
     }
 
@@ -53,13 +54,13 @@ class DrawingContext {
     this.points = this.points.concat(points);
   }
 
-  color(r, g, b) {
+  color(r: number, g: number, b: number) {
     this.red = Math.floor(MAX_VALUE * r);
     this.green = Math.floor(MAX_VALUE * g);
     this.blue = Math.floor(MAX_VALUE * b);
   }
 
-  rect(x, y, width, height) {
+  rect(x: number, y: number, width: number, height: number) {
     this.moveTo(x, y);
 
     this.lineTo(x + width, y);
@@ -68,7 +69,8 @@ class DrawingContext {
     this.lineTo(x, y);
   }
 
-  ilda(ildaJson, options = {}) {
+  // TODO: typings
+  ilda(ildaJson: any, options: any = {}) {
     const frame = options.frame || 0;
 
     const section = ildaJson.sections[frame];
@@ -77,7 +79,7 @@ class DrawingContext {
   }
 }
 
-function loadIldaFile(path) {
+function loadIldaFile(path: string) {
   const buffer = fs.readFileSync(path);
   const byteArray = Array.prototype.slice.call(buffer, 0);
 
