@@ -1,8 +1,8 @@
-const EtherDream = require('node-etherdream');
-const WebSocketServer = require('ws').Server;
-const express = require('express');
-const path = require('path');
-const http = require('http');
+import { EtherDream, EtherConn, StreamSourceFn } from '@ether-dream/core';
+import { Server as WebSocketServer } from 'ws';
+import * as express from 'express';
+import * as path from 'path';
+import * as http from 'http';
 
 // When there is no real device, we fake an interval.
 // We've measured how fast the real device streams, which was 4ms.
@@ -14,13 +14,11 @@ const REQUESTED_POINTS_COUNT = 500;
 const PORT = 8080;
 
 class Simulator {
-  constructor() {
-    this.server = null;
-    this.wss = null;
-    this.deviceConn = null;
-  }
+  server?: http.Server;
+  wss?: WebSocketServer;
+  deviceConn?: EtherConn;
 
-  async start(opts = {}) {
+  async start(opts: { device?: boolean } = {}) {
     if (opts.device) {
       await this.startDevice();
     }
@@ -31,7 +29,7 @@ class Simulator {
     return new Promise((resolve, reject) => {
       this.server = http.createServer();
       const app = express();
-      app.use(express.static(path.join(__dirname, '/public')));
+      app.use(express.static(path.join(__dirname, '..', 'public')));
       this.wss = new WebSocketServer({ server: this.server });
 
       this.server.on('request', app);
@@ -48,33 +46,26 @@ class Simulator {
     }
   }
 
-  startDevice() {
-    const self = this;
-    return new Promise((resolve, reject) => {
-      console.log('Looking for EtherDream hosts...');
-      EtherDream.findFirst(function(devices) {
-        if (!devices.length) {
-          throw new Error('No Etherdream device found on network.');
-        }
-        const device = devices[0];
-        EtherDream.connect(
-          device.ip,
-          device.port,
-          conn => {
-            if (!conn) {
-              throw new Error(
-                `Could not connect to device on ${device.ip}:${device.port}`
-              );
-            }
-            self.deviceConn = conn;
-            resolve(true);
-          }
-        );
-      });
-    });
+  async startDevice() {
+    console.log('Looking for EtherDream hosts...');
+    const devices = await EtherDream.findFirst();
+    if (!devices.length) {
+      throw new Error('No Etherdream device found on network.');
+    }
+    const device = devices[0];
+    const conn = await EtherDream.connect(
+      device.ip,
+      device.port
+    );
+    if (!conn) {
+      throw new Error(
+        `Could not connect to device on ${device.ip}:${device.port}`
+      );
+    }
+    this.deviceConn = conn;
   }
 
-  streamPoints(rate, pointSource) {
+  streamPoints(rate: number, pointSource: StreamSourceFn) {
     if (!this.deviceConn) {
       setInterval(() => {
         pointSource(REQUESTED_POINTS_COUNT, streamPoints => {
@@ -91,8 +82,8 @@ class Simulator {
     }
   }
 
-  _updateSimulator(data) {
-    this.wss.clients.forEach(client => {
+  _updateSimulator(data: any[]) {
+    this.wss!.clients.forEach(client => {
       client.send(JSON.stringify(data), function() {
         // Ignore errors for now
       });

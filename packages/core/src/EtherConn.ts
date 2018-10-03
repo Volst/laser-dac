@@ -9,7 +9,7 @@ import {
 const STANDARD_RESPONSE_SIZE = 22;
 
 type HandlerCallbackFn = (data: any) => void;
-type StreamSourceFn = (
+export type StreamSourceFn = (
   numpoints: number,
   pointcallback: (points: any[]) => void
 ) => void;

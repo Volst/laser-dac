@@ -1,8 +1,8 @@
 import * as dgram from 'dgram';
-import { EtherConn } from './EtherConn';
+import { EtherConn, StreamSourceFn } from './EtherConn';
 import { twohex } from './parse';
 
-interface IDevice {
+export interface IDevice {
   ip: string;
   port: number;
   name: string;
@@ -11,7 +11,7 @@ interface IDevice {
 }
 
 export class EtherDream {
-  static _find = function(limit: number, timeout: number) {
+  static _find = function(limit: number, timeout: number): Promise<IDevice[]> {
     const ips: string[] = [];
     const devices: IDevice[] = [];
 
@@ -81,3 +81,5 @@ export class EtherDream {
       .then(success => (success ? conn : null));
   };
 }
+
+export { EtherConn, StreamSourceFn };
