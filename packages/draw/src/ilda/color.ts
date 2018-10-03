@@ -1,6 +1,6 @@
-const { MAX_VALUE } = require('../constants');
+import { MAX_VALUE } from '../constants';
 
-const defaultColors = [
+export const defaultColors = [
   '#F00',
   '#F10',
   '#F20',
@@ -67,7 +67,7 @@ const defaultColors = [
   '#022'
 ];
 
-function hexToRgb(hex) {
+export function hexToRgb(hex: string) {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, function(m, r, g, b) {
@@ -75,6 +75,9 @@ function hexToRgb(hex) {
   });
 
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) {
+    return { r: 0, g: 0, b: 0 };
+  }
   return {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
@@ -82,7 +85,7 @@ function hexToRgb(hex) {
   };
 }
 
-function parseColor(st) {
+export function parseColor(st: any) {
   // TODO: no idea what this does but it is necessary
   const colorIndex = (st >> 0) & 0x7f;
 
@@ -97,5 +100,3 @@ function parseColor(st) {
     b: Math.floor(MAX_VALUE * (rgb.b / 255))
   };
 }
-
-module.exports = { hexToRgb, defaultColors, parseColor };
