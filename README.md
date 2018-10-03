@@ -19,3 +19,7 @@ This package can simulate the Ether Dream device so you can develop without havi
 ## [`@ether-dream/draw`](./packages/draw)
 
 This package makes it easy for you to make laser drawings using programming. It takes much inspiration from the [canvas API](https://developer.mozilla.org/kab/docs/Web/API/Canvas_API). It can also import ILDA files used by professional laser tools.
+
+## [Examples](./examples)
+
+We also have some [_examples_](./examples) that should help you get started.

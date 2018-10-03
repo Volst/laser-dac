@@ -1,0 +1,17 @@
+{
+  "name": "@ether-dream/examples",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "repository": "Volst/ether-dream-tools",
+  "engines": {
+    "node": ">=8.0"
+  },
+  "dependencies": {
+    "ts-node-dev": "^1.0.0-pre.30"
+  },
+  "scripts": {
+    "start": "ts-node-dev --no-notify --project ../tsconfig.json",
+    "watch": "if [[ ${EXAMPLE} ]]; then yarn start $EXAMPLE; else echo; fi"
+  }
+}

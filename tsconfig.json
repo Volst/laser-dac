@@ -1,9 +1,12 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./packages",
-    "paths": {
-      // "graphql-authentication": ["./graphql-authentication/src"]
-    }
+    "target": "es2017",
+    "module": "commonjs",
+    "declaration": true,
+    "lib": ["esnext"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "strictFunctionTypes": false,
+    "forceConsistentCasingInFileNames": true
   }
 }
