@@ -4,7 +4,7 @@ import { MAX_VALUE, RESOLUTION } from './constants';
 
 type Point = { x: number; y: number; r: number; g: number; b: number };
 
-class DrawingContext {
+export class DrawingContext {
   points: Point[] = [];
   red = 0;
   green = 0;
@@ -79,11 +79,9 @@ class DrawingContext {
   }
 }
 
-function loadIldaFile(path: string) {
+export function loadIldaFile(path: string) {
   const buffer = fs.readFileSync(path);
   const byteArray = Array.prototype.slice.call(buffer, 0);
 
   return IldaReader.fromByteArray(byteArray);
 }
-
-module.exports = { DrawingContext, loadIldaFile };

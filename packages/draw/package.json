@@ -16,6 +16,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json --watch",
     "prepublishOnly": "npm run -s build"
   }
 }

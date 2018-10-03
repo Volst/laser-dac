@@ -13,7 +13,7 @@ const STREAM_INTERVAL = 4;
 const REQUESTED_POINTS_COUNT = 500;
 const PORT = 8080;
 
-class Simulator {
+export class Simulator {
   server?: http.Server;
   wss?: WebSocketServer;
   deviceConn?: EtherConn;
@@ -90,5 +90,3 @@ class Simulator {
     });
   }
 }
-
-module.exports = Simulator;
