@@ -55,9 +55,9 @@ export class DrawingContext {
   }
 
   color(r: number, g: number, b: number) {
-    this.red = Math.floor(MAX_VALUE * r);
-    this.green = Math.floor(MAX_VALUE * g);
-    this.blue = Math.floor(MAX_VALUE * b);
+    this.red = r;
+    this.green = g;
+    this.blue = b;
   }
 
   rect(x: number, y: number, width: number, height: number) {

@@ -27,6 +27,7 @@ function render() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   lines.forEach(function(line, i) {
+    ctx.beginPath();
     if (i > 0) {
       ctx.moveTo(
         ((MAX_VALUE - (lines[i - 1].x + MAX_VALUE / 2)) / MAX_VALUE) *
@@ -34,26 +35,25 @@ function render() {
         ((MAX_VALUE - (lines[i - 1].y + MAX_VALUE / 2)) / MAX_VALUE) *
           canvas.height
       );
-
-      // If a line doesn't have any color, it shouldn't be drawn at all. This is known as blanking.
-      if (line.r || line.g || line.b) {
-        ctx.beginPath();
-        ctx.lineTo(
-          ((MAX_VALUE - (line.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
-          ((MAX_VALUE - (line.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
-        );
-        ctx.closePath();
-        ctx.strokeStyle = `rgb(${calculateColor(line.r)}, ${calculateColor(
-          line.g
-        )}, ${calculateColor(line.b)})`;
-        ctx.stroke();
-      } else {
-        ctx.moveTo(
-          ((MAX_VALUE - (line.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
-          ((MAX_VALUE - (line.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
-        );
-      }
     }
+
+    // If a line doesn't have any color, it shouldn't be drawn at all. This is known as blanking.
+    if (line.r || line.g || line.b) {
+      ctx.lineTo(
+        ((MAX_VALUE - (line.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
+        ((MAX_VALUE - (line.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
+      );
+      ctx.strokeStyle = `rgb(${calculateColor(line.r)}, ${calculateColor(
+        line.g
+      )}, ${calculateColor(line.b)})`;
+      ctx.stroke();
+    } else {
+      ctx.moveTo(
+        ((MAX_VALUE - (line.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
+        ((MAX_VALUE - (line.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
+      );
+    }
+    ctx.closePath();
   });
   requestAnimationFrame(render);
 }
