@@ -20,7 +20,7 @@
     "public"
   ],
   "dependencies": {
-    "@ether-dream/core": "^0.0.0",
+    "@ether-dream/core": "file:../core",
     "@types/express": "^4.16.0",
     "@types/ws": "^6.0.1",
     "express": "^4.15.2",
