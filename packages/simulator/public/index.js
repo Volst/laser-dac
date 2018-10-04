@@ -6,9 +6,23 @@ const ctx = c.getContext('2d');
 const MAX_VALUE = 65535;
 const AFTERGLOW_AMOUNT = 50;
 let lastRenderTime;
-ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 ctx.strokeStyle = '#fff';
-ctx.lineWidth = 2;
+
+function handleResize() {
+  const pixelRatio = window.devicePixelRatio;
+
+  ctx.scale(pixelRatio, pixelRatio);
+  c.width = Math.floor(c.clientWidth * pixelRatio);
+  c.height = Math.floor(c.clientHeight * pixelRatio);
+  ctx.lineWidth = pixelRatio;
+}
+handleResize();
+window.onresize = handleResize;
+
+// Listen to changes in device pixel ratio.
+window
+  .matchMedia('screen and (min-resolution: 2dppx)')
+  .addListener(handleResize);
 
 function calculateColor(raw) {
   return Math.round((raw / MAX_VALUE) * 255);
