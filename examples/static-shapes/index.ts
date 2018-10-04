@@ -11,12 +11,20 @@ const POINTS_RATE = 30000;
   let ctx = new DrawingContext();
   function updateDots() {
     ctx = new DrawingContext();
+
+    // Triangle
     ctx.color(0, 1, 0);
     ctx.moveTo(0.1, 0.1);
-    ctx.lineTo(0.9, 0.1);
-    ctx.lineTo(0.9, 0.9);
-    ctx.lineTo(0.1, 0.9);
+    ctx.lineTo(0.305, 0.1);
+    ctx.lineTo(0.2, 0.3);
     ctx.lineTo(0.1, 0.1);
+
+    // Rectangle
+    ctx.color(1, 0, 0);
+    ctx.rect(0.5, 0.5, 0.2, 0.2);
+
+    // Circle
+    // Just kidding, still have to fix that.
   }
 
   let currentPointId = 0;
