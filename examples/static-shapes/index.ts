@@ -42,7 +42,6 @@ const POINTS_RATE = 30000;
       }
     }
 
-    console.log('Render', streamPoints.length, numpoints);
     callback(streamPoints);
   });
 
