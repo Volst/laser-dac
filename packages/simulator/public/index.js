@@ -45,18 +45,16 @@ function render() {
     ctx.beginPath();
     if (i > 0) {
       ctx.moveTo(
-        ((MAX_VALUE - (points[i - 1].x + MAX_VALUE / 2)) / MAX_VALUE) *
-          canvas.width,
-        ((MAX_VALUE - (points[i - 1].y + MAX_VALUE / 2)) / MAX_VALUE) *
-          canvas.height
+        ((points[i - 1].x + MAX_VALUE / 2) / MAX_VALUE) * canvas.width,
+        ((points[i - 1].y + MAX_VALUE / 2) / MAX_VALUE) * canvas.height
       );
     }
 
     // If a point doesn't have any color, it shouldn't be drawn at all. This is known as blanking.
     if (point.r || point.g || point.b) {
       ctx.lineTo(
-        ((MAX_VALUE - (point.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
-        ((MAX_VALUE - (point.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
+        ((point.x + MAX_VALUE / 2) / MAX_VALUE) * canvas.width,
+        ((point.y + MAX_VALUE / 2) / MAX_VALUE) * canvas.height
       );
       ctx.strokeStyle = `rgb(${calculateColor(point.r)}, ${calculateColor(
         point.g
@@ -64,8 +62,8 @@ function render() {
       ctx.stroke();
     } else {
       ctx.moveTo(
-        ((MAX_VALUE - (point.x + MAX_VALUE / 2)) / MAX_VALUE) * canvas.width,
-        ((MAX_VALUE - (point.y + MAX_VALUE / 2)) / MAX_VALUE) * canvas.height
+        ((point.x + MAX_VALUE / 2) / MAX_VALUE) * canvas.width,
+        ((point.y + MAX_VALUE / 2) / MAX_VALUE) * canvas.height
       );
     }
     ctx.closePath();

@@ -14,10 +14,10 @@ const POINTS_RATE = 30000;
 
     // Triangle
     ctx.color(0, 1, 0);
-    ctx.moveTo(0.1, 0.1);
-    ctx.lineTo(0.305, 0.1);
-    ctx.lineTo(0.2, 0.3);
-    ctx.lineTo(0.1, 0.1);
+    ctx.moveTo(0.2, 0.126794);
+    ctx.lineTo(0.3, 0.3);
+    ctx.lineTo(0.1, 0.3);
+    ctx.lineTo(0.2, 0.126794);
 
     // Rectangle
     ctx.color(1, 0, 0);
