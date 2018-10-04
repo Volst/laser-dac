@@ -7,6 +7,7 @@ const MAX_VALUE = 65535;
 const AFTERGLOW_AMOUNT = 50;
 let lastRenderTime;
 ctx.strokeStyle = '#fff';
+ctx.lineCap = 'round';
 
 function handleResize() {
   const pixelRatio = window.devicePixelRatio;
