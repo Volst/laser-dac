@@ -1,5 +1,5 @@
 import { Simulator } from '@ether-dream/simulator';
-import { DrawingContext } from '@ether-dream/draw';
+import { Scene, Rect } from '@ether-dream/draw';
 
 const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
@@ -8,20 +8,20 @@ const POINTS_RATE = 30000;
   const simulator = new Simulator();
   await simulator.start({ device: process.argv.includes('--device') });
 
-  let ctx = new DrawingContext();
+  let scene = new Scene();
   function updateDots() {
-    ctx = new DrawingContext();
-
-    // Triangle
-    ctx.color(0, 1, 0);
-    ctx.moveTo(0.2, 0.126794);
-    ctx.lineTo(0.3, 0.3);
-    ctx.lineTo(0.1, 0.3);
-    ctx.lineTo(0.2, 0.126794);
+    scene = new Scene();
 
     // Rectangle
-    ctx.color(1, 0, 0);
-    ctx.rect(0.5, 0.5, 0.2, 0.2);
+    const rect = new Rect({
+      width: 0.2,
+      height: 0.2,
+      x: 0.5,
+      y: 0.5,
+      color: [1, 0, 0]
+    });
+
+    scene.add(rect);
 
     // Circle
     // Just kidding, still have to fix that.
@@ -31,7 +31,7 @@ const POINTS_RATE = 30000;
 
   simulator.streamPoints(POINTS_RATE, (numpoints, callback) => {
     const streamPoints = [];
-    const pointsBuffer = ctx.points;
+    const pointsBuffer = scene.points;
 
     if (pointsBuffer.length) {
       for (var i = 0; i < numpoints; i++) {
