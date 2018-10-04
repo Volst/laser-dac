@@ -7,7 +7,7 @@ export class Scene {
   add(...shapes: Shape[]) {
     shapes.forEach(shape => {
       const points = shape.draw();
-      this.points = points.concat(points);
+      this.points = this.points.concat(points);
     });
   }
 }
