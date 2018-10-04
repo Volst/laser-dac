@@ -17,8 +17,8 @@ export class DrawingContext {
     this.currentX = x;
     this.currentY = y;
     const point = {
-      x: Math.floor(x * MAX_VALUE - MAX_VALUE / 2),
-      y: Math.floor(y * MAX_VALUE - MAX_VALUE / 2),
+      x: this.relativeToPosition(x),
+      y: this.relativeToPosition(y),
       r: 0,
       g: 0,
       b: 0
@@ -41,11 +41,11 @@ export class DrawingContext {
       const stepY = this.currentY - (distanceY / steps) * i;
 
       points.push({
-        x: Math.floor(stepX * MAX_VALUE - MAX_VALUE / 2),
-        y: Math.floor(stepY * MAX_VALUE - MAX_VALUE / 2),
-        r: Math.floor(MAX_VALUE * this.red),
-        g: Math.floor(MAX_VALUE * this.green),
-        b: Math.floor(MAX_VALUE * this.blue)
+        x: this.relativeToPosition(stepX),
+        y: this.relativeToPosition(stepY),
+        r: this.relativeToColor(this.red),
+        g: this.relativeToColor(this.green),
+        b: this.relativeToColor(this.blue)
       });
     }
 
@@ -76,6 +76,14 @@ export class DrawingContext {
     const section = ildaJson.sections[frame];
 
     this.points = this.points.concat(section.points);
+  }
+
+  private relativeToPosition(n: number) {
+    return Math.floor(n * MAX_VALUE - MAX_VALUE / 2);
+  }
+
+  private relativeToColor(color: number) {
+    return Math.floor(MAX_VALUE * color);
   }
 }
 
