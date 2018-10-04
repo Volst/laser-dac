@@ -4,8 +4,10 @@ import { Shape } from './Shape';
 export class Scene {
   points: Point[] = [];
 
-  add(shape: Shape) {
-    const points = shape.draw();
-    this.points = points.concat(points);
+  add(...shapes: Shape[]) {
+    shapes.forEach(shape => {
+      const points = shape.draw();
+      this.points = points.concat(points);
+    });
   }
 }
