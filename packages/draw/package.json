@@ -17,9 +17,30 @@
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",
+    "test": "jest",
     "prepublishOnly": "npm run -s build"
   },
   "dependencies": {
     "svg-pathdata": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.3",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.3"
+  },
+  "jest": {
+    "roots": [
+      "./src"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ]
   }
 }

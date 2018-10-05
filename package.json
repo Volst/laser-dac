@@ -15,6 +15,7 @@
   "scripts": {
     "publish": "lerna publish",
     "build": "lerna run build",
+    "test": "lerna run test",
     "watch": "lerna run --parallel watch",
     "precommit": "pretty-quick --staged"
   }

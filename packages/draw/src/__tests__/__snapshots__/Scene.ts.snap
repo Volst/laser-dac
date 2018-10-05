@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`draw two shapes on the scene 1`] = `
+Array [
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": -26214,
+    "y": -26214,
+  },
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": -19661,
+    "y": -19661,
+  },
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": 0,
+    "y": 0,
+  },
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": 6553,
+    "y": 6553,
+  },
+]
+`;
