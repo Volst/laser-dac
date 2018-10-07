@@ -1,0 +1,87 @@
+# Ether Dream Drawer
+
+This package makes it easy for you to make laser drawings using programming. Of course there are many professional laser tools that you can use, but the advantage of this package is that since you can program it, it can handle interactive drawings.
+
+There is also first-class support for using ILDA files (a standard used by the laser community for generating laser drawings with animations). You can include multiple ILDA files, control playback and position them anywhere you want on the scene.
+
+There also will be support for SVG files. This way you don't need expensive laser software to generate ILDA files!
+
+## Usage
+
+This package has a couple of classes that let you draw something on a **scene**. A scene is the area the laser can draw things in.
+
+```js
+const scene = new Scene();
+```
+
+A scene has only one method; `add(shape)`.
+
+Now we want to draw a rectangle on the scene. You can do it like this:
+
+```js
+const rect = new Rect({
+  width: 0.2,
+  height: 0.2,
+  x: 0.4,
+  y: 0.4,
+  color: [0, 1, 0]
+});
+
+scene.add(rect);
+```
+
+Perhaps you'll have noticed that everything is based on a scale from **0 to 1**, even colors. Drawing starts from the top left. The rectangle is drawn at 40% from the top left, and takes in 20% of the scene.
+
+`color` is an array of RGB values; so `[0, 1, 0]` means green.
+
+`x` and `y` is the amount of offset starting from left or the top.
+
+### `Path()`
+
+With the `Path()` class you are able to draw a specific path, the exact same way as you can do with `<path/>` in a SVG.
+
+```js
+const cross = new Path({
+  path:
+    'M0.2 0.2 h0.1 v0.1 h0.1 v0.1 h-0.1 v0.1 h-0.1 v-0.1 h-0.1 v-0.1 h0.1 z',
+  color: [0, 1, 0],
+  x: 0.1,
+  y: 0.1
+});
+
+scene.add(cross);
+```
+
+You can copy these values straight from a SVG; you'll
+
+### `Rect()`
+
+```js
+const rect = new Rect({
+  width: 0.2,
+  height: 0.2,
+  x: 0.4,
+  y: 0.4,
+  color: [0, 1, 0]
+});
+
+scene.add(rect);
+```
+
+### `Ilda()`
+
+ILDA files (`.ild`) can be used directly by the drawing tool. This file format is widely supported by laser drawing tools. An example:
+
+```js
+const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
+
+const ilda = new Ilda({
+  file: boeing,
+  frame: 0,
+  x: 0,
+  y: 0
+});
+scene.add(ilda);
+```
+
+The `frame` option controls what frame you want to display; it's easy to animate this and play all frames on whatever speed you like. See the [ilda-animation](https://github.com/Volst/ether-dream-tools/tree/master/examples/ilda-animation) example.
