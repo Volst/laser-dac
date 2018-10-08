@@ -52,26 +52,15 @@ export class Path extends Shape {
           commandPoints.push(new Point(command.x, command.y));
           break;
 
+        case SVGPathData.HORIZ_LINE_TO:
+        case SVGPathData.VERT_LINE_TO:
         case SVGPathData.LINE_TO:
           commandPoints = new Line({
             from: { x: prevX, y: prevY },
-            to: { x: command.x, y: command.y },
-            color: this.color
-          }).draw(resolution);
-          break;
-
-        case SVGPathData.HORIZ_LINE_TO:
-          commandPoints = new Line({
-            from: { x: prevX, y: prevY },
-            to: { x: command.x, y: prevY },
-            color: this.color
-          }).draw(resolution);
-          break;
-
-        case SVGPathData.VERT_LINE_TO:
-          commandPoints = new Line({
-            from: { x: prevX, y: prevY },
-            to: { x: prevX, y: command.y },
+            to: {
+              x: 'x' in command ? command.x : prevX,
+              y: 'y' in command ? command.y : prevY
+            },
             color: this.color
           }).draw(resolution);
           break;
