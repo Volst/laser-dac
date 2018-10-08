@@ -25,29 +25,18 @@ const POINTS_RATE = 30000;
 
     // Should draw this cross: https://codepen.io/chrisnager/pen/armzk
     const cross = new Path({
-      path:
-        'M0.2 0.2 h0.1 v0.1 h0.1 v0.1 h-0.1 v0.1 h-0.1 v-0.1 h-0.1 v-0.1 h0.1 z',
+      path: 'M2 1 h1 v1 h1 v1 h-1 v1 h-1 v-1 h-1 v-1 h1 z',
       color: [0, 1, 0],
-      x: 0,
-      y: 0
+      width: 5,
+      height: 5
     });
     scene.add(cross);
 
     const smile = new Path({
       path: 'M0.5,0.8c0,0,0,0.1,0.1,0.1c0.1,0,0.1-0.1,0.1-0.1',
-      color: [0, 1, 1],
-      x: 0,
-      y: 0
+      color: [0, 1, 1]
     });
     scene.add(smile);
-
-    // const weird = new Path({
-    //   path: 'M 0,0.0 L 0.5,0.5 l 0.125,0 Z',
-    //   color: [0, 1, 0],
-    //   x: 0,
-    //   y: 0
-    // });
-    // scene.add(weird);
 
     // Rectangle
     const rect = new Rect({

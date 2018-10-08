@@ -5,8 +5,8 @@ import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
 
 interface PathOptions {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   width?: number;
   height?: number;
   color: Color;
@@ -25,8 +25,8 @@ export class Path extends Shape {
 
   constructor(options: PathOptions) {
     super();
-    this.x = options.x;
-    this.y = options.y;
+    this.x = options.x || 0;
+    this.y = options.y || 0;
     this.width = options.width || 1;
     this.height = options.height || 1;
     this.color = options.color;
