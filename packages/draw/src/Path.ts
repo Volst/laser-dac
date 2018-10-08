@@ -1,6 +1,7 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Line } from './Line';
+import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
 
 interface PathOptions {
@@ -70,6 +71,22 @@ export class Path extends Shape {
           commandPoints = new Line({
             from: { x: prevX, y: prevY },
             to: { x: prevX, y: command.y },
+            color: this.color
+          }).draw(resolution);
+          break;
+
+        case SVGPathData.CURVE_TO:
+          commandPoints = new Curve({
+            from: {
+              x: prevX,
+              y: prevY,
+              control: { x: command.x1, y: command.y1 }
+            },
+            to: {
+              x: command.x,
+              y: command.y,
+              control: { x: command.x2, y: command.y2 }
+            },
             color: this.color
           }).draw(resolution);
           break;

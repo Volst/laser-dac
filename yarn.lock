@@ -1144,6 +1144,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bezier-js@^2.2.15:
+  version "2.2.15"
+  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-2.2.15.tgz#090f84e9bd82083632d0be8207b0a27a13504833"
+  integrity sha512-T2ayoZLq/wG5tNUj0yNGchWp+CY64bfysnPJ/ESszsI8QVo2fDQDJ/HyFj9cyJSkJFick1E0LsSCod22eU0D8w==
+
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"

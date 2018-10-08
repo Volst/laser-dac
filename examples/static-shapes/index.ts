@@ -33,6 +33,14 @@ const POINTS_RATE = 30000;
     });
     scene.add(cross);
 
+    const smile = new Path({
+      path: 'M0.5,0.8c0,0,0,0.1,0.1,0.1c0.1,0,0.1-0.1,0.1-0.1',
+      color: [0, 1, 1],
+      x: 0,
+      y: 0
+    });
+    scene.add(smile);
+
     // const weird = new Path({
     //   path: 'M 0,0.0 L 0.5,0.5 l 0.125,0 Z',
     //   color: [0, 1, 0],

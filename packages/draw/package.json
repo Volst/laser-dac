@@ -21,6 +21,7 @@
     "prepublishOnly": "npm run -s build"
   },
   "dependencies": {
+    "bezier-js": "^2.2.15",
     "svg-pathdata": "^5.0.2"
   },
   "devDependencies": {
