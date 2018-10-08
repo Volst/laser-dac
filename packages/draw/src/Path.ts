@@ -7,6 +7,8 @@ import { SVGPathData } from 'svg-pathdata';
 interface PathOptions {
   x: number;
   y: number;
+  width?: number;
+  height?: number;
   color: Color;
   path: string;
 }
@@ -14,6 +16,8 @@ interface PathOptions {
 export class Path extends Shape {
   x: number;
   y: number;
+  width: number;
+  height: number;
   color: Color;
   // Example: "M0.67 0 L0.33 0.88 L1 0.88 Z" draws a triangle
   // Works exactly like SVG path. Learn everything about it: https://css-tricks.com/svg-path-syntax-illustrated-guide/
@@ -23,14 +27,23 @@ export class Path extends Shape {
     super();
     this.x = options.x;
     this.y = options.y;
+    this.width = options.width || 1;
+    this.height = options.height || 1;
     this.color = options.color;
     this.path = options.path;
-    // TODO: https://yarnpkg.com/en/package/svg-pathdata
-    // Use x,y as offset
+    // TODO: Use x,y as offset
   }
 
   draw(resolution: number) {
-    const pathData = new SVGPathData(this.path).toAbs();
+    const pathData = new SVGPathData(this.path).toAbs().transform(command => {
+      if ('x' in command) {
+        command.x = command.x / this.width;
+      }
+      if ('y' in command) {
+        command.y = command.y / this.height;
+      }
+      return command;
+    });
 
     if (!pathData.commands.length) {
       return [];
