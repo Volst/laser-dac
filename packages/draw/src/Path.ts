@@ -28,7 +28,7 @@ export class Path extends Shape {
   }
 
   draw() {
-    const pathData = new SVGPathData(this.path);
+    const pathData = new SVGPathData(this.path).toAbs();
 
     if (!pathData.commands.length) {
       return [];
@@ -48,25 +48,13 @@ export class Path extends Shape {
           point = new Point(command.x, command.y);
           break;
         case SVGPathData.LINE_TO:
-          if (command.relative) {
-            point = new Point(prevX + command.x, prevY + command.y, this.color);
-          } else {
-            point = new Point(command.x, command.y, this.color);
-          }
+          point = new Point(command.x, command.y, this.color);
           break;
         case SVGPathData.HORIZ_LINE_TO:
-          if (command.relative) {
-            point = new Point(prevX + command.x, prevY, this.color);
-          } else {
-            point = new Point(command.x, prevY, this.color);
-          }
+          point = new Point(command.x, prevY, this.color);
           break;
         case SVGPathData.VERT_LINE_TO:
-          if (command.relative) {
-            point = new Point(prevX, prevY + command.y, this.color);
-          } else {
-            point = new Point(prevX, command.y, this.color);
-          }
+          point = new Point(prevX, command.y, this.color);
           break;
         case SVGPathData.CLOSE_PATH:
           point = new Point(firstCommand.x, firstCommand.y, this.color);
@@ -75,10 +63,10 @@ export class Path extends Shape {
           point = new Point(0, 0);
       }
       if (command.x) {
-        prevX = (command.relative ? prevX : 0) + command.x;
+        prevX = command.x;
       }
       if (command.y) {
-        prevY = (command.relative ? prevY : 0) + command.y;
+        prevY = command.y;
       }
       return point;
     });
