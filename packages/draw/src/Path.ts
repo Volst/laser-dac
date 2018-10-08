@@ -58,7 +58,7 @@ export class Path extends Shape {
     let prevY = 0;
 
     const points = pathData.commands.map(command => {
-      let commandPoints = [];
+      let commandPoints: Point[] = [];
 
       switch (command.type) {
         case SVGPathData.MOVE_TO:
@@ -101,9 +101,6 @@ export class Path extends Shape {
             color: this.color
           }).draw(resolution);
           break;
-
-        default:
-          commandPoints.push(new Point(0, 0));
       }
 
       if ('x' in command) {
