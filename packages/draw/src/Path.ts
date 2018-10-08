@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
+import { Line } from './Line';
 import { SVGPathData } from 'svg-pathdata';
 
 interface PathOptions {
@@ -27,7 +28,7 @@ export class Path extends Shape {
     // Use x,y as offset
   }
 
-  draw() {
+  draw(resolution: number) {
     const pathData = new SVGPathData(this.path).toAbs();
 
     if (!pathData.commands.length) {
@@ -42,34 +43,60 @@ export class Path extends Shape {
     let prevY = 0;
 
     const points = pathData.commands.map((command: any, i) => {
-      let point = null;
+      let commandPoints = [];
+
       switch (command.type) {
         case SVGPathData.MOVE_TO:
-          point = new Point(command.x, command.y);
+          commandPoints.push(new Point(command.x, command.y));
           break;
+
         case SVGPathData.LINE_TO:
-          point = new Point(command.x, command.y, this.color);
+          commandPoints = new Line({
+            from: { x: prevX, y: prevY },
+            to: { x: command.x, y: command.y },
+            color: this.color
+          }).draw(resolution);
           break;
+
         case SVGPathData.HORIZ_LINE_TO:
-          point = new Point(command.x, prevY, this.color);
+          commandPoints = new Line({
+            from: { x: prevX, y: prevY },
+            to: { x: command.x, y: prevY },
+            color: this.color
+          }).draw(resolution);
           break;
+
         case SVGPathData.VERT_LINE_TO:
-          point = new Point(prevX, command.y, this.color);
+          commandPoints = new Line({
+            from: { x: prevX, y: prevY },
+            to: { x: prevX, y: command.y },
+            color: this.color
+          }).draw(resolution);
           break;
+
         case SVGPathData.CLOSE_PATH:
-          point = new Point(firstCommand.x, firstCommand.y, this.color);
+          commandPoints = new Line({
+            from: { x: prevX, y: prevY },
+            to: { x: firstCommand.x, y: firstCommand.y },
+            color: this.color
+          }).draw(resolution);
           break;
+
         default:
-          point = new Point(0, 0);
+          commandPoints.push(new Point(0, 0));
       }
+
       if (command.x) {
         prevX = command.x;
       }
       if (command.y) {
         prevY = command.y;
       }
-      return point;
+
+      return commandPoints;
     });
-    return points;
+
+    // Flatten points array.
+    return points.reduce((flat, commandPoints) => flat.concat(commandPoints));
   }
 }
