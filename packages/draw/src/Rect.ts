@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
+import { Line } from './Line';
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -27,13 +28,37 @@ export class Rect extends Shape {
     this.color = options.color;
   }
 
-  draw() {
+  draw(resolution: number) {
     return [
       new Point(this.x, this.y),
-      new Point(this.x + this.width, this.y, this.color),
-      new Point(this.x + this.width, this.y + this.height, this.color),
-      new Point(this.x, this.y + this.height, this.color),
-      new Point(this.x, this.y, this.color)
+
+      // Top.
+      ...new Line({
+        from: { x: this.x, y: this.y },
+        to: { x: this.x + this.width, y: this.y },
+        color: this.color
+      }).draw(resolution),
+
+      // Right.
+      ...new Line({
+        from: { x: this.x + this.width, y: this.y },
+        to: { x: this.x + this.width, y: this.y + this.height },
+        color: this.color
+      }).draw(resolution),
+
+      // Bottom.
+      ...new Line({
+        from: { x: this.x + this.width, y: this.y + this.height },
+        to: { x: this.x, y: this.y + this.height },
+        color: this.color
+      }).draw(resolution),
+
+      // Left.
+      ...new Line({
+        from: { x: this.x, y: this.y + this.height },
+        to: { x: this.x, y: this.y },
+        color: this.color
+      }).draw(resolution)
     ];
   }
 }
