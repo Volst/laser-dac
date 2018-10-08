@@ -596,6 +596,11 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.2.tgz#54c5a964462be3d4d78af631363c18d6fa91ac26"
   integrity sha512-yprFYuno9FtNsSHVlSWd+nRlmGoAbqbeCwOryP6sC/zoCjhpArcRMYp19EvpSUSizJAlsXEwJv+wcWS9XaXdMw==
 
+"@types/bezier-js@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@types/bezier-js/-/bezier-js-0.0.7.tgz#5c0e570d8494cae3ed1cde5764a1145c1e9a31b7"
+  integrity sha512-N+/UZFYVp9ka8Xby7hZSHsXqKm6FJIXK/+BRH0BpEfb18aVTtRBPzGIQfDRexAZPYgtWupqP6afapmYYKjvWoQ==
+
 "@types/body-parser@*":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"

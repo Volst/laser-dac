@@ -3,7 +3,6 @@ import { Point, Color } from './Point';
 import { Line } from './Line';
 import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
-import { CommandM } from 'svg-pathdata/lib/types';
 
 interface PathOptions {
   x: number;

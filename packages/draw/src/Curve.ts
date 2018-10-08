@@ -1,8 +1,6 @@
 import { Shape } from '@ether-dream/draw/src/Shape';
 import { Point, Color } from '@ether-dream/draw/src/Point';
-
-// TODO: Can't get this to work with @types/bezier-js and import syntax.
-const Bezier = require('bezier-js');
+import Bezier = require('bezier-js');
 
 interface BezierCoordinates {
   x: number;
