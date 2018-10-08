@@ -1,5 +1,5 @@
 import { Simulator } from '@ether-dream/simulator';
-import { Scene, Rect, Path } from '@ether-dream/draw';
+import { Scene, Rect, Path, Line } from '@ether-dream/draw';
 
 const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
@@ -10,7 +10,9 @@ const POINTS_RATE = 30000;
 
   let scene = new Scene();
   function updateDots() {
-    scene = new Scene();
+    scene = new Scene({
+      resolution: 500
+    });
 
     // Triangle
     // const triangle = new Path({
@@ -19,7 +21,6 @@ const POINTS_RATE = 30000;
     //   x: 0,
     //   y: 0
     // });
-
     // scene.add(triangle);
 
     // Should draw this cross: https://codepen.io/chrisnager/pen/armzk
@@ -30,7 +31,6 @@ const POINTS_RATE = 30000;
       x: 0,
       y: 0
     });
-
     scene.add(cross);
 
     // const weird = new Path({
@@ -39,19 +39,31 @@ const POINTS_RATE = 30000;
     //   x: 0,
     //   y: 0
     // });
-
     // scene.add(weird);
 
     // Rectangle
     const rect = new Rect({
       width: 0.2,
       height: 0.2,
-      x: 0.4,
-      y: 0.4,
+      x: 0.5,
+      y: 0.5,
       color: [1, 0, 0]
     });
-
     scene.add(rect);
+
+    // Line
+    const line = new Line({
+      from: {
+        x: 0.7,
+        y: 0.1
+      },
+      to: {
+        x: 0.9,
+        y: 0.3
+      },
+      color: [1, 1, 1]
+    });
+    scene.add(line);
 
     // Circle
     // Just kidding, still have to fix that.

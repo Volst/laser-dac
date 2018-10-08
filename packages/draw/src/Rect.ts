@@ -1,21 +1,27 @@
-import { Shape, ShapeOptions } from './Shape';
+import { Shape } from './Shape';
 import { Point, Color } from './Point';
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
-interface RectOptions extends ShapeOptions {
+interface RectOptions {
+  x: number;
+  y: number;
   width: number;
   height: number;
   color: Color;
 }
 
 export class Rect extends Shape {
+  x: number;
+  y: number;
   width: number;
   height: number;
   color: Color;
 
   constructor(options: RectOptions) {
-    super(options);
+    super();
+    this.x = options.x;
+    this.y = options.y;
     this.width = options.width;
     this.height = options.height;
     this.color = options.color;

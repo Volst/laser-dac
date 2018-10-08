@@ -1,20 +1,26 @@
-import { Shape, ShapeOptions } from './Shape';
+import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { SVGPathData } from 'svg-pathdata';
 
-interface PathOptions extends ShapeOptions {
+interface PathOptions {
+  x: number;
+  y: number;
   color: Color;
   path: string;
 }
 
 export class Path extends Shape {
+  x: number;
+  y: number;
   color: Color;
   // Example: "M0.67 0 L0.33 0.88 L1 0.88 Z" draws a triangle
   // Works exactly like SVG path. Learn everything about it: https://css-tricks.com/svg-path-syntax-illustrated-guide/
   path: string;
 
   constructor(options: PathOptions) {
-    super(options);
+    super();
+    this.x = options.x;
+    this.y = options.y;
     this.color = options.color;
     this.path = options.path;
     // TODO: https://yarnpkg.com/en/package/svg-pathdata

@@ -1,18 +1,24 @@
 import * as fs from 'fs';
 import * as IldaReader from './ilda/reader';
-import { Shape, ShapeOptions } from './Shape';
+import { Shape } from './Shape';
 
-interface IldaOptions extends ShapeOptions {
+interface IldaOptions {
+  x: number;
+  y: number;
   frame: number;
   file: any;
 }
 
 export class Ilda extends Shape {
+  x: number;
+  y: number;
   frame: number;
   file: any;
 
   constructor(options: IldaOptions) {
-    super(options);
+    super();
+    this.x = options.x;
+    this.y = options.y;
     this.frame = options.frame;
     this.file = options.file;
   }
