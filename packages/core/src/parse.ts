@@ -7,31 +7,33 @@ function parseUInt32(c0: number, c1: number, c2: number, c3: number) {
 }
 
 export function parseStandardResponse(data: number[]) {
-  var st: any = {
+  const response = String.fromCharCode(data[0]);
+  const status = {
+    protocol: data[2],
+    light_engine_state: data[3],
+    playback_state: data[4],
+    source: data[5],
+    light_engine_flags: parseUInt16(data[6], data[7]),
+    playback_flags: parseUInt16(data[8], data[9]),
+    source_flags: parseUInt16(data[10], data[11]),
+    buffer_fullness: parseUInt16(data[12], data[13]),
+    point_rate: parseUInt32(data[14], data[15], data[16], data[17]),
+    point_count: parseUInt32(data[18], data[19], data[20], data[21])
+  };
+  const st: any = {
     // dac_response
-    response: String.fromCharCode(data[0]),
+    response,
     command: String.fromCharCode(data[1]),
-    success: st.response == 'a',
+    success: response == 'a',
     str:
       'resp=' +
-      st.response +
+      response +
       ',fullness=' +
-      st.status.buffer_fullness +
+      status.buffer_fullness +
       ',raw=' +
       data,
     // dac_status
-    status: {
-      protocol: data[2],
-      light_engine_state: data[3],
-      playback_state: data[4],
-      source: data[5],
-      light_engine_flags: parseUInt16(data[6], data[7]),
-      playback_flags: parseUInt16(data[8], data[9]),
-      source_flags: parseUInt16(data[10], data[11]),
-      buffer_fullness: parseUInt16(data[12], data[13]),
-      point_rate: parseUInt32(data[14], data[15], data[16], data[17]),
-      point_count: parseUInt32(data[18], data[19], data[20], data[21])
-    }
+    status
   };
   return st;
 }

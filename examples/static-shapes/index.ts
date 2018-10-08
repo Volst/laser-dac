@@ -6,7 +6,7 @@ const POINTS_RATE = 30000;
 
 (async () => {
   const simulator = new Simulator();
-  await simulator.start({ device: process.argv.includes('--device') });
+  await simulator.start({ device: !!process.env.DEVICE });
 
   let scene = new Scene();
   function updateDots() {
