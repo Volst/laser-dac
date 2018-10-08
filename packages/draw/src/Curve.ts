@@ -1,8 +1,10 @@
 import { Shape } from '@ether-dream/draw/src/Shape';
 import { Point, Color } from '@ether-dream/draw/src/Point';
+
+// TODO: Can't get this to work with @types/bezier-js and import syntax.
 const Bezier = require('bezier-js');
 
-interface coordinates {
+interface BezierCoordinates {
   x: number;
   y: number;
   control: {
@@ -12,14 +14,14 @@ interface coordinates {
 }
 
 interface CurveOptions {
-  from: coordinates;
-  to: coordinates;
+  from: BezierCoordinates;
+  to: BezierCoordinates;
   color: Color;
 }
 
 export class Curve extends Shape {
-  from: coordinates;
-  to: coordinates;
+  from: BezierCoordinates;
+  to: BezierCoordinates;
   color: Color;
 
   constructor(options: CurveOptions) {
@@ -29,7 +31,7 @@ export class Curve extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number) {
+  draw(resolution: number): Point[] {
     const curve = new Bezier(
       this.from.x,
       this.from.y,
@@ -45,10 +47,8 @@ export class Curve extends Shape {
     const steps = Math.round(distance * resolution);
     const curvePoints = curve.getLUT(steps);
 
-    const points = curvePoints.map(
+    return curvePoints.map(
       (point: any) => new Point(point.x, point.y, this.color)
     );
-
-    return points;
   }
 }

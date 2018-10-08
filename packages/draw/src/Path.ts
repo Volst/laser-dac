@@ -3,6 +3,7 @@ import { Point, Color } from './Point';
 import { Line } from './Line';
 import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
+import { CommandM } from 'svg-pathdata/lib/types';
 
 interface PathOptions {
   x: number;
@@ -36,14 +37,15 @@ export class Path extends Shape {
       return [];
     }
 
-    // TODO: this is weird, the svg-pathdata pkg is written in TS but contains the wrong interface for "SVGCommand". Should send a PR.
     // The path can end by going to back to the first drawn line
-    const firstCommand = pathData.commands[0] as any;
+    const firstCommand = pathData.commands[0];
+    const firstX = 'x' in firstCommand ? firstCommand.x : 0;
+    const firstY = 'y' in firstCommand ? firstCommand.y : 0;
     // Keep track of where the last line was drawn so relative positions work
     let prevX = 0;
     let prevY = 0;
 
-    const points = pathData.commands.map((command: any, i) => {
+    const points = pathData.commands.map(command => {
       let commandPoints = [];
 
       switch (command.type) {
@@ -94,7 +96,7 @@ export class Path extends Shape {
         case SVGPathData.CLOSE_PATH:
           commandPoints = new Line({
             from: { x: prevX, y: prevY },
-            to: { x: firstCommand.x, y: firstCommand.y },
+            to: { x: firstX, y: firstY },
             color: this.color
           }).draw(resolution);
           break;
@@ -103,10 +105,10 @@ export class Path extends Shape {
           commandPoints.push(new Point(0, 0));
       }
 
-      if (command.x) {
+      if ('x' in command) {
         prevX = command.x;
       }
-      if (command.y) {
+      if ('y' in command) {
         prevY = command.y;
       }
 

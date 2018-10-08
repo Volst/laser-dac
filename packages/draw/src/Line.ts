@@ -1,20 +1,20 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 
-interface coordinates {
+interface Coordinates {
   x: number;
   y: number;
 }
 
 interface LineOptions {
-  from: coordinates;
-  to: coordinates;
+  from: Coordinates;
+  to: Coordinates;
   color: Color;
 }
 
 export class Line extends Shape {
-  from: coordinates;
-  to: coordinates;
+  from: Coordinates;
+  to: Coordinates;
   color: Color;
 
   constructor(options: LineOptions) {
