@@ -1,9 +1,10 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Line } from './Line';
-import { Curve } from './Curve';
+import { CubicCurve } from './CubicCurve';
 import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
+import { QuadCurve } from './QuadCurve';
 
 interface PathOptions {
   x?: number;
@@ -100,7 +101,7 @@ export class Path extends Shape {
           break;
 
         case SVGPathData.CURVE_TO:
-          commandPoints = new Curve({
+          commandPoints = new CubicCurve({
             from: {
               x: prevX,
               y: prevY,
@@ -111,6 +112,17 @@ export class Path extends Shape {
               y: command.y,
               control: { x: command.x2, y: command.y2 }
             },
+            color: this.color
+          }).draw(resolution);
+          prevX = command.x;
+          prevY = command.y;
+          break;
+
+        case SVGPathData.QUAD_TO:
+          commandPoints = new QuadCurve({
+            from: { x: prevX, y: prevY },
+            to: { x: command.x, y: command.y },
+            control: { x: command.x1, y: command.y1 },
             color: this.color
           }).draw(resolution);
           prevX = command.x;
@@ -131,6 +143,11 @@ export class Path extends Shape {
           prevX = lastMoveCommand.x;
           prevY = lastMoveCommand.y;
           break;
+
+        default:
+          console.warn(
+            `Path parsing warning: command ${command.type} is not supported`
+          );
       }
 
       return commandPoints;

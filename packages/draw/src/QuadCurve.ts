@@ -5,27 +5,26 @@ import Bezier = require('bezier-js');
 interface BezierCoordinates {
   x: number;
   y: number;
-  control: {
-    x: number;
-    y: number;
-  };
 }
 
-interface CurveOptions {
+interface QuadCurveOptions {
   from: BezierCoordinates;
   to: BezierCoordinates;
+  control: BezierCoordinates;
   color: Color;
 }
 
-export class Curve extends Shape {
+export class QuadCurve extends Shape {
   from: BezierCoordinates;
   to: BezierCoordinates;
+  control: BezierCoordinates;
   color: Color;
 
-  constructor(options: CurveOptions) {
+  constructor(options: QuadCurveOptions) {
     super();
     this.from = options.from;
     this.to = options.to;
+    this.control = options.control;
     this.color = options.color;
   }
 
@@ -33,10 +32,8 @@ export class Curve extends Shape {
     const curve = new Bezier(
       this.from.x,
       this.from.y,
-      this.from.control.x,
-      this.from.control.y,
-      this.to.control.x,
-      this.to.control.y,
+      this.control.x,
+      this.control.y,
       this.to.x,
       this.to.y
     );
