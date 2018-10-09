@@ -9,7 +9,7 @@ const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
 
 (async () => {
   const simulator = new Simulator();
-  await simulator.start({ device: process.argv.includes('--device') });
+  await simulator.start({ device: !!process.env.DEVICE });
 
   let scene = new Scene();
   let frame = 0;
