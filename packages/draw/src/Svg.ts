@@ -62,6 +62,7 @@ export class Svg extends Shape {
 
   draw(resolution: number) {
     const viewBox = this.parseViewBox(String(this.file.attributes.viewBox));
+    const aspectRatio = viewBox.width / viewBox.height;
 
     this.nodeWalker(this.file);
 
@@ -72,7 +73,7 @@ export class Svg extends Shape {
         x: this.x,
         y: this.y,
         width: viewBox.width,
-        height: viewBox.height
+        height: aspectRatio * viewBox.height
       }).draw(resolution)
     );
 

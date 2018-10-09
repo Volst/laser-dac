@@ -1,8 +1,7 @@
 import { Simulator } from '@ether-dream/simulator';
-import { Scene, Svg, loadSvgFile } from '@ether-dream/draw';
+import { Scene, Svg, loadSvgFile } from '@ether-dream/draw/src';
 import * as path from 'path';
 
-const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
 
 const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
@@ -11,24 +10,16 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
   const simulator = new Simulator();
   await simulator.start({ device: !!process.env.DEVICE });
 
-  let scene = new Scene();
-  function updateDots() {
-    scene = new Scene({
-      resolution: 500
-    });
+  const scene = new Scene({
+    resolution: 500
+  });
 
-    // Should draw the Volst logo.
-    // This is just the <path /> copy pasted from a SVG file.
-    const logo = new Svg({
-      file: logoFile,
-      x: 0,
-      y: 0
-    });
-    scene.add(logo);
-
-    // Circle
-    // Just kidding, still have to fix that.
-  }
+  const logo = new Svg({
+    file: logoFile,
+    x: 0,
+    y: 0.3
+  });
+  scene.add(logo);
 
   let currentPointId = 0;
 
@@ -46,6 +37,4 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
     }
     callback(streamPoints);
   });
-
-  setInterval(updateDots, FRAME_RATE);
 })();
