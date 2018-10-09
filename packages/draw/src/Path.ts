@@ -3,7 +3,7 @@ import { Point, Color } from './Point';
 import { Line } from './Line';
 import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
-import { CommandM } from 'svg-pathdata/lib/types';
+import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 
 interface PathOptions {
   x?: number;
@@ -35,21 +35,35 @@ export class Path extends Shape {
     // TODO: Use x,y as offset
   }
 
+  transformSize = (command: SVGCommand) => {
+    if ('x' in command) {
+      command.x = command.x / this.width;
+    }
+    if ('x1' in command) {
+      command.x1 = command.x1 / this.width;
+    }
+    if ('x2' in command) {
+      command.x2 = command.x2 / this.width;
+    }
+    if ('y' in command) {
+      command.y = command.y / this.height;
+    }
+    if ('y1' in command) {
+      command.y1 = command.y1 / this.height;
+    }
+    if ('y2' in command) {
+      command.y2 = command.y2 / this.height;
+    }
+    return command;
+  };
+
   draw(resolution: number) {
     const pathData = new SVGPathData(this.path)
       // Transforms relative commands to absolute so we don't have to implement relative commands at all!
       .toAbs()
       // Transforms S and T commands to C and Q so we don't have to implement S and T commands!
       .normalizeST()
-      .transform(command => {
-        if ('x' in command) {
-          command.x = command.x / this.width;
-        }
-        if ('y' in command) {
-          command.y = command.y / this.height;
-        }
-        return command;
-      });
+      .transform(this.transformSize);
 
     if (!pathData.commands.length) {
       return [];
