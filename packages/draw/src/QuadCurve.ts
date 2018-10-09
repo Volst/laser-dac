@@ -40,10 +40,12 @@ export class QuadCurve extends Shape {
 
     const distance = curve.length();
     const steps = Math.round(distance * resolution);
+    // When there are less than two steps, we can skip making a curve altogether.
+    if (steps < 2) {
+      return [new Point(this.to.x, this.to.y, this.color)];
+    }
     const curvePoints = curve.getLUT(steps);
 
-    return curvePoints.map(
-      (point: any) => new Point(point.x, point.y, this.color)
-    );
+    return curvePoints.map(point => new Point(point.x, point.y, this.color));
   }
 }
