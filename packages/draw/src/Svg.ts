@@ -11,7 +11,7 @@ interface SvgOptions {
   x: number;
   y: number;
   file: Node;
-  color: Color;
+  color?: Color;
 }
 
 export class Svg extends Shape {
