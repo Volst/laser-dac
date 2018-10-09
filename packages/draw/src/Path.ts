@@ -5,6 +5,7 @@ import { CubicCurve } from './CubicCurve';
 import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 import { QuadCurve } from './QuadCurve';
+import { flatten } from './helpers';
 
 interface PathOptions {
   x?: number;
@@ -153,7 +154,6 @@ export class Path extends Shape {
       return commandPoints;
     });
 
-    // Flatten points array.
-    return points.reduce((flat, commandPoints) => flat.concat(commandPoints));
+    return flatten(points) as Point[];
   }
 }

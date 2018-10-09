@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import { Shape } from './Shape';
 import { parse, Node } from 'svg-parser';
 import { Path } from './Path';
-import { Color } from './Point';
-import { hexToRgb } from './helpers';
+import { Color, Point } from './Point';
+import { hexToRgb, flatten } from './helpers';
 
 const DEFAULT_COLOR: Color = [0, 1, 0];
 
@@ -76,10 +76,7 @@ export class Svg extends Shape {
       }).draw(resolution)
     );
 
-    return points.reduce(
-      (flat, commandPoints) => flat.concat(commandPoints),
-      []
-    );
+    return flatten(points) as Point[];
   }
 }
 
