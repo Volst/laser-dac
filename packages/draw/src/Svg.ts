@@ -2,17 +2,23 @@ import * as fs from 'fs';
 import { Shape } from './Shape';
 import { parse, Node } from 'svg-parser';
 import { Path } from './Path';
+import { Color } from './Point';
+import { hexToRgb } from './helpers';
+
+const DEFAULT_COLOR: Color = [0, 1, 0];
 
 interface SvgOptions {
   x: number;
   y: number;
   file: Node;
+  color: Color;
 }
 
 export class Svg extends Shape {
   x: number;
   y: number;
   file: Node;
+  color: Color;
   private pathNodes: Node[] = [];
 
   constructor(options: SvgOptions) {
@@ -20,6 +26,7 @@ export class Svg extends Shape {
     this.x = options.x;
     this.y = options.y;
     this.file = options.file;
+    this.color = options.color || DEFAULT_COLOR;
   }
 
   parseViewBox(raw: string) {
@@ -30,11 +37,19 @@ export class Svg extends Shape {
       throw new Error('SVG parser: Invalid viewBox given');
     }
     return {
-      minX: parseInt(values[0]),
-      minY: parseInt(values[1]),
-      width: parseInt(values[2]),
-      height: parseInt(values[3])
+      minX: parseFloat(values[0]),
+      minY: parseFloat(values[1]),
+      width: parseFloat(values[2]),
+      height: parseFloat(values[3])
     };
+  }
+
+  parseHexToRelativeColor(color: string): Color {
+    const rgb = hexToRgb(color);
+    if (rgb) {
+      return [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255];
+    }
+    return this.color;
   }
 
   nodeWalker = (child: Node) => {
@@ -53,8 +68,7 @@ export class Svg extends Shape {
     const points = this.pathNodes.map(node =>
       new Path({
         path: node.attributes.d as string,
-        // TODO: add support for colors
-        color: [0, 1, 0],
+        color: this.parseHexToRelativeColor(node.attributes.fill as string),
         x: this.x,
         y: this.y,
         width: viewBox.width,
