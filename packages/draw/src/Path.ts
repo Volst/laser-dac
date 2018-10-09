@@ -3,7 +3,7 @@ import { Point, Color } from './Point';
 import { Line } from './Line';
 import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
-import { CommandM, CommandS, CommandC } from 'svg-pathdata/lib/types';
+import { CommandM } from 'svg-pathdata/lib/types';
 
 interface PathOptions {
   x?: number;
@@ -36,15 +36,20 @@ export class Path extends Shape {
   }
 
   draw(resolution: number) {
-    const pathData = new SVGPathData(this.path).toAbs().transform(command => {
-      if ('x' in command) {
-        command.x = command.x / this.width;
-      }
-      if ('y' in command) {
-        command.y = command.y / this.height;
-      }
-      return command;
-    });
+    const pathData = new SVGPathData(this.path)
+      // Transforms relative commands to absolute so we don't have to implement relative commands at all!
+      .toAbs()
+      // Transforms S and T commands to C and Q so we don't have to implement S and T commands!
+      .normalizeST()
+      .transform(command => {
+        if ('x' in command) {
+          command.x = command.x / this.width;
+        }
+        if ('y' in command) {
+          command.y = command.y / this.height;
+        }
+        return command;
+      });
 
     if (!pathData.commands.length) {
       return [];
@@ -52,7 +57,6 @@ export class Path extends Shape {
 
     // The path can end by going to back to the first drawn line
     let lastMoveCommand: CommandM | undefined;
-    let lastCurveCommand: CommandS | CommandC | undefined;
     // Keep track of where the last line was drawn so relative positions work
     let prevX = 0;
     let prevY = 0;
@@ -98,31 +102,6 @@ export class Path extends Shape {
           }).draw(resolution);
           prevX = command.x;
           prevY = command.y;
-          lastCurveCommand = command;
-          break;
-
-        case SVGPathData.SMOOTH_CURVE_TO:
-          if (!lastCurveCommand) {
-            throw new Error(
-              'Path parsing error: smooth curve command called without a prior curve command.'
-            );
-          }
-          commandPoints = new Curve({
-            from: {
-              x: prevX,
-              y: prevY,
-              control: { x: lastCurveCommand.x2, y: lastCurveCommand.y2 }
-            },
-            to: {
-              x: command.x,
-              y: command.y,
-              control: { x: command.x2, y: command.y2 }
-            },
-            color: this.color
-          }).draw(resolution);
-          prevX = command.x;
-          prevY = command.y;
-          lastCurveCommand = command;
           break;
 
         case SVGPathData.CLOSE_PATH:
