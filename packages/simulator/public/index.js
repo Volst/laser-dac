@@ -27,7 +27,7 @@ window
   .addListener(handleResize);
 
 function calculateRelativePosition(position) {
-  return (position + HALF_MAX_VALUE) / MAX_VALUE;
+  return 1 - (position + HALF_MAX_VALUE) / MAX_VALUE;
 }
 
 function calculateColor(raw) {
