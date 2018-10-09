@@ -13,6 +13,7 @@ export class Svg extends Shape {
   x: number;
   y: number;
   file: Node;
+  private pathNodes: Node[] = [];
 
   constructor(options: SvgOptions) {
     super();
@@ -36,28 +37,35 @@ export class Svg extends Shape {
     };
   }
 
+  nodeWalker = (child: Node) => {
+    if (child.name === 'path') {
+      this.pathNodes.push(child);
+    } else {
+      child.children.forEach(this.nodeWalker);
+    }
+  };
+
   draw(resolution: number) {
     const viewBox = this.parseViewBox(String(this.file.attributes.viewBox));
 
-    const points: any[] = [];
+    this.nodeWalker(this.file);
 
-    this.file.children.forEach(child => {
-      // TODO: use real Volst logo to see if groups are supported
-      if (child.name === 'path') {
-        points.push(
-          new Path({
-            path: child.attributes.d as string,
-            // TODO: add support for colors
-            color: [0, 1, 0],
-            x: this.x,
-            y: this.y,
-            width: viewBox.width,
-            height: viewBox.height
-          }).draw(resolution)
-        );
-      }
-    });
-    return points.reduce((flat, commandPoints) => flat.concat(commandPoints));
+    const points = this.pathNodes.map(node =>
+      new Path({
+        path: node.attributes.d as string,
+        // TODO: add support for colors
+        color: [0, 1, 0],
+        x: this.x,
+        y: this.y,
+        width: viewBox.width,
+        height: viewBox.height
+      }).draw(resolution)
+    );
+
+    return points.reduce(
+      (flat, commandPoints) => flat.concat(commandPoints),
+      []
+    );
   }
 }
 
