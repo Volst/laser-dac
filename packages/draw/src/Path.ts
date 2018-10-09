@@ -3,6 +3,7 @@ import { Point, Color } from './Point';
 import { Line } from './Line';
 import { Curve } from './Curve';
 import { SVGPathData } from 'svg-pathdata';
+import { CommandM } from 'svg-pathdata/lib/types';
 
 interface PathOptions {
   x?: number;
@@ -50,9 +51,7 @@ export class Path extends Shape {
     }
 
     // The path can end by going to back to the first drawn line
-    const firstCommand = pathData.commands[0];
-    const firstX = 'x' in firstCommand ? firstCommand.x : 0;
-    const firstY = 'y' in firstCommand ? firstCommand.y : 0;
+    let lastMoveCommand: CommandM;
     // Keep track of where the last line was drawn so relative positions work
     let prevX = 0;
     let prevY = 0;
@@ -63,19 +62,23 @@ export class Path extends Shape {
       switch (command.type) {
         case SVGPathData.MOVE_TO:
           commandPoints.push(new Point(command.x, command.y));
+          lastMoveCommand = command;
+          prevX = command.x;
+          prevY = command.y;
           break;
 
         case SVGPathData.HORIZ_LINE_TO:
         case SVGPathData.VERT_LINE_TO:
         case SVGPathData.LINE_TO:
+          const toX = 'x' in command ? command.x : prevX;
+          const toY = 'y' in command ? command.y : prevY;
           commandPoints = new Line({
             from: { x: prevX, y: prevY },
-            to: {
-              x: 'x' in command ? command.x : prevX,
-              y: 'y' in command ? command.y : prevY
-            },
+            to: { x: toX, y: toY },
             color: this.color
           }).draw(resolution);
+          prevX = toX;
+          prevY = toY;
           break;
 
         case SVGPathData.CURVE_TO:
@@ -92,22 +95,21 @@ export class Path extends Shape {
             },
             color: this.color
           }).draw(resolution);
+          prevX = command.x;
+          prevY = command.y;
           break;
 
         case SVGPathData.CLOSE_PATH:
-          commandPoints = new Line({
-            from: { x: prevX, y: prevY },
-            to: { x: firstX, y: firstY },
-            color: this.color
-          }).draw(resolution);
+          if (lastMoveCommand) {
+            commandPoints = new Line({
+              from: { x: prevX, y: prevY },
+              to: { x: lastMoveCommand.x, y: lastMoveCommand.y },
+              color: this.color
+            }).draw(resolution);
+            prevX = lastMoveCommand.x;
+            prevY = lastMoveCommand.y;
+          }
           break;
-      }
-
-      if ('x' in command) {
-        prevX = command.x;
-      }
-      if ('y' in command) {
-        prevY = command.y;
       }
 
       return commandPoints;
