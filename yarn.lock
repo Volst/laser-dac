@@ -677,6 +677,11 @@
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
+"@types/svg-parser@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/svg-parser/-/svg-parser-1.0.0.tgz#2040b3454482633cc3c2c9efd005c04654d80f73"
+  integrity sha512-+EI+Ugqg9T0yvcbNQ3ZdOvK7tVThokK8SdZ/DUo17gNn20GkvlRA0id23xEZ/SHcJzvDARXjsekEu9atc47enA==
+
 "@types/ws@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-6.0.1.tgz#ca7a3f3756aa12f62a0a62145ed14c6db25d5a28"
@@ -3995,6 +4000,11 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
+locate-character@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/locate-character/-/locate-character-1.0.0.tgz#116443c23f29fae28900cac285ba0c71f2693f6d"
+  integrity sha1-EWRDwj8p+uKJAMrChboMcfJpP20=
+
 locate-path@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-2.0.0.tgz#2b568b265eec944c6d9c0de9c3dbbbca0354cd8e"
@@ -6159,6 +6169,13 @@ supports-color@^5.3.0:
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
   dependencies:
     has-flag "^3.0.0"
+
+svg-parser@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-1.0.5.tgz#7ba73ebdaac7a542b842d68598872d0777e5b7ff"
+  integrity sha1-e6c+varHpUK4QtaFmIctB3flt/8=
+  dependencies:
+    locate-character "^1.0.0"
 
 svg-pathdata@^5.0.2:
   version "5.0.2"

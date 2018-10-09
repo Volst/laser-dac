@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "@types/bezier-js": "^0.0.7",
+    "@types/svg-parser": "^1.0.0",
     "bezier-js": "^2.2.15",
+    "svg-parser": "^1.0.5",
     "svg-pathdata": "^5.0.2"
   },
   "devDependencies": {
