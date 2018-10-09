@@ -32,27 +32,26 @@ export class Path extends Shape {
     this.height = options.height || 1;
     this.color = options.color;
     this.path = options.path;
-    // TODO: Use x,y as offset
   }
 
   transformSize = (command: SVGCommand) => {
     if ('x' in command) {
-      command.x = command.x / this.width;
+      command.x = this.x + command.x / this.width;
     }
     if ('x1' in command) {
-      command.x1 = command.x1 / this.width;
+      command.x1 = this.x + command.x1 / this.width;
     }
     if ('x2' in command) {
-      command.x2 = command.x2 / this.width;
+      command.x2 = this.x + command.x2 / this.width;
     }
     if ('y' in command) {
-      command.y = command.y / this.height;
+      command.y = this.y + command.y / this.height;
     }
     if ('y1' in command) {
-      command.y1 = command.y1 / this.height;
+      command.y1 = this.y + command.y1 / this.height;
     }
     if ('y2' in command) {
-      command.y2 = command.y2 / this.height;
+      command.y2 = this.y + command.y2 / this.height;
     }
     return command;
   };
