@@ -6,8 +6,8 @@ test('render blanking point', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: -26214,
-    y: -19661
+    x: 26214,
+    y: 19661
   });
 });
 
@@ -17,8 +17,8 @@ test('render green point', () => {
     r: 0,
     g: 65535,
     b: 0,
-    x: -32768,
-    y: -32768
+    x: 32768,
+    y: 32768
   });
 });
 
@@ -28,8 +28,8 @@ test('render red point', () => {
     r: 65535,
     g: 0,
     b: 0,
-    x: -32768,
-    y: -32768
+    x: 32768,
+    y: 32768
   });
 });
 
@@ -39,8 +39,8 @@ test('render blue point', () => {
     r: 0,
     g: 0,
     b: 65535,
-    x: -32768,
-    y: -32768
+    x: 32768,
+    y: 32768
   });
 });
 
@@ -50,8 +50,8 @@ test('render point in exactly the middle', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: 0,
-    y: 0
+    x: -0,
+    y: -0
   });
 });
 
@@ -61,7 +61,7 @@ test('render point in bottom right', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: 32767,
-    y: 32767
+    x: -32767,
+    y: -32767
   });
 });

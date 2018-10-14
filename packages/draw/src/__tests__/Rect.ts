@@ -8,6 +8,6 @@ test('draw basic green rectangle', () => {
     y: 0.4,
     color: [0, 1, 0]
   });
-  const points = rect.draw();
+  const points = rect.draw(10);
   expect(points).toMatchSnapshot();
 });

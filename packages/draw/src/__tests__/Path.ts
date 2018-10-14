@@ -8,7 +8,7 @@ test('draw a cross', () => {
     x: 0,
     y: 0
   });
-  expect(cross.draw()).toMatchSnapshot();
+  expect(cross.draw(10)).toMatchSnapshot();
 });
 
 test('draw a triangle', () => {
@@ -18,7 +18,7 @@ test('draw a triangle', () => {
     x: 0,
     y: 0
   });
-  expect(triangle.draw()).toMatchSnapshot();
+  expect(triangle.draw(10)).toMatchSnapshot();
 });
 
 // TODO: draw something with an x,y offset
