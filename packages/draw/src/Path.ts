@@ -6,6 +6,7 @@ import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
+import arcToBezier = require('svg-arc-to-cubic-bezier');
 
 interface PathOptions {
   x?: number;
@@ -37,6 +38,7 @@ export class Path extends Shape {
   }
 
   transformSize = (command: SVGCommand) => {
+    // TODO: yes this is a bit messy.
     if ('x' in command) {
       command.x = this.x + command.x / this.width;
     }
@@ -54,6 +56,12 @@ export class Path extends Shape {
     }
     if ('y2' in command) {
       command.y2 = this.y + command.y2 / this.height;
+    }
+    if ('rX' in command) {
+      command.rX = this.x + command.rX / this.width;
+    }
+    if ('rY' in command) {
+      command.rY = this.y + command.rY / this.height;
     }
     return command;
   };
@@ -126,6 +134,43 @@ export class Path extends Shape {
             control: { x: command.x1, y: command.y1 },
             color: this.color
           }).draw(resolution);
+          prevX = command.x;
+          prevY = command.y;
+          break;
+
+        case SVGPathData.ARC:
+          // TODO: Of course it would be better to implement this properly instead of converting arcs to a cubic bezier.
+          const curves = arcToBezier({
+            px: prevX,
+            py: prevY,
+            cx: command.x,
+            cy: command.y,
+            rx: command.rX,
+            ry: command.rY,
+            xAxisRotation: command.xRot,
+            largeArcFlag: command.lArcFlag,
+            sweepFlag: command.sweepFlag
+          });
+          let curvePrevX = prevX;
+          let curvePrevY = prevY;
+          curves.forEach(curve => {
+            const curvePoints = new CubicCurve({
+              from: {
+                x: curvePrevX,
+                y: curvePrevY,
+                control: { x: curve.x1, y: curve.y1 }
+              },
+              to: {
+                x: curve.x,
+                y: curve.y,
+                control: { x: curve.x2, y: curve.y2 }
+              },
+              color: this.color
+            }).draw(resolution);
+            curvePrevX = curve.x;
+            curvePrevY = curve.y;
+            Array.prototype.push.apply(commandPoints, curvePoints);
+          });
           prevX = command.x;
           prevY = command.y;
           break;
