@@ -4,6 +4,8 @@
 
 This is a collection of unofficial tools that contains everything you need to get started with programming on the [Ether Dream](https://ether-dream.com/); a high-performance laser DAC.
 
+Our goal is to make it as easy as possible to develop **interactive laser drawings**. Laser drawing software has existed for years, but making it interactive (e.g. creating a basic webapp using websockets to allow someone to control your laser) is something different!
+
 The tools use Node.js and are published on npm under the `@ether-dream` scope.
 
 **Currently this is in early development.**
