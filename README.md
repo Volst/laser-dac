@@ -1,6 +1,8 @@
 # Ether Dream Tools
 
-This is a collection of tools that contains everything you need to get started with programming on the [Ether Dream](https://ether-dream.com/); a high-performance laser DAC.
+[![CircleCI branch](https://img.shields.io/circleci/project/github/Volst/ether-dream-tools/master.svg)](https://circleci.com/gh/Volst/ether-dream-tools)
+
+This is a collection of unofficial tools that contains everything you need to get started with programming on the [Ether Dream](https://ether-dream.com/); a high-performance laser DAC.
 
 The tools use Node.js and are published on npm under the `@ether-dream` scope.
 
