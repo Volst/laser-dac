@@ -11,13 +11,14 @@ test('draw a boeing', () => {
   expect(points).toMatchSnapshot();
 });
 
-test('draw a boeing with offset', () => {
+test('draw a boeing with offset and custom size', () => {
   const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
   const ilda = new Ilda({
     file: boeing,
     frame: 0,
     x: 0.1,
-    y: 0.3
+    y: 0.3,
+    size: 0.5
   });
   const points = ilda.draw();
   expect(points).toMatchSnapshot();
