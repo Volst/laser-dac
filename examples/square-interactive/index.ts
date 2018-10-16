@@ -30,6 +30,9 @@ wss.on('connection', function connection(ws, req) {
     } else if (payload.type === 'REMOVE') {
       console.log('Removing client');
       renderer.removeClient(id);
+    } else if (payload.type === 'PRESS') {
+      console.log('Triggering press');
+      renderer.triggerPress();
     } else {
       console.log('Unknown websocket message', payload);
     }

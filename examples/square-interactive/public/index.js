@@ -33,16 +33,25 @@ function stopMoving() {
   });
 }
 
+function triggerDoublePress(e) {
+  console.log('TIRGGERED');
+  sendMessage({
+    type: 'PRESS'
+  });
+}
+
 ws.onopen = function() {
   console.log('Websocket connection opened.');
 
   document.removeEventListener('touchmove', startMoving);
   document.removeEventListener('touchstart', startMoving);
   document.removeEventListener('touchend', startMoving);
+  document.removeEventListener('dblclick', triggerDoublePress);
 
   document.addEventListener('touchmove', startMoving, false);
   document.addEventListener('touchstart', startMoving, false);
   document.addEventListener('touchend', stopMoving, false);
+  document.addEventListener('dblclick', triggerDoublePress, false);
 };
 
 const uniqueId = uuid();
