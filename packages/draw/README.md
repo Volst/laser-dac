@@ -68,6 +68,24 @@ const rect = new Rect({
 scene.add(rect);
 ```
 
+### `Line()`
+
+```js
+const line = new Line({
+  from: {
+    x: 0.1,
+    y: 0.1,
+  },
+  to: {
+    x: 0.5,
+    y: 0.5,
+  }
+  color: [0, 1, 0]
+});
+
+scene.add(line);
+```
+
 ### `Ilda()`
 
 ILDA files (`.ild`) can be used directly by the drawing tool. This file format is widely supported by laser drawing tools. An example:
@@ -85,3 +103,28 @@ scene.add(ilda);
 ```
 
 The `frame` option controls what frame you want to display; it's easy to animate this and play all frames on whatever speed you like. See the [ilda-animation](https://github.com/Volst/ether-dream-tools/tree/master/examples/ilda-animation) example.
+
+### `Svg()`
+
+SVG files can also be used directly by the drawing tool!
+
+```js
+const logoFile = loadIldaFile(path.resolve(__dirname, './logo.svg'));
+
+const logo = new Svg({
+  file: logoFile,
+  x: 0,
+  y: 0
+});
+scene.add(logo);
+```
+
+A couple caveats:
+
+- Only `<path/>` is supported; almost every vector tool has some way to convert a vector to only paths.
+- CSS inside SVG is not supported
+- `preserveAspectRatio` is not supported
+
+The color for a path is decided by the `fill` property. It's possible to override the colors by adding a `color` property like `color: [0, 1, 0]`.
+
+The size of the SVG is decided by the `viewBox` on the svg. At the moment the only possible way to reduce the size is to change the `viewBox` property in your SVG.
