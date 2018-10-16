@@ -4,6 +4,10 @@ export function relativeToPosition(n: number) {
   return Math.floor(n * MAX_VALUE - MAX_VALUE / 2) * -1;
 }
 
+export function positionToRelative(n: number) {
+  return -(2 * n - MAX_VALUE) / (MAX_VALUE * 2);
+}
+
 export function relativeToColor(color: number) {
   return Math.floor(MAX_VALUE * color);
 }
