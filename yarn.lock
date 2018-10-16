@@ -682,6 +682,11 @@
   resolved "https://registry.yarnpkg.com/@types/svg-parser/-/svg-parser-1.0.0.tgz#2040b3454482633cc3c2c9efd005c04654d80f73"
   integrity sha512-+EI+Ugqg9T0yvcbNQ3ZdOvK7tVThokK8SdZ/DUo17gNn20GkvlRA0id23xEZ/SHcJzvDARXjsekEu9atc47enA==
 
+"@types/victor@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/victor/-/victor-1.1.0.tgz#c540809e2efb94ef60e293495cfad1614d14ec87"
+  integrity sha512-37o+SnbGRoWqb2+6GQ3NoFX8Ff5zCvm0XsXFulNvO89t2zKluqb4twVORheAnmQ+iEd0rKzAcBGC2//3XBoU1A==
+
 "@types/ws@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-6.0.1.tgz#ca7a3f3756aa12f62a0a62145ed14c6db25d5a28"
@@ -6559,6 +6564,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+victor@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/victor/-/victor-1.1.0.tgz#de3cc77b15589b1b0c7b22c3dad297034ab002ba"
+  integrity sha1-3jzHexVYmxsMeyLD2tKXA0qwAro=
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
