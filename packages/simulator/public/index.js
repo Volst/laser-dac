@@ -5,7 +5,7 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const MAX_VALUE = 65535;
 const HALF_MAX_VALUE = MAX_VALUE / 2;
-const AFTERGLOW_AMOUNT = 50;
+let afterglowAmount = 50;
 let positionDelay = 0;
 let lastRenderTime;
 ctx.strokeStyle = '#fff';
@@ -35,6 +35,14 @@ document.getElementById('positionDelay').addEventListener(
   false
 );
 
+document.getElementById('afterglowAmount').addEventListener(
+  'input',
+  function() {
+    afterglowAmount = Number(this.value);
+  },
+  false
+);
+
 function calculateRelativePosition(position) {
   return 1 - (position + HALF_MAX_VALUE) / MAX_VALUE;
 }
@@ -48,7 +56,7 @@ function render() {
   if (lastRenderTime) {
     const frameInterval = currentTime - lastRenderTime;
     // We add variable afterglow depending on the time until the last render.
-    ctx.fillStyle = `rgba(0, 0, 0, ${frameInterval / AFTERGLOW_AMOUNT})`;
+    ctx.fillStyle = `rgba(0, 0, 0, ${frameInterval / afterglowAmount})`;
   }
   lastRenderTime = currentTime;
 
