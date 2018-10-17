@@ -8,24 +8,49 @@
             }
             body {
                 background: #000;
+                color: #fff;
+                font-family: sans-serif;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 margin: 0;
             }
-            #canvas {
-                background: #000;
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 border: 2px solid #333;
                 max-width: 800px;
                 width: 100vmin;
                 max-height: 800px;
                 height: 100vmin;
+                position: relative;
+            }
+            .container:hover .settings {
+                display: flex;
+            }
+            .settings {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px;
+                flex-direction: column;
+                display: none;
+            }
+            #canvas {
+                height: 100%;
+                width: 100%;
             }
         </style>
     </head>
     <body>
-        <canvas id="canvas"></canvas>
-
+        <div class="container">
+            <div class="settings">
+                <label for="positionDelay">Position Delay</label>
+                <input type="range" id="positionDelay" name="positionDelay" min="0" max="10" value="0" />
+            </div>
+            <canvas id="canvas"></canvas>
+        </div>
         <script src="./index.js" type="module"></script>
     </body>
 </html>
