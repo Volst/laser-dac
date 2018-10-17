@@ -10,18 +10,21 @@ interface LineOptions {
   from: Coordinates;
   to: Coordinates;
   color: Color;
+  blanking?: Boolean;
 }
 
 export class Line extends Shape {
   from: Coordinates;
   to: Coordinates;
   color: Color;
+  blanking: Boolean;
 
   constructor(options: LineOptions) {
     super();
     this.from = options.from;
     this.to = options.to;
     this.color = options.color;
+    this.blanking = options.blanking || false;
   }
 
   draw(resolution: number) {
@@ -33,10 +36,12 @@ export class Line extends Shape {
 
     const points = [];
 
-    // Add first point as blanking.
-    points.push(new Point(this.from.x, this.from.y));
+    if (this.blanking) {
+      // Add first point as blanking.
+      points.push(new Point(this.from.x, this.from.y));
+    }
 
-    for (let stepNumber = 0; stepNumber <= steps; stepNumber++) {
+    for (let stepNumber = 1; stepNumber <= steps; stepNumber++) {
       points.push(
         new Point(
           this.from.x - (distanceX / steps) * stepNumber,

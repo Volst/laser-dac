@@ -58,7 +58,8 @@ const POINTS_RATE = 30000;
         x: 0.9,
         y: 0.3
       },
-      color: [1, 1, 1]
+      color: [1, 1, 1],
+      blanking: true
     });
     scene.add(line);
 

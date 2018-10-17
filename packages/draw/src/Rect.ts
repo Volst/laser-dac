@@ -30,13 +30,12 @@ export class Rect extends Shape {
 
   draw(resolution: number) {
     return [
-      new Point(this.x, this.y),
-
       // Top.
       ...new Line({
         from: { x: this.x, y: this.y },
         to: { x: this.x + this.width, y: this.y },
-        color: this.color
+        color: this.color,
+        blanking: true
       }).draw(resolution),
 
       // Right.
