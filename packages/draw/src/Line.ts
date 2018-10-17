@@ -36,7 +36,7 @@ export class Line extends Shape {
     // Add first point as blanking.
     points.push(new Point(this.from.x, this.from.y));
 
-    for (let stepNumber = 0; stepNumber < steps; stepNumber++) {
+    for (let stepNumber = 0; stepNumber <= steps; stepNumber++) {
       points.push(
         new Point(
           this.from.x - (distanceX / steps) * stepNumber,
