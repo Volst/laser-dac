@@ -10,14 +10,14 @@ interface LineOptions {
   from: Coordinates;
   to: Coordinates;
   color: Color;
-  blanking?: Boolean;
+  blanking?: boolean;
 }
 
 export class Line extends Shape {
   from: Coordinates;
   to: Coordinates;
   color: Color;
-  blanking: Boolean;
+  blanking: boolean;
 
   constructor(options: LineOptions) {
     super();
