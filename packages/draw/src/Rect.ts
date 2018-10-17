@@ -1,5 +1,5 @@
 import { Shape } from './Shape';
-import { Point, Color } from './Point';
+import { Color } from './Point';
 import { Line } from './Line';
 
 // TODO: I don't like these options being duplicated in the class
