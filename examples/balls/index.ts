@@ -2,7 +2,6 @@ import { Simulator } from '@ether-dream/simulator';
 import { Scene, Rect } from '@ether-dream/draw';
 import { Ball } from './Ball';
 
-const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
 const NUMBER_OF_BALLS = 4;
 
@@ -21,12 +20,10 @@ const NUMBER_OF_BALLS = 4;
     );
   }
 
-  let scene = new Scene();
-  function updateDots() {
-    scene = new Scene({
-      resolution: 70
-    });
-
+  const scene = new Scene({
+    resolution: 70
+  });
+  function renderFrame() {
     const bounds = new Rect({
       x: 0,
       y: 0,
@@ -41,6 +38,8 @@ const NUMBER_OF_BALLS = 4;
       scene.add(ball.draw());
     });
   }
+
+  scene.start(renderFrame);
 
   let currentPointId = 0;
 
@@ -58,6 +57,4 @@ const NUMBER_OF_BALLS = 4;
     }
     callback(streamPoints);
   });
-
-  setInterval(updateDots, FRAME_RATE);
 })();

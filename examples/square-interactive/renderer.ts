@@ -2,7 +2,6 @@ import { Simulator } from '@ether-dream/simulator';
 import { Scene, Rect, loadIldaFile, Ilda } from '@ether-dream/draw';
 import * as path from 'path';
 
-const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
 const horseFile = loadIldaFile(path.resolve(__dirname, './horse.ild'));
 const boomFile = loadIldaFile(path.resolve(__dirname, './boom.ild'));
@@ -50,13 +49,11 @@ export class Renderer {
     const simulator = new Simulator();
     await simulator.start({ device: !!process.env.DEVICE });
 
-    let scene = new Scene();
+    const scene = new Scene();
     const self = this;
     let horseFrame = 0;
     let boomFrame = 0;
-    function updateDots() {
-      scene = new Scene();
-
+    function renderFrame() {
       self.activeClients.forEach((client, i) => {
         const rect = new Rect({
           // Super ugly hack to make the first client a green box, second a red box and third a blue box.
@@ -93,6 +90,8 @@ export class Renderer {
       }
     }
 
+    scene.start(renderFrame);
+
     let currentPointId = 0;
 
     simulator.streamPoints(POINTS_RATE, (numpoints, callback) => {
@@ -116,7 +115,5 @@ export class Renderer {
       // );
       callback(streamPoints);
     });
-
-    setInterval(updateDots, FRAME_RATE);
   }
 }

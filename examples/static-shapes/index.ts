@@ -1,19 +1,16 @@
 import { Simulator } from '@ether-dream/simulator';
 import { Scene, Rect, Path, Line } from '@ether-dream/draw';
 
-const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
 
 (async () => {
   const simulator = new Simulator();
   await simulator.start({ device: !!process.env.DEVICE });
 
-  let scene = new Scene();
-  function updateDots() {
-    scene = new Scene({
-      resolution: 500
-    });
-
+  const scene = new Scene({
+    resolution: 500
+  });
+  function renderFrame() {
     // Triangle
     // const triangle = new Path({
     //   path: 'M0.67 0 l0.33 0.88 L1 0.88 Z',
@@ -67,6 +64,8 @@ const POINTS_RATE = 30000;
     // Just kidding, still have to fix that.
   }
 
+  scene.start(renderFrame);
+
   let currentPointId = 0;
 
   simulator.streamPoints(POINTS_RATE, (numpoints, callback) => {
@@ -83,6 +82,4 @@ const POINTS_RATE = 30000;
     }
     callback(streamPoints);
   });
-
-  setInterval(updateDots, FRAME_RATE);
 })();
