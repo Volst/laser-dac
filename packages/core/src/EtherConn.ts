@@ -8,13 +8,22 @@ import {
 
 const STANDARD_RESPONSE_SIZE = 22;
 
-type HandlerCallbackFn = (data: any) => void;
+type HandlerCallbackFn = (data: number[]) => void;
+// Best hack ever.
+// https://stackoverflow.com/questions/36015691/obtaining-the-return-type-of-a-function
+const pstdReturnType = (false as true) && parseStandardResponse([]);
 export interface IPoint {
   x: number;
   y: number;
   r: number;
   g: number;
   b: number;
+  // TODO: have yet to find out what these four properties are. In our tests they are always undefined
+  // https://github.com/j4cbo/j4cDAC/blob/e592ebcb7c9b6fb521be2005f4b85de54bc04f0f/common/protocol.h
+  control?: number;
+  i?: number;
+  u1?: number;
+  u2?: number;
 }
 export type StreamSourceFn = (
   numpoints: number,
@@ -25,7 +34,7 @@ type NoOpFn = () => void;
 
 export class EtherConn {
   client?: net.Socket;
-  inputqueue: any[] = [];
+  inputqueue: number[] = [];
   inputhandlerqueue: { size: number; callback: HandlerCallbackFn }[] = [];
   timer = 0;
   acks = 0;
@@ -40,7 +49,7 @@ export class EtherConn {
   // TODO: add more exact typing
   streamSource?: StreamSourceFn;
   frameSource?: FrameSourceFn;
-  frameBuffer?: any[];
+  frameBuffer?: IPoint[];
 
   _send(sendcommand: string) {
     this.client!.write(new Buffer(sendcommand, 'binary'));
@@ -93,7 +102,9 @@ export class EtherConn {
         // console.log('SOCKET got ' + data.length + ' bytes');
         // console.log('SOCKET DATA:', data.toString(), data.length, self.currentcommand);
         // console.log('\n\n');
-        for (let i = 0; i < data.length; i++) self.inputqueue.push(data[i]);
+        for (let i = 0; i < data.length; i++) {
+          self.inputqueue.push(data[i]);
+        }
         setTimeout(function() {
           self._popinputqueue();
         }, 0);
@@ -114,10 +125,7 @@ export class EtherConn {
 
   waitForResponse(size: number, callback: HandlerCallbackFn) {
     // console.log('Setting up responder for ' + size + ' bytes...');
-    this.inputhandlerqueue.push({
-      size: size,
-      callback: callback
-    });
+    this.inputhandlerqueue.push({ size, callback });
     this._popinputqueue();
   }
 
@@ -134,7 +142,7 @@ export class EtherConn {
     });
   }
 
-  handleStandardResponse(data: any) {
+  handleStandardResponse(data: typeof pstdReturnType) {
     this.fullness = data.status.buffer_fullness;
     this.playback_state = data.status.playback_state;
     this.valid = data.response == 'a';
@@ -208,7 +216,7 @@ export class EtherConn {
     });
   }
 
-  sendPoints(points: any[], callback: NoOpFn) {
+  sendPoints(points: IPoint[], callback: NoOpFn) {
     // console.log('send points command, n=' + points.length);
     const _this = this;
     const batch = points.length;
@@ -242,7 +250,7 @@ export class EtherConn {
     });
   }
 
-  pollGotData(framedata: any[]) {
+  pollGotData(framedata: IPoint[]) {
     const _this = this;
     // console.log('Send ' + framedata.length + ' points to DAC');
     if (framedata.length > 0) {
@@ -306,7 +314,7 @@ export class EtherConn {
 
     function innerStream(numpoints: number, pointcallback: Function) {
       if (_this.frameBuffer!.length < numpoints) {
-        _this.frameSource!(function(points: any[]) {
+        _this.frameSource!(function(points: IPoint[]) {
           for (let i = 0; i < points.length; i++) {
             _this.frameBuffer!.push(points[i]);
           }
