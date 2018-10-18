@@ -2,7 +2,6 @@ import { Simulator } from '@ether-dream/simulator';
 import { Scene, Rect, loadIldaFile, Ilda } from '@ether-dream/draw';
 import * as path from 'path';
 
-const POINTS_RATE = 30000;
 const horseFile = loadIldaFile(path.resolve(__dirname, './horse.ild'));
 const boomFile = loadIldaFile(path.resolve(__dirname, './boom.ild'));
 
@@ -91,29 +90,6 @@ export class Renderer {
     }
 
     scene.start(renderFrame);
-
-    let currentPointId = 0;
-
-    simulator.streamPoints(POINTS_RATE, (numpoints, callback) => {
-      const streamPoints = [];
-      const pointsBuffer = scene.points;
-
-      if (pointsBuffer.length) {
-        for (var i = 0; i < numpoints; i++) {
-          currentPointId++;
-          currentPointId %= pointsBuffer.length;
-
-          streamPoints.push(pointsBuffer[currentPointId]);
-        }
-      }
-
-      // console.log(
-      //   'Render',
-      //   streamPoints.length,
-      //   numpoints,
-      //   pointsBuffer.length
-      // );
-      callback(streamPoints);
-    });
+    simulator.stream(scene);
   }
 }

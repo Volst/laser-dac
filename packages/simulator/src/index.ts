@@ -1,4 +1,9 @@
-import { EtherDream, EtherConn, StreamSourceFn } from '@ether-dream/core';
+import {
+  EtherDream,
+  EtherConn,
+  StreamSourceFn,
+  IPoint
+} from '@ether-dream/core';
 import { Server as WebSocketServer } from 'ws';
 import * as express from 'express';
 import * as path from 'path';
@@ -12,6 +17,7 @@ const STREAM_INTERVAL = 4;
 // Only used for the simulator!
 const REQUESTED_POINTS_COUNT = 500;
 const PORT = 8080;
+const DEFAULT_POINTS_RATE = 30000;
 
 export class Simulator {
   server?: http.Server;
@@ -80,6 +86,30 @@ export class Simulator {
         });
       });
     }
+  }
+
+  stream(
+    scene: { points: IPoint[] },
+    pointsRate: number = DEFAULT_POINTS_RATE
+  ) {
+    const pointsBuffer = scene.points;
+    let currentPointId = 0;
+    this.streamPoints(pointsRate, (numpoints, callback) => {
+      // The Ether Dream device can only render a given number of points (numpoints), in practice at max 1799.
+      //
+      const streamPoints = [];
+
+      if (pointsBuffer.length) {
+        for (var i = 0; i < numpoints; i++) {
+          currentPointId++;
+          currentPointId %= pointsBuffer.length;
+
+          streamPoints.push(pointsBuffer[currentPointId]);
+        }
+      }
+      // console.log('Render', streamPoints.length, numpoints);
+      callback(streamPoints);
+    });
   }
 
   _updateSimulator(data: any[]) {

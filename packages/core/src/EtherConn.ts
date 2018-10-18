@@ -9,11 +9,18 @@ import {
 const STANDARD_RESPONSE_SIZE = 22;
 
 type HandlerCallbackFn = (data: any) => void;
+export interface IPoint {
+  x: number;
+  y: number;
+  r: number;
+  g: number;
+  b: number;
+}
 export type StreamSourceFn = (
   numpoints: number,
-  pointcallback: (points: any[]) => void
+  pointcallback: (points: IPoint[]) => void
 ) => void;
-type FrameSourceFn = (callback: (points: any[]) => void) => void;
+type FrameSourceFn = (callback: (points: IPoint[]) => void) => void;
 type NoOpFn = () => void;
 
 export class EtherConn {

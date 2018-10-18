@@ -20,7 +20,7 @@ export function parseStandardResponse(data: number[]) {
     point_rate: parseUInt32(data[14], data[15], data[16], data[17]),
     point_count: parseUInt32(data[18], data[19], data[20], data[21])
   };
-  const st: any = {
+  const st = {
     // dac_response
     response,
     command: String.fromCharCode(data[1]),

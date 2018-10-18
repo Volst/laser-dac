@@ -1,5 +1,5 @@
 import * as dgram from 'dgram';
-import { EtherConn, StreamSourceFn } from './EtherConn';
+import { EtherConn, StreamSourceFn, IPoint } from './EtherConn';
 import { twohex } from './parse';
 
 export interface IDevice {
@@ -82,4 +82,4 @@ export class EtherDream {
   };
 }
 
-export { EtherConn, StreamSourceFn };
+export { EtherConn, StreamSourceFn, IPoint };

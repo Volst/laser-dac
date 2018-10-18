@@ -1,8 +1,6 @@
 import { Simulator } from '@ether-dream/simulator';
 import { Scene, Rect, Path, Line } from '@ether-dream/draw';
 
-const POINTS_RATE = 30000;
-
 (async () => {
   const simulator = new Simulator();
   await simulator.start({ device: !!process.env.DEVICE });
@@ -65,21 +63,5 @@ const POINTS_RATE = 30000;
   }
 
   scene.start(renderFrame);
-
-  let currentPointId = 0;
-
-  simulator.streamPoints(POINTS_RATE, (numpoints, callback) => {
-    const streamPoints = [];
-    const pointsBuffer = scene.points;
-
-    if (pointsBuffer.length) {
-      for (var i = 0; i < numpoints; i++) {
-        currentPointId++;
-        currentPointId %= pointsBuffer.length;
-
-        streamPoints.push(pointsBuffer[currentPointId]);
-      }
-    }
-    callback(streamPoints);
-  });
+  simulator.stream(scene);
 })();
