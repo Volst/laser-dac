@@ -3,8 +3,7 @@ import { Color } from './Point';
 import { Line } from './Line';
 import { Wait } from './Wait';
 
-// This is advised by "Accurate and Efficient Drawing Method for Laser Projection" for 90 degree angles.
-const WAIT_AMOUNT = 15;
+const WAIT_AMOUNT = 6;
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -43,7 +42,7 @@ export class Rect extends Shape {
       }).draw(resolution),
 
       ...new Wait({
-        x: this.x,
+        x: this.x + this.width,
         y: this.y,
         color: this.color,
         amount: WAIT_AMOUNT
@@ -57,8 +56,8 @@ export class Rect extends Shape {
       }).draw(resolution),
 
       ...new Wait({
-        x: this.x,
-        y: this.y,
+        x: this.x + this.width,
+        y: this.y + this.height,
         color: this.color,
         amount: WAIT_AMOUNT
       }).draw(),
@@ -72,7 +71,7 @@ export class Rect extends Shape {
 
       ...new Wait({
         x: this.x,
-        y: this.y,
+        y: this.y + this.height,
         color: this.color,
         amount: WAIT_AMOUNT
       }).draw(),
@@ -82,7 +81,14 @@ export class Rect extends Shape {
         from: { x: this.x, y: this.y + this.height },
         to: { x: this.x, y: this.y },
         color: this.color
-      }).draw(resolution)
+      }).draw(resolution),
+
+      ...new Wait({
+        x: this.x,
+        y: this.y,
+        color: this.color,
+        amount: WAIT_AMOUNT
+      }).draw()
     ];
   }
 }
