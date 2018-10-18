@@ -9,7 +9,7 @@ import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
 import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 import arcToBezier = require('svg-arc-to-cubic-bezier');
-import { positionToRelative } from '../dist/helpers';
+import { positionToRelative } from './helpers';
 
 interface PathOptions {
   x?: number;
