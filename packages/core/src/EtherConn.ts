@@ -52,7 +52,7 @@ export class EtherConn {
   frameBuffer?: IPoint[];
 
   _send(sendcommand: string) {
-    this.client!.write(new Buffer(sendcommand, 'binary'));
+    this.client!.write(Buffer.from(sendcommand, 'binary'));
     this._popinputqueue();
   }
 
