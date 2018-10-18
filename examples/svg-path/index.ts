@@ -11,7 +11,7 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
   await simulator.start({ device: !!process.env.DEVICE });
 
   const scene = new Scene({
-    resolution: 500
+    resolution: 150
   });
 
   const logo = new Svg({
