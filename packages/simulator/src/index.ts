@@ -92,12 +92,13 @@ export class Simulator {
     scene: { points: IPoint[] },
     pointsRate: number = DEFAULT_POINTS_RATE
   ) {
-    const pointsBuffer = scene.points;
     let currentPointId = 0;
     this.streamPoints(pointsRate, (numpoints, callback) => {
-      // The Ether Dream device can only render a given number of points (numpoints), in practice at max 1799.
-      //
-      const streamPoints = [];
+      const pointsBuffer = scene.points;
+      // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
+      // So here we limit the points given to the max accepted, and then keep track of where we cut it off (currentPointId).
+      // So when this function is invoked again, it starts rendering from that point.
+      const streamPoints: IPoint[] = [];
 
       if (pointsBuffer.length) {
         for (var i = 0; i < numpoints; i++) {
