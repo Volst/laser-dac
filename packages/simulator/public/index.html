@@ -26,36 +26,14 @@
                 height: 100vmin;
                 position: relative;
             }
-            .container:hover .settings {
-                display: flex;
-            }
-            .settings {
-                position: absolute;
-                top: 0;
-                left: 0;
-                padding: 10px;
-                flex-direction: column;
-                display: none;
-            }
             #canvas {
                 height: 100%;
                 width: 100%;
-            }
-            input[type="range"]::-moz-range-track {
-              background-color: #fff;
-              height: 5px;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="settings">
-                <label for="positionDelay">Position Delay</label>
-                <input type="range" id="positionDelay" name="positionDelay" min="0" max="10" value="0" />
-                <br>
-                <label for="afterglowAmount">Afterglow Amount</label>
-                <input type="range" id="afterglowAmount" name="afterglowAmount" min="0" max="300" value="50" />
-            </div>
             <canvas id="canvas"></canvas>
         </div>
         <script src="./index.js" type="module"></script>
