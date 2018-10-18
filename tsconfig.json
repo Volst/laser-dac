@@ -6,7 +6,6 @@
     "lib": ["esnext"],
     "strict": true,
     "noUnusedLocals": true,
-    "strictFunctionTypes": false,
     "forceConsistentCasingInFileNames": true
   }
 }
