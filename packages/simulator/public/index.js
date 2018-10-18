@@ -5,6 +5,8 @@ class SimulatorOptions {
   constructor() {
     this.positionDelay = 0;
     this.afterglowAmount = 50;
+    this.numberOfPoints = '';
+    this.totalPoints = '';
   }
 }
 
@@ -12,6 +14,9 @@ const options = new SimulatorOptions();
 var gui = new dat.GUI();
 gui.add(options, 'positionDelay', 0, 10);
 gui.add(options, 'afterglowAmount', 0, 300);
+gui.add(options, 'numberOfPoints').listen();
+gui.add(options, 'totalPoints').listen();
+gui.width = 300;
 
 let points = [];
 const canvas = document.getElementById('canvas');
@@ -102,5 +107,13 @@ const host = window.document.location.host.replace(/:.*/, '');
 const ws = new WebsocketClient();
 ws.open('ws://' + host + ':8080');
 ws.onmessage = function(event) {
-  points = JSON.parse(event.data);
+  const payload = JSON.parse(event.data);
+  if (payload.type === 'POINTS') {
+    points = payload.data;
+    return;
+  }
+  if (payload.type === 'POINTS_INFO') {
+    options.numberOfPoints = String(payload.data.numpoints);
+    options.totalPoints = String(payload.data.totalPoints);
+  }
 };

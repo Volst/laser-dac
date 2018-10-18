@@ -5,6 +5,7 @@ import {
   IPoint
 } from '@ether-dream/core';
 import { Server as WebSocketServer } from 'ws';
+import { throttle } from './helpers';
 import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
@@ -75,14 +76,14 @@ export class Simulator {
     if (!this.deviceConn) {
       setInterval(() => {
         pointSource(REQUESTED_POINTS_COUNT, streamPoints => {
-          this._updateSimulator(streamPoints);
+          this.sendPointsToSimulator(streamPoints);
         });
       }, STREAM_INTERVAL);
     } else {
       this.deviceConn.streamPoints(rate, (numpoints, callback) => {
         pointSource(numpoints, streamPoints => {
           callback(streamPoints);
-          this._updateSimulator(streamPoints);
+          this.sendPointsToSimulator(streamPoints);
         });
       });
     }
@@ -108,16 +109,31 @@ export class Simulator {
           streamPoints.push(pointsBuffer[currentPointId]);
         }
       }
-      // console.log('Render', streamPoints.length, numpoints);
+      this.sendPointInfoToSimulator(numpoints, pointsBuffer.length);
       callback(streamPoints);
     });
   }
 
-  _updateSimulator(data: any[]) {
+  private sendToSimulator(data: any) {
     this.wss!.clients.forEach(client => {
       client.send(JSON.stringify(data), function() {
         // Ignore errors for now
       });
     });
   }
+
+  private sendPointsToSimulator(data: any[]) {
+    this.sendToSimulator({ type: 'POINTS', data });
+  }
+
+  // This method is called soo often, so throttle it!
+  private sendPointInfoToSimulator = throttle(
+    (numpoints: number, totalPoints: number) => {
+      this.sendToSimulator({
+        type: 'POINTS_INFO',
+        data: { numpoints, totalPoints }
+      });
+    },
+    500
+  );
 }
