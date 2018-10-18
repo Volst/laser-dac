@@ -9,9 +9,7 @@ import {
 const STANDARD_RESPONSE_SIZE = 22;
 
 type HandlerCallbackFn = (data: number[]) => void;
-// Best hack ever.
-// https://stackoverflow.com/questions/36015691/obtaining-the-return-type-of-a-function
-const pstdReturnType = (false as true) && parseStandardResponse([]);
+type pstdReturnType = ReturnType<typeof parseStandardResponse>;
 export interface IPoint {
   x: number;
   y: number;
@@ -142,7 +140,7 @@ export class EtherConn {
     });
   }
 
-  handleStandardResponse(data: typeof pstdReturnType) {
+  handleStandardResponse(data: pstdReturnType) {
     this.fullness = data.status.buffer_fullness;
     this.playback_state = data.status.playback_state;
     this.valid = data.response == 'a';
