@@ -7,8 +7,9 @@ import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
-import { BLANKING_AMOUNT } from './constants';
+import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 import arcToBezier = require('svg-arc-to-cubic-bezier');
+import { positionToRelative } from '../dist/helpers';
 
 interface PathOptions {
   x?: number;
@@ -86,8 +87,8 @@ export class Path extends Shape {
     let prevX = 0;
     let prevY = 0;
 
-    const points = pathData.commands.map(command => {
-      let commandPoints: Point[] = [];
+    const points = pathData.commands.reduce((accumulator: [], command) => {
+      let commandPoints: any[] = [];
 
       switch (command.type) {
         case SVGPathData.MOVE_TO:
@@ -203,8 +204,44 @@ export class Path extends Shape {
           );
       }
 
-      return commandPoints;
-    });
+      let wait: Point[] = [];
+      if (accumulator.length >= 2 && commandPoints.length) {
+        const nextPoint: Point = commandPoints[0];
+        const lastPoint: Point = accumulator[accumulator.length - 1];
+        const secondLastPoint: Point = accumulator[accumulator.length - 2];
+
+        // Get previous angle in radians.
+        const previousAngle = Math.atan2(
+          secondLastPoint.y - lastPoint.y,
+          secondLastPoint.x - lastPoint.x
+        );
+
+        // Get next angle in radians.
+        const nextAngle = Math.atan2(
+          lastPoint.y - nextPoint.y,
+          lastPoint.x - nextPoint.x
+        );
+
+        // Get difference in angle where 90 degrees is 0.5, and 180 is 1.
+        const relativeAngle =
+          Math.abs(
+            Math.atan2(
+              Math.sin(previousAngle - nextAngle),
+              Math.cos(previousAngle - nextAngle)
+            )
+          ) / Math.PI;
+
+        const waitShape = new Wait({
+          x: positionToRelative(lastPoint.x),
+          y: positionToRelative(lastPoint.y),
+          color: [lastPoint.r, lastPoint.g, lastPoint.b],
+          amount: Math.floor(MAX_WAIT_AMOUNT * relativeAngle)
+        });
+        wait = waitShape.draw();
+      }
+
+      return [...accumulator, ...wait, ...commandPoints];
+    }, []);
 
     return flatten(points) as Point[];
   }

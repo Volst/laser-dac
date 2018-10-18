@@ -2,8 +2,10 @@ import { Shape } from './Shape';
 import { Color } from './Point';
 import { Line } from './Line';
 import { Wait } from './Wait';
+import { MAX_WAIT_AMOUNT } from './constants';
 
-const WAIT_AMOUNT = 6;
+//
+const WAIT_AMOUNT = MAX_WAIT_AMOUNT / 2;
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -87,7 +89,7 @@ export class Rect extends Shape {
         x: this.x,
         y: this.y,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: MAX_WAIT_AMOUNT
       }).draw()
     ];
   }

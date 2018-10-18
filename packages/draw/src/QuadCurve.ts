@@ -46,6 +46,9 @@ export class QuadCurve extends Shape {
     }
     const curvePoints = curve.getLUT(steps);
 
+    // Remove the first point if there is one.
+    if (curvePoints.length > 1) curvePoints.shift();
+
     return curvePoints.map(point => new Point(point.x, point.y, this.color));
   }
 }
