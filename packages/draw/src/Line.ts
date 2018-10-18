@@ -1,5 +1,7 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
+import { Wait } from './Wait';
+import { BLANKING_AMOUNT } from './constants';
 
 interface Coordinates {
   x: number;
@@ -34,11 +36,16 @@ export class Line extends Shape {
     const distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
     const steps = Math.round(distance * resolution);
 
-    const points = [];
+    let points: Point[] = [];
 
     if (this.blanking) {
-      // Add first point as blanking.
-      points.push(new Point(this.from.x, this.from.y));
+      // Add blanking points.
+      points = new Wait({
+        x: this.from.x,
+        y: this.from.y,
+        color: [0, 0, 0],
+        amount: BLANKING_AMOUNT
+      }).draw();
     }
 
     for (let stepNumber = 1; stepNumber <= steps; stepNumber++) {

@@ -5,3 +5,5 @@ export const MAX_VALUE = 65535;
 
 // TODO: find out what this does exactly
 export const RESOLUTION = 150;
+
+export const BLANKING_AMOUNT = 24;

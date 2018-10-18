@@ -4,14 +4,14 @@ import { Point, Color } from './Point';
 interface WaitOptions {
   x: number;
   y: number;
-  color: Color;
+  color?: Color;
   amount: number;
 }
 
 export class Wait extends Shape {
   x: number;
   y: number;
-  color: Color;
+  color?: Color;
   amount: number;
 
   constructor(options: WaitOptions) {

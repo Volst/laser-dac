@@ -1,11 +1,13 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Line } from './Line';
+import { Wait } from './Wait';
 import { CubicCurve } from './CubicCurve';
 import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
+import { BLANKING_AMOUNT } from './constants';
 import arcToBezier = require('svg-arc-to-cubic-bezier');
 
 interface PathOptions {
@@ -89,7 +91,12 @@ export class Path extends Shape {
 
       switch (command.type) {
         case SVGPathData.MOVE_TO:
-          commandPoints.push(new Point(command.x, command.y));
+          commandPoints = new Wait({
+            x: command.x,
+            y: command.y,
+            amount: BLANKING_AMOUNT
+          }).draw();
+
           lastMoveCommand = command;
           prevX = command.x;
           prevY = command.y;
