@@ -12,7 +12,7 @@ class SimulatorOptions {
 
 const options = new SimulatorOptions();
 var gui = new dat.GUI();
-gui.add(options, 'positionDelay', 0, 10);
+gui.add(options, 'positionDelay', 0, 10).step(1);
 gui.add(options, 'afterglowAmount', 0, 300);
 gui.add(options, 'numberOfPoints').listen();
 gui.add(options, 'totalPoints').listen();
