@@ -4,7 +4,7 @@ import { Ball } from './Ball';
 
 const FRAME_RATE = 15;
 const POINTS_RATE = 30000;
-const NUMBER_OF_BALLS = 5;
+const NUMBER_OF_BALLS = 4;
 
 (async () => {
   const simulator = new Simulator();
@@ -24,7 +24,7 @@ const NUMBER_OF_BALLS = 5;
   let scene = new Scene();
   function updateDots() {
     scene = new Scene({
-      resolution: 100
+      resolution: 70
     });
 
     const bounds = new Rect({

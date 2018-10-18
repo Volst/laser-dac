@@ -1,6 +1,9 @@
 import { Shape } from './Shape';
 import { Color } from './Point';
 import { Line } from './Line';
+import { Wait } from './Wait';
+
+const WAIT_AMOUNT = 6;
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -38,12 +41,26 @@ export class Rect extends Shape {
         blanking: true
       }).draw(resolution),
 
+      ...new Wait({
+        x: this.x + this.width,
+        y: this.y,
+        color: this.color,
+        amount: WAIT_AMOUNT
+      }).draw(),
+
       // Right.
       ...new Line({
         from: { x: this.x + this.width, y: this.y },
         to: { x: this.x + this.width, y: this.y + this.height },
         color: this.color
       }).draw(resolution),
+
+      ...new Wait({
+        x: this.x + this.width,
+        y: this.y + this.height,
+        color: this.color,
+        amount: WAIT_AMOUNT
+      }).draw(),
 
       // Bottom.
       ...new Line({
@@ -52,12 +69,26 @@ export class Rect extends Shape {
         color: this.color
       }).draw(resolution),
 
+      ...new Wait({
+        x: this.x,
+        y: this.y + this.height,
+        color: this.color,
+        amount: WAIT_AMOUNT
+      }).draw(),
+
       // Left.
       ...new Line({
         from: { x: this.x, y: this.y + this.height },
         to: { x: this.x, y: this.y },
         color: this.color
-      }).draw(resolution)
+      }).draw(resolution),
+
+      ...new Wait({
+        x: this.x,
+        y: this.y,
+        color: this.color,
+        amount: WAIT_AMOUNT
+      }).draw()
     ];
   }
 }
