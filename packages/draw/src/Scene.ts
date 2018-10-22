@@ -1,7 +1,8 @@
 import { Point } from './Point';
 import { Shape } from './Shape';
 
-const DEFAULT_FRAME_RATE = 15;
+// Frames per second; 30fps will be enough for most use-cases.
+const DEFAULT_FPS = 30;
 const DEFAULT_RESOLUTION = 500;
 
 interface SceneOptions {
@@ -30,11 +31,12 @@ export class Scene {
     this.points = [];
   }
 
-  start(renderFrame: () => void, frameRate: number = DEFAULT_FRAME_RATE) {
+  start(renderFrame: () => void, fps: number = DEFAULT_FPS) {
+    const ms = 1000 / fps;
     this.interval = setInterval(() => {
       this.reset();
       renderFrame();
-    }, frameRate);
+    }, ms);
   }
 
   stop() {
