@@ -24,8 +24,6 @@ const ctx = canvas.getContext('2d');
 const MAX_VALUE = 65535;
 const HALF_MAX_VALUE = MAX_VALUE / 2;
 let lastRenderTime;
-ctx.strokeStyle = '#fff';
-ctx.lineCap = 'round';
 
 function handleResize() {
   const pixelRatio = window.devicePixelRatio;
@@ -72,32 +70,25 @@ function render() {
     const color =
       points[colorIndex < points.length ? colorIndex : points.length - 1];
 
-    ctx.beginPath();
-    if (i > 0) {
-      const previousPoint = points[i - 1];
-      ctx.moveTo(
-        calculateRelativePosition(previousPoint.x) * canvas.width,
-        calculateRelativePosition(previousPoint.y) * canvas.height
-      );
-    }
+    // Prevent drawing unnecessary lines.
+    const isBlanking = !color || !(color.r || color.g || color.b);
+    if (isBlanking || i === 0) return;
+    const previousPoint = points[i - 1];
+    if (previousPoint.x === point.x && previousPoint.y === point.y) return;
 
-    // If a point doesn't have any color, it shouldn't be drawn at all. This is known as blanking.
-    if (color && (color.r || color.g || color.b)) {
-      ctx.lineTo(
-        calculateRelativePosition(point.x) * canvas.width,
-        calculateRelativePosition(point.y) * canvas.height
-      );
-      ctx.strokeStyle = `rgb(${calculateColor(color.r)}, ${calculateColor(
-        color.g
-      )}, ${calculateColor(color.b)})`;
-      ctx.stroke();
-    } else {
-      ctx.moveTo(
-        calculateRelativePosition(point.x) * canvas.width,
-        calculateRelativePosition(point.y) * canvas.height
-      );
-    }
-    ctx.closePath();
+    ctx.beginPath();
+    ctx.moveTo(
+      calculateRelativePosition(previousPoint.x) * canvas.width,
+      calculateRelativePosition(previousPoint.y) * canvas.height
+    );
+    ctx.lineTo(
+      calculateRelativePosition(point.x) * canvas.width,
+      calculateRelativePosition(point.y) * canvas.height
+    );
+    ctx.strokeStyle = `rgb(${calculateColor(color.r)}, ${calculateColor(
+      color.g
+    )}, ${calculateColor(color.b)})`;
+    ctx.stroke();
   });
   requestAnimationFrame(render);
 }
