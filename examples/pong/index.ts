@@ -3,8 +3,8 @@ import { Scene, Rect } from '@ether-dream/draw';
 import { Player } from './Player';
 import { Ball } from './Ball';
 
-export const AREA_WIDTH = 0.2;
-export const AREA_HEIGHT = 0.4;
+export const AREA_WIDTH = 0.1;
+export const AREA_HEIGHT = 0.2;
 
 (async () => {
   const simulator = new Simulator();
@@ -23,7 +23,7 @@ export const AREA_HEIGHT = 0.4;
     }
   });
   const scene = new Scene({
-    resolution: 200
+    resolution: 600
   });
 
   function renderFrame() {
@@ -45,6 +45,6 @@ export const AREA_HEIGHT = 0.4;
     scene.add(ball.draw());
   }
 
-  scene.start(renderFrame);
+  scene.start(renderFrame, 100);
   simulator.stream(scene);
 })();

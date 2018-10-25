@@ -1,8 +1,8 @@
 import { Line } from '@ether-dream/draw';
 import { AREA_HEIGHT, AREA_WIDTH } from './index';
 
-const GAP = 0.04;
-export const PADDLE_WIDTH = 0.125;
+const GAP = 0.02;
+export const PADDLE_WIDTH = 0.05;
 
 interface PlayerOptions {
   position: 'top' | 'bottom';
@@ -12,7 +12,7 @@ export class Player {
   x: number;
   y: number;
   score: number = 0;
-  speed: number = 0.004;
+  speed: number = 0.002;
 
   constructor(options: PlayerOptions) {
     const distanceFromCenter = AREA_HEIGHT / 2 - GAP;
@@ -37,8 +37,8 @@ export class Player {
     }
   };
 
-  draw = () =>
-    new Line({
+  draw = () => {
+    return new Line({
       from: {
         x: this.x,
         y: this.y
@@ -51,4 +51,5 @@ export class Player {
       blankBefore: true,
       blankAfter: true
     });
+  };
 }

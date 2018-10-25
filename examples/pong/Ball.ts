@@ -3,7 +3,7 @@ import { AREA_HEIGHT, AREA_WIDTH } from './index';
 import { PADDLE_WIDTH } from './Player';
 import Victor = require('victor');
 
-const RADIUS = 0.005;
+const RADIUS = 0.002;
 
 interface BallOptions {
   players: { top: {}; bottom: {} };
@@ -12,7 +12,7 @@ interface BallOptions {
 export class Ball {
   x: number = 0.5;
   y: number = 0.5;
-  vector: Victor = new Victor(0.004, 0.004);
+  vector: Victor = new Victor(0.002, 0.002);
   players: { top: any; bottom: any };
 
   constructor(options: BallOptions) {
