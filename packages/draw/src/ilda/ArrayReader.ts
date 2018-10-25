@@ -1,5 +1,3 @@
-import { MAX_VALUE } from '../constants';
-
 export type ByteArray = number[];
 
 export class ArrayReader {
@@ -50,8 +48,7 @@ export class ArrayReader {
   }
 
   convertCoordinate(xy: number) {
-    xy = xy / MAX_VALUE + 0.5;
-    return Math.floor(xy * MAX_VALUE - MAX_VALUE / 2);
+    return xy;
   }
 
   readLong() {

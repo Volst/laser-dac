@@ -46,10 +46,12 @@ export function fromByteArray(arr: ByteArray) {
         p.readByte();
         for (let i = 0; i < np2; i++) {
           const point = new Point();
-          point.x = p.readSignedShort();
-          point.y = p.readSignedShort();
-          // const st = p.readShort();
-          // point.color = (st >> 0) & 0x7f;
+          point.x = p.convertCoordinate(p.readSignedShort());
+          point.y = p.convertCoordinate(p.readSignedShort());
+          const rgb = parseColor(p.readShort());
+          point.r = rgb.r;
+          point.g = rgb.g;
+          point.b = rgb.b;
           section.points.push(point);
         }
         break;
