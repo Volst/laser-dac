@@ -7,6 +7,7 @@ class SimulatorOptions {
     this.afterglowAmount = 50;
     this.numberOfPoints = '';
     this.totalPoints = '';
+    this.showBlanking = false;
   }
 }
 
@@ -14,6 +15,7 @@ const options = new SimulatorOptions();
 var gui = new dat.GUI();
 gui.add(options, 'positionDelay', 0, 10).step(1);
 gui.add(options, 'afterglowAmount', 0, 300);
+gui.add(options, 'showBlanking');
 gui.add(options, 'numberOfPoints').listen();
 gui.add(options, 'totalPoints').listen();
 gui.width = 300;
@@ -72,7 +74,7 @@ function render() {
 
     // Prevent drawing unnecessary lines.
     const isBlanking = !color || !(color.r || color.g || color.b);
-    if (isBlanking || i === 0) return;
+    if ((!options.showBlanking && isBlanking) || i === 0) return;
     const previousPoint = points[i - 1];
     if (previousPoint.x === point.x && previousPoint.y === point.y) return;
 
@@ -85,9 +87,13 @@ function render() {
       calculateRelativePosition(point.x) * canvas.width,
       calculateRelativePosition(point.y) * canvas.height
     );
-    ctx.strokeStyle = `rgb(${calculateColor(color.r)}, ${calculateColor(
-      color.g
-    )}, ${calculateColor(color.b)})`;
+    if (isBlanking) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    } else {
+      ctx.strokeStyle = `rgb(${calculateColor(color.r)}, ${calculateColor(
+        color.g
+      )}, ${calculateColor(color.b)})`;
+    }
     ctx.stroke();
   });
   requestAnimationFrame(render);
