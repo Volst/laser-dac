@@ -40,7 +40,7 @@ export class Rect extends Shape {
         from: { x: this.x, y: this.y },
         to: { x: this.x + this.width, y: this.y },
         color: this.color,
-        blanking: true
+        blankBefore: true
       }).draw(resolution),
 
       ...new Wait({
@@ -82,15 +82,9 @@ export class Rect extends Shape {
       ...new Line({
         from: { x: this.x, y: this.y + this.height },
         to: { x: this.x, y: this.y },
-        color: this.color
-      }).draw(resolution),
-
-      ...new Wait({
-        x: this.x,
-        y: this.y,
         color: this.color,
-        amount: MAX_WAIT_AMOUNT
-      }).draw()
+        blankAfter: true
+      }).draw(resolution)
     ];
   }
 }

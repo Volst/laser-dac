@@ -54,7 +54,8 @@ import { Scene, Rect, Path, Line } from '@ether-dream/draw';
         y: 0.3
       },
       color: [1, 1, 1],
-      blanking: true
+      blankBefore: true,
+      blankAfter: true
     });
     scene.add(line);
 

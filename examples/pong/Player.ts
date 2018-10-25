@@ -48,6 +48,7 @@ export class Player {
         y: this.y
       },
       color: [0, 1, 0],
-      blanking: true
+      blankBefore: true,
+      blankAfter: true
     });
 }

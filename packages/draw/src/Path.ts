@@ -193,7 +193,8 @@ export class Path extends Shape {
             commandPoints = new Line({
               from: { x: prevX, y: prevY },
               to: { x: lastMoveCommand.x, y: lastMoveCommand.y },
-              color: this.color
+              color: this.color,
+              blankAfter: true
             }).draw(resolution);
             prevX = lastMoveCommand.x;
             prevY = lastMoveCommand.y;

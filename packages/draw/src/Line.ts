@@ -1,7 +1,7 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Wait } from './Wait';
-import { BLANKING_AMOUNT } from './constants';
+import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 
 interface Coordinates {
   x: number;
@@ -12,21 +12,24 @@ interface LineOptions {
   from: Coordinates;
   to: Coordinates;
   color: Color;
-  blanking?: boolean;
+  blankBefore?: boolean;
+  blankAfter?: boolean;
 }
 
 export class Line extends Shape {
   from: Coordinates;
   to: Coordinates;
   color: Color;
-  blanking: boolean;
+  blankBefore: boolean;
+  blankAfter: boolean;
 
   constructor(options: LineOptions) {
     super();
     this.from = options.from;
     this.to = options.to;
     this.color = options.color;
-    this.blanking = options.blanking || false;
+    this.blankBefore = options.blankBefore || false;
+    this.blankAfter = options.blankAfter || false;
   }
 
   draw(resolution: number) {
@@ -38,7 +41,7 @@ export class Line extends Shape {
 
     let points: Point[] = [];
 
-    if (this.blanking) {
+    if (this.blankBefore) {
       // Add blanking points.
       points = new Wait({
         x: this.from.x,
@@ -57,6 +60,20 @@ export class Line extends Shape {
         )
       );
     }
+
+    if (this.blankAfter) {
+      // Add blanking points.
+      points = [
+        ...points,
+        ...new Wait({
+          x: this.to.x,
+          y: this.to.y,
+          color: this.color,
+          amount: MAX_WAIT_AMOUNT / 2
+        }).draw()
+      ];
+    }
+
     return points;
   }
 }
