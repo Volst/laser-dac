@@ -1,5 +1,5 @@
 import { Rect } from '@ether-dream/draw';
-import { AREA_HEIGHT, AREA_WIDTH } from './index';
+import { AREA_HEIGHT, AREA_WIDTH } from './renderer';
 import { PADDLE_WIDTH } from './Player';
 import Victor = require('victor');
 
