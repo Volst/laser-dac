@@ -8,6 +8,7 @@ class SimulatorOptions {
     this.numberOfPoints = '';
     this.totalPoints = '';
     this.showBlanking = false;
+    this.showDots = false;
   }
 }
 
@@ -16,6 +17,7 @@ var gui = new dat.GUI();
 gui.add(options, 'positionDelay', 0, 10).step(1);
 gui.add(options, 'afterglowAmount', 0, 300);
 gui.add(options, 'showBlanking');
+gui.add(options, 'showDots');
 gui.add(options, 'numberOfPoints').listen();
 gui.add(options, 'totalPoints').listen();
 gui.width = 300;
@@ -83,18 +85,25 @@ function render() {
       calculateRelativePosition(previousPoint.x) * canvas.width,
       calculateRelativePosition(previousPoint.y) * canvas.height
     );
-    ctx.lineTo(
-      calculateRelativePosition(point.x) * canvas.width,
-      calculateRelativePosition(point.y) * canvas.height
-    );
+    const canvasPointX = calculateRelativePosition(point.x) * canvas.width;
+    const canvasPointY = calculateRelativePosition(point.y) * canvas.height;
+    const canvasColor = `rgb(${calculateColor(color.r)}, ${calculateColor(
+      color.g
+    )}, ${calculateColor(color.b)})`;
+    ctx.lineTo(canvasPointX, canvasPointY);
+
     if (isBlanking) {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
     } else {
-      ctx.strokeStyle = `rgb(${calculateColor(color.r)}, ${calculateColor(
-        color.g
-      )}, ${calculateColor(color.b)})`;
+      ctx.strokeStyle = canvasColor;
     }
     ctx.stroke();
+    if (options.showDots && !isBlanking) {
+      ctx.fillStyle = canvasColor;
+      ctx.beginPath();
+      ctx.arc(canvasPointX, canvasPointY, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
   });
   requestAnimationFrame(render);
 }
