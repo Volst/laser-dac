@@ -1,26 +1,47 @@
 import { Simulator } from '@ether-dream/simulator';
-import { Scene, IldaFont, loadIldaFile } from '@ether-dream/draw';
+import { Scene, IldaFont, loadIldaFile, Timeline } from '@ether-dream/draw';
 import * as path from 'path';
 import * as mapping from './fontMap.json';
 
 const fontFile = loadIldaFile(path.resolve(__dirname, './font.ild'));
+
+function renderText(text: string) {
+  return () =>
+    new IldaFont({
+      file: fontFile,
+      mapping,
+      text,
+      x: 0,
+      size: 0.5,
+      fontWidth: 0.3
+    });
+}
+
+const textAnimation = new Timeline({
+  loop: true,
+  items: [
+    {
+      duration: 2000,
+      render: renderText('Play')
+    },
+    {
+      duration: 2000,
+      render: renderText('This')
+    },
+    {
+      duration: 2000,
+      render: renderText('Game')
+    }
+  ]
+});
 
 (async () => {
   const simulator = new Simulator();
   await simulator.start({ device: !!process.env.DEVICE });
 
   const scene = new Scene();
-
   function renderFrame() {
-    const hey = new IldaFont({
-      file: fontFile,
-      mapping,
-      text: 'Hey',
-      x: 0,
-      size: 1,
-      fontWidth: 0.3
-    });
-    scene.add(hey);
+    scene.add(textAnimation);
   }
 
   scene.start(renderFrame);
