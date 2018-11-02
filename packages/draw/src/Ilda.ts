@@ -57,7 +57,7 @@ export class Ilda extends Shape {
 
 export function loadIldaFile(path: string) {
   const buffer = fs.readFileSync(path);
-  const byteArray = Array.prototype.slice.call(buffer, 0);
+  const byteArray = Array.prototype.slice.call(buffer, 0) as number[];
 
   return IldaReader.fromByteArray(byteArray);
 }
