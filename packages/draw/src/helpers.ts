@@ -1,4 +1,5 @@
 import { MAX_VALUE } from './constants';
+import { Point } from './Point';
 
 export function relativeToPosition(n: number) {
   return Math.floor(n * MAX_VALUE - MAX_VALUE / 2) * -1;
@@ -37,4 +38,8 @@ export function flatten(arr: any[], result: any[] = []) {
     }
   }
   return result;
+}
+
+export function isBlankingPoint(point: Point) {
+  return !point.r && !point.g && !point.b;
 }

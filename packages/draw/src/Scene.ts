@@ -11,6 +11,8 @@ interface SceneOptions {
   resolution?: number;
 }
 
+type TransformFn = (points: Point[]) => Point[];
+
 export class Scene {
   points: Point[] = [];
   resolution: number;
@@ -20,11 +22,12 @@ export class Scene {
     this.resolution = (options && options.resolution) || DEFAULT_RESOLUTION;
   }
 
-  add(...shapes: Shape[]) {
-    shapes.forEach(shape => {
-      const points = shape.draw(this.resolution);
-      this.points = this.points.concat(points);
-    });
+  add(shape: Shape, transformer?: TransformFn) {
+    let points = shape.draw(this.resolution);
+    if (transformer) {
+      points = transformer(points);
+    }
+    this.points = this.points.concat(points);
   }
 
   reset() {
