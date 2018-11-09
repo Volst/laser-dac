@@ -1,6 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`draw two shapes on the scene 1`] = `
+exports[`draw a shape and use a transformer 1`] = `
+Array [
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": 26224,
+    "y": 26214,
+  },
+  Point {
+    "b": 0,
+    "g": 0,
+    "r": 0,
+    "x": 19671,
+    "y": 19661,
+  },
+]
+`;
+
+exports[`draw a shape on the scene 1`] = `
 Array [
   Point {
     "b": 0,
@@ -15,20 +34,6 @@ Array [
     "r": 0,
     "x": 19661,
     "y": 19661,
-  },
-  Point {
-    "b": 0,
-    "g": 0,
-    "r": 0,
-    "x": -0,
-    "y": -0,
-  },
-  Point {
-    "b": 0,
-    "g": 0,
-    "r": 0,
-    "x": -6553,
-    "y": -6553,
   },
 ]
 `;
