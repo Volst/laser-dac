@@ -1,5 +1,5 @@
-import { Shape } from '@ether-dream/draw/src/Shape';
-import { Point, Color } from '@ether-dream/draw/src/Point';
+import { Shape } from './Shape';
+import { Point, Color } from './Point';
 import Bezier = require('bezier-js');
 
 interface BezierCoordinates {

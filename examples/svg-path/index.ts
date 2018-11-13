@@ -1,5 +1,5 @@
 import { Simulator } from '@ether-dream/simulator';
-import { Scene, Svg, loadSvgFile } from '@ether-dream/draw/src';
+import { Scene, Svg, loadSvgFile } from '@ether-dream/draw';
 import * as path from 'path';
 
 const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
