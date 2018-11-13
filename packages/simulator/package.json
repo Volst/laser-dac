@@ -19,6 +19,9 @@
     "dist",
     "public"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@ether-dream/core": "file:../core",
     "@types/express": "^4.16.0",
