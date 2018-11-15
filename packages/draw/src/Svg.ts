@@ -64,6 +64,7 @@ export class Svg extends Shape {
     const viewBox = this.parseViewBox(String(this.file.attributes.viewBox));
     const aspectRatio = viewBox.width / viewBox.height;
 
+    this.pathNodes = [];
     this.nodeWalker(this.file);
 
     const points = this.pathNodes.map(node =>
