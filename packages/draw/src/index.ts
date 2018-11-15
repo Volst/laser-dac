@@ -6,4 +6,5 @@ export { Ilda, loadIldaFile } from './Ilda';
 export { IldaFont } from './IldaFont';
 export { Timeline } from './Timeline';
 export { rotate } from './transformers/rotate';
+export { distort } from './transformers/distort';
 export { Svg, loadSvgFile } from './Svg';
