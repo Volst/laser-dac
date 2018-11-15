@@ -9,6 +9,11 @@ function sendMessage(msg) {
 }
 
 function startMoving(e) {
+  if (!isTouching) {
+    doubletap();
+  }
+
+  isTouching = true;
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const clientX = e.touches[0].clientX;
@@ -28,6 +33,7 @@ function startMoving(e) {
 }
 
 function stopMoving() {
+  isTouching = false;
   sendMessage({
     type: 'REMOVE'
   });
@@ -40,18 +46,28 @@ function triggerDoublePress(e) {
   });
 }
 
+var isTouching = false;
+
+var mylatesttap;
+function doubletap() {
+  var now = new Date().getTime();
+  var timesince = now - mylatesttap;
+  if (timesince < 250 && timesince > 0) {
+    triggerDoublePress();
+  }
+  mylatesttap = new Date().getTime();
+}
+
 ws.onopen = function() {
   console.log('Websocket connection opened.');
 
   document.removeEventListener('touchmove', startMoving);
   document.removeEventListener('touchstart', startMoving);
   document.removeEventListener('touchend', startMoving);
-  document.removeEventListener('dblclick', triggerDoublePress);
 
   document.addEventListener('touchmove', startMoving, false);
   document.addEventListener('touchstart', startMoving, false);
   document.addEventListener('touchend', stopMoving, false);
-  document.addEventListener('dblclick', triggerDoublePress, false);
 };
 
 const uniqueId = uuid();

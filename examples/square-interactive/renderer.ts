@@ -55,7 +55,6 @@ export class Renderer {
     function renderFrame() {
       self.activeClients.forEach((client, i) => {
         const rect = new Rect({
-          // Super ugly hack to make the first client a green box, second a red box and third a blue box.
           color: [1, 0, 0],
           x: client.x,
           y: client.y,
@@ -89,7 +88,7 @@ export class Renderer {
       }
     }
 
-    scene.start(renderFrame);
-    simulator.stream(scene);
+    scene.start(renderFrame, 60);
+    simulator.stream(scene, 25000);
   }
 }
