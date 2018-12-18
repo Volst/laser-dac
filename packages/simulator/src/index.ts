@@ -2,7 +2,8 @@ import {
   EtherDream,
   EtherConn,
   StreamSourceFn,
-  IPoint
+  IPoint,
+  IDevice
 } from '@ether-dream/core';
 import { Server as WebSocketServer } from 'ws';
 import { throttle } from './helpers';
@@ -53,13 +54,24 @@ export class Simulator {
     }
   }
 
-  async startDevice() {
-    console.log('Looking for EtherDream hosts...');
-    const devices = await EtherDream.findFirst();
-    if (!devices.length) {
-      throw new Error('No Etherdream device found on network.');
+  async searchDevices() {
+    const manualAddress = process.env.ETHER_ADDRESS;
+    if (manualAddress) {
+      console.log('Manual EtherDream address given,', manualAddress);
+      const [ip, port] = manualAddress.split(':');
+      return { ip, port: parseInt(port) } as IDevice;
+    } else {
+      console.log('Looking for EtherDream hosts...');
+      const devices = await EtherDream.findFirst();
+      if (!devices.length) {
+        throw new Error('No Etherdream device found on network.');
+      }
+      return devices[0];
     }
-    const device = devices[0];
+  }
+
+  async startDevice() {
+    const device = await this.searchDevices();
     const conn = await EtherDream.connect(
       device.ip,
       device.port
