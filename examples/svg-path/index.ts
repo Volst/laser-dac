@@ -1,5 +1,5 @@
 import { Simulator } from '@ether-dream/simulator';
-import { Scene, Svg, loadSvgFile, distort } from '@ether-dream/draw';
+import { Scene, Svg, loadSvgFile } from '@ether-dream/draw';
 import * as path from 'path';
 
 const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
@@ -15,20 +15,12 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
   const logo = new Svg({
     file: logoFile,
     x: 0,
-    y: 0.3
+    y: 0.3,
+    size: 0.6
   });
 
   function renderFrame() {
-    const random = new Date().getMilliseconds() / 1000 / 4;
-    scene.add(
-      logo,
-      distort(
-        { x: random, y: 0.1 },
-        { x: 0.9, y: 0.1 },
-        { x: 0.9, y: 0.9 },
-        { x: 0.2 - random, y: random + 0.5 }
-      )
-    );
+    scene.add(logo);
   }
 
   scene.start(renderFrame);

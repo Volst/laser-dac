@@ -12,11 +12,13 @@ interface SvgOptions {
   y: number;
   file: Node;
   color?: Color;
+  size?: number;
 }
 
 export class Svg extends Shape {
   x: number;
   y: number;
+  size: number;
   file: Node;
   color: Color;
   private pathNodes: Node[] = [];
@@ -27,6 +29,7 @@ export class Svg extends Shape {
     this.y = options.y;
     this.file = options.file;
     this.color = options.color || DEFAULT_COLOR;
+    this.size = options.size || 1;
   }
 
   parseViewBox(raw: string) {
@@ -63,6 +66,8 @@ export class Svg extends Shape {
   draw(resolution: number) {
     const viewBox = this.parseViewBox(String(this.file.attributes.viewBox));
     const aspectRatio = viewBox.width / viewBox.height;
+    const width = viewBox.width / this.size;
+    const height = (aspectRatio * viewBox.height) / this.size;
 
     this.pathNodes = [];
     this.nodeWalker(this.file);
@@ -73,8 +78,8 @@ export class Svg extends Shape {
         color: this.parseHexToRelativeColor(node.attributes.fill as string),
         x: this.x,
         y: this.y,
-        width: viewBox.width,
-        height: aspectRatio * viewBox.height
+        width,
+        height
       }).draw(resolution)
     );
 
