@@ -1,5 +1,5 @@
 import { Point } from '../Point';
-import { isBlankingPoint } from '../helpers';
+import { isBlankingPoint, relativeToPosition } from '../helpers';
 
 function rotateXY(
   cx: number,
@@ -46,7 +46,9 @@ function finderCenterPoint(points: Point[]): [number, number] {
 
 export function rotate(angle: number, pivotPoint?: [number, number]) {
   return function(points: Point[]) {
-    const pivot = pivotPoint || finderCenterPoint(points);
+    const pivot = pivotPoint
+      ? pivotPoint.map(n => relativeToPosition(n))
+      : finderCenterPoint(points);
     const pivotX = pivot[0];
     const pivotY = pivot[1];
     return points.map(point => {
