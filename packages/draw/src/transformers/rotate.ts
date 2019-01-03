@@ -44,14 +44,14 @@ function finderCenterPoint(points: Point[]): [number, number] {
   return [centerX, centerY];
 }
 
-export function rotate(angle: number) {
+export function rotate(angle: number, pivotPoint?: [number, number]) {
   return function(points: Point[]) {
-    const centerPoints = finderCenterPoint(points);
-    const centerX = centerPoints[0];
-    const centerY = centerPoints[1];
+    const pivot = pivotPoint || finderCenterPoint(points);
+    const pivotX = pivot[0];
+    const pivotY = pivot[1];
     return points.map(point => {
-      // Would love to use `const [centerX, centerY]` but this has negative perf implications with V8
-      const newPoints = rotateXY(centerX, centerY, point.x, point.y, angle);
+      // Would love to use `const [pivotX, pivotY]` but this has negative perf implications with V8
+      const newPoints = rotateXY(pivotX, pivotY, point.x, point.y, angle);
       point.x = newPoints[0];
       point.y = newPoints[1];
       return point;
