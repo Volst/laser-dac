@@ -4,11 +4,12 @@ import dat from './dat.gui.js';
 class SimulatorOptions {
   constructor() {
     this.positionDelay = 0;
-    this.afterglowAmount = 50;
+    this.afterglowAmount = 30;
     this.numberOfPoints = '';
     this.totalPoints = '';
     this.showBlanking = false;
     this.showDots = false;
+    this.forceTotalRender = true;
   }
 }
 
@@ -18,6 +19,7 @@ gui.add(options, 'positionDelay', 0, 10).step(1);
 gui.add(options, 'afterglowAmount', 0, 300);
 gui.add(options, 'showBlanking');
 gui.add(options, 'showDots');
+gui.add(options, 'forceTotalRender');
 gui.add(options, 'numberOfPoints').listen();
 gui.add(options, 'totalPoints').listen();
 gui.width = 300;
@@ -115,7 +117,12 @@ ws.open('ws://' + host + ':8080');
 ws.onmessage = function(event) {
   const payload = JSON.parse(event.data);
   if (payload.type === 'POINTS') {
-    points = payload.data;
+    if (options.forceTotalRender) {
+      points = points.concat(payload.data);
+      points = points.slice(Math.max(points.length - options.totalPoints, 0));
+    } else {
+      points = payload.data;
+    }
     return;
   }
   if (payload.type === 'POINTS_INFO') {

@@ -146,6 +146,6 @@ export class Simulator {
         data: { numpoints, totalPoints }
       });
     },
-    500
+    400
   );
 }
