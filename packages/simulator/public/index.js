@@ -60,7 +60,9 @@ function render() {
   if (lastRenderTime) {
     const frameInterval = currentTime - lastRenderTime;
     // We add variable afterglow depending on the time until the last render.
-    ctx.fillStyle = `rgba(0, 0, 0, ${frameInterval / options.afterglowAmount})`;
+    ctx.fillStyle = `rgba(0, 0, 0, ${
+      options.afterglowAmount ? frameInterval / options.afterglowAmount : 1
+    })`;
   }
   lastRenderTime = currentTime;
 
