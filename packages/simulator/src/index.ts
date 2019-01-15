@@ -106,6 +106,7 @@ export class Simulator {
     pointsRate: number = DEFAULT_POINTS_RATE
   ) {
     let currentPointId = 0;
+    let lastPoint: IPoint;
     this.streamPoints(pointsRate, (numpoints, callback) => {
       const pointsBuffer = scene.points;
       // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
@@ -114,6 +115,19 @@ export class Simulator {
       const streamPoints: IPoint[] = [];
 
       if (pointsBuffer.length) {
+        // Add blanking point if current point has changed.
+        if (
+          lastPoint &&
+          pointsBuffer[currentPointId] &&
+          lastPoint !== pointsBuffer[currentPointId]
+        ) {
+          const point = pointsBuffer[currentPointId];
+          point.r = 0;
+          point.g = 0;
+          point.b = 0;
+          streamPoints.push(point);
+        }
+
         for (var i = 0; i < numpoints; i++) {
           currentPointId++;
           currentPointId %= pointsBuffer.length;
@@ -121,6 +135,7 @@ export class Simulator {
           streamPoints.push(pointsBuffer[currentPointId]);
         }
       }
+      lastPoint = streamPoints[streamPoints.length - 1];
       this.sendPointInfoToSimulator(numpoints, pointsBuffer.length);
       callback(streamPoints);
     });
