@@ -13,6 +13,10 @@ export function relativeToColor(color: number) {
   return Math.floor(MAX_VALUE * color);
 }
 
+export function colorToRelative(color: number) {
+  return color / MAX_VALUE;
+}
+
 const RGB_HEX = /^#?(?:([\da-f]{3})[\da-f]?|([\da-f]{6})(?:[\da-f]{2})?)$/i;
 
 export function hexToRgb(str: string) {
