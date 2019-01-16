@@ -10,6 +10,7 @@ import { throttle } from './helpers';
 import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
+import { BLANKING_AMOUNT } from '@ether-dream/draw/dist/constants';
 
 // When there is no real device, we fake an interval.
 // We've measured how fast the real device streams, which was 4ms.
@@ -109,26 +110,28 @@ export class Simulator {
     let lastPoint: IPoint;
     this.streamPoints(pointsRate, (numpoints, callback) => {
       const pointsBuffer = scene.points;
+      const frameHasChanged =
+        lastPoint &&
+        pointsBuffer[currentPointId] &&
+        lastPoint !== pointsBuffer[currentPointId];
+
       // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
       // So here we limit the points given to the max accepted, and then keep track of where we cut it off (currentPointId).
       // So when this function is invoked again, it starts rendering from that point.
       const streamPoints: IPoint[] = [];
 
       if (pointsBuffer.length) {
-        // Add blanking point if current point has changed.
-        if (
-          lastPoint &&
-          pointsBuffer[currentPointId] &&
-          lastPoint !== pointsBuffer[currentPointId]
-        ) {
-          const point = pointsBuffer[currentPointId];
-          point.r = 0;
-          point.g = 0;
-          point.b = 0;
-          streamPoints.push(point);
+        // Add blanking points on new if current point has changed.
+        if (frameHasChanged) {
+          const { x, y } = pointsBuffer[currentPointId];
+          const point = { x, y, r: 0, g: 0, b: 0 };
+          for (let index = 0; index < BLANKING_AMOUNT; index++) {
+            streamPoints.push(point);
+          }
         }
 
-        for (var i = 0; i < numpoints; i++) {
+        const drawPointsAmount = numpoints - streamPoints.length;
+        for (var i = 0; i < drawPointsAmount; i++) {
           currentPointId++;
           currentPointId %= pointsBuffer.length;
 
