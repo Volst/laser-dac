@@ -1,6 +1,6 @@
 {
   "name": "@ether-dream/draw",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Ether-Dream laser drawing tools inspired by the canvas API",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
