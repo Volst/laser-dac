@@ -243,7 +243,7 @@ export class EtherConn {
           callback();
         }
       } else {
-        callback();
+        throw new Error('Got invalid response from Ether Dream');
       }
     });
   }
