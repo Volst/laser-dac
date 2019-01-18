@@ -1,6 +1,6 @@
 {
   "name": "@ether-dream/simulator",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Ether-Dream laser DAC simulator",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
