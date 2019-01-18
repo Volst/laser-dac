@@ -1,20 +1,20 @@
-import { MAX_VALUE } from './constants';
+import { XY_RESOLUTION, COLOR_RESOLUTION } from './constants';
 import { Point } from './Point';
 
 export function relativeToPosition(n: number) {
-  return Math.floor(n * MAX_VALUE - MAX_VALUE / 2) * -1;
+  return Math.floor(n * XY_RESOLUTION - XY_RESOLUTION / 2) * -1;
 }
 
 export function positionToRelative(n: number) {
-  return -(2 * n - MAX_VALUE) / (MAX_VALUE * 2);
+  return -(2 * n - XY_RESOLUTION) / (XY_RESOLUTION * 2);
 }
 
 export function relativeToColor(color: number) {
-  return Math.floor(MAX_VALUE * color);
+  return Math.floor(COLOR_RESOLUTION * color);
 }
 
 export function colorToRelative(color: number) {
-  return color / MAX_VALUE;
+  return color / COLOR_RESOLUTION;
 }
 
 const RGB_HEX = /^#?(?:([\da-f]{3})[\da-f]?|([\da-f]{6})(?:[\da-f]{2})?)$/i;

@@ -5,6 +5,8 @@ class SimulatorOptions {
   constructor() {
     this.positionDelay = 0;
     this.afterglowAmount = 30;
+    this.xyResolution = 65535;
+    this.colorResolution = 1023;
     this.numberOfPoints = '';
     this.totalPoints = '';
     this.showBlanking = false;
@@ -20,6 +22,8 @@ gui.add(options, 'afterglowAmount', 0, 300);
 gui.add(options, 'showBlanking');
 gui.add(options, 'showDots');
 gui.add(options, 'forceTotalRender');
+gui.add(options, 'xyResolution', 0, 65535);
+gui.add(options, 'colorResolution', 0, 1023);
 gui.add(options, 'numberOfPoints').listen();
 gui.add(options, 'totalPoints').listen();
 gui.width = 300;
@@ -27,8 +31,6 @@ gui.width = 300;
 let points = [];
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const MAX_VALUE = 65535;
-const HALF_MAX_VALUE = MAX_VALUE / 2;
 let lastRenderTime;
 
 function handleResize() {
@@ -48,11 +50,11 @@ window
   .addListener(handleResize);
 
 function calculateRelativePosition(position) {
-  return 1 - (position + HALF_MAX_VALUE) / MAX_VALUE;
+  return 1 - (position + options.xyResolution / 2) / options.xyResolution;
 }
 
 function calculateColor(raw) {
-  return Math.round((raw / MAX_VALUE) * 255);
+  return Math.round((raw / options.colorResolution) * 255);
 }
 
 function render() {

@@ -1,4 +1,4 @@
-import { MAX_VALUE } from '../constants';
+import { COLOR_RESOLUTION } from '../constants';
 
 export const defaultColors = [
   '#F00',
@@ -95,8 +95,8 @@ export function parseColor(st: any) {
   }
   const rgb = hexToRgb(hex);
   return {
-    r: Math.floor(MAX_VALUE * (rgb.r / 255)),
-    g: Math.floor(MAX_VALUE * (rgb.g / 255)),
-    b: Math.floor(MAX_VALUE * (rgb.b / 255))
+    r: Math.floor(COLOR_RESOLUTION * (rgb.r / 255)),
+    g: Math.floor(COLOR_RESOLUTION * (rgb.g / 255)),
+    b: Math.floor(COLOR_RESOLUTION * (rgb.b / 255))
   };
 }
