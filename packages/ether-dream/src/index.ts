@@ -1,6 +1,7 @@
 import * as dgram from 'dgram';
 import { EtherConn, StreamSourceFn, IPoint } from './EtherConn';
 import { twohex } from './parse';
+import { Device } from '@laser-dac/core';
 
 const DEFAULT_POINTS_RATE = 30000;
 const BLANKING_AMOUNT = 24;
@@ -13,7 +14,7 @@ export interface IDevice {
   sw_revision: number;
 }
 
-export class EtherDream {
+export class EtherDream extends Device {
   connection?: EtherConn;
 
   static _find = function(limit: number, timeout: number): Promise<IDevice[]> {
@@ -112,6 +113,13 @@ export class EtherDream {
       );
     }
     this.connection = conn;
+    return true;
+  }
+
+  stop() {
+    if (this.connection) {
+      this.connection.sendStop(() => null);
+    }
   }
 
   stream(

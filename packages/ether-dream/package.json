@@ -31,7 +31,7 @@
     "access": "public"
   },
   "dependencies": {
-    "pvec": "^1.1.0"
+    "@laser-dac/core": "^0.2.0"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",

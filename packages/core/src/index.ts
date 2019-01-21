@@ -1,6 +1,6 @@
 const DEFAULT_POINTS_RATE = 30000;
 
-export interface IPoint {
+export interface Point {
   x: number;
   y: number;
   r: number;
@@ -8,11 +8,20 @@ export interface IPoint {
   b: number;
 }
 
-export class DAC {
-  // TODO dont use any
-  devices: any[] = [];
+export interface Scene {
+  points: Point[];
+}
 
-  use(device: any) {
+export abstract class Device {
+  abstract start(): Promise<boolean>;
+  abstract stop(): void;
+  abstract stream(scene: Scene, pointsRate: number): void;
+}
+
+export class DAC {
+  devices: Device[] = [];
+
+  use(device: Device) {
     this.devices.push(device);
   }
 
@@ -22,10 +31,7 @@ export class DAC {
     }
   }
 
-  stream(
-    scene: { points: IPoint[] },
-    pointsRate: number = DEFAULT_POINTS_RATE
-  ) {
+  stream(scene: Scene, pointsRate: number = DEFAULT_POINTS_RATE) {
     for (const device of this.devices) {
       device.stream(scene, pointsRate);
     }

@@ -1,5 +1,5 @@
 import { Server as WebSocketServer } from 'ws';
-import { IPoint } from '@laser-dac/core';
+import { Point, Device, Scene } from '@laser-dac/core';
 import { throttle } from './helpers';
 import * as express from 'express';
 import * as path from 'path';
@@ -16,11 +16,11 @@ const PORT = 8080;
 const DEFAULT_POINTS_RATE = 30000;
 const BLANKING_AMOUNT = 24;
 
-export class Simulator {
+export class Simulator extends Device {
   server?: http.Server;
   wss?: WebSocketServer;
 
-  start() {
+  start(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.server = http.createServer();
       const app = express();
@@ -41,12 +41,9 @@ export class Simulator {
     }
   }
 
-  stream(
-    scene: { points: IPoint[] },
-    pointsRate: number = DEFAULT_POINTS_RATE
-  ) {
+  stream(scene: Scene, pointsRate: number = DEFAULT_POINTS_RATE) {
     let currentPointId = 0;
-    let lastPoint: IPoint;
+    let lastPoint: Point;
     const numpoints = REQUESTED_POINTS_COUNT;
     setInterval(() => {
       const pointsBuffer = scene.points;
@@ -58,7 +55,7 @@ export class Simulator {
       // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
       // So here we limit the points given to the max accepted, and then keep track of where we cut it off (currentPointId).
       // So when this function is invoked again, it starts rendering from that point.
-      const streamPoints: IPoint[] = [];
+      const streamPoints: Point[] = [];
 
       if (pointsBuffer.length) {
         // Add blanking points on new if current point has changed.
