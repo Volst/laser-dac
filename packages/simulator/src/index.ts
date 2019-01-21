@@ -13,8 +13,6 @@ const STREAM_INTERVAL = 4;
 // Only used for the simulator!
 const REQUESTED_POINTS_COUNT = 500;
 const PORT = 8080;
-const DEFAULT_POINTS_RATE = 30000;
-const BLANKING_AMOUNT = 24;
 
 export class Simulator extends Device {
   server?: http.Server;
@@ -41,43 +39,32 @@ export class Simulator extends Device {
     }
   }
 
-  stream(scene: Scene, pointsRate: number = DEFAULT_POINTS_RATE) {
-    let currentPointId = 0;
-    let lastPoint: Point;
-    const numpoints = REQUESTED_POINTS_COUNT;
-    setInterval(() => {
-      const pointsBuffer = scene.points;
-      const frameHasChanged =
-        lastPoint &&
-        pointsBuffer[currentPointId] &&
-        lastPoint !== pointsBuffer[currentPointId];
+  stream(scene: Scene, pointsRate?: number) {
+    const self = this;
+    const frameBuffer: Point[] = [];
 
-      // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
-      // So here we limit the points given to the max accepted, and then keep track of where we cut it off (currentPointId).
-      // So when this function is invoked again, it starts rendering from that point.
-      const streamPoints: Point[] = [];
-
-      if (pointsBuffer.length) {
-        // Add blanking points on new if current point has changed.
-        if (frameHasChanged) {
-          const { x, y } = pointsBuffer[currentPointId];
-          const point = { x, y, r: 0, g: 0, b: 0 };
-          for (let index = 0; index < BLANKING_AMOUNT; index++) {
-            streamPoints.push(point);
-          }
+    function innerStream(
+      numpoints: number,
+      pointcallback: (points: Point[]) => void
+    ) {
+      if (frameBuffer.length < numpoints) {
+        const points = scene.points;
+        for (let i = 0; i < points.length; i++) {
+          frameBuffer.push(points[i]);
         }
-
-        const drawPointsAmount = numpoints - streamPoints.length;
-        for (var i = 0; i < drawPointsAmount; i++) {
-          currentPointId++;
-          currentPointId %= pointsBuffer.length;
-
-          streamPoints.push(pointsBuffer[currentPointId]);
-        }
+        // get another frame if we need to...
+        setTimeout(innerStream.bind(self, numpoints, pointcallback), 0);
+        self.sendPointInfoToSimulator(numpoints, points.length);
+      } else {
+        const points = frameBuffer.splice(0, numpoints);
+        pointcallback(points);
       }
-      lastPoint = streamPoints[streamPoints.length - 1];
-      this.sendPointsToSimulator(streamPoints);
-      this.sendPointInfoToSimulator(numpoints, pointsBuffer.length);
+    }
+
+    setInterval(() => {
+      innerStream(REQUESTED_POINTS_COUNT, streamPoints => {
+        this.sendPointsToSimulator(streamPoints);
+      });
     }, STREAM_INTERVAL);
   }
 

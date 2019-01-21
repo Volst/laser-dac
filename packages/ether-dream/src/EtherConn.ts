@@ -44,7 +44,6 @@ export class EtherConn {
   preparesent = false;
   valid = true;
   rate?: number;
-  // TODO: add more exact typing
   streamSource?: StreamSourceFn;
   frameSource?: FrameSourceFn;
   frameBuffer?: IPoint[];
@@ -311,6 +310,7 @@ export class EtherConn {
     this.frameBuffer = [];
 
     function innerStream(numpoints: number, pointcallback: Function) {
+      console.log({ numpoints });
       if (_this.frameBuffer!.length < numpoints) {
         _this.frameSource!(function(points: IPoint[]) {
           for (let i = 0; i < points.length; i++) {
