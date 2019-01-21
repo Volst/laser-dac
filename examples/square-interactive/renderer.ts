@@ -1,4 +1,6 @@
+import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, Rect, loadIldaFile, Ilda } from '@laser-dac/draw';
 import * as path from 'path';
 
@@ -45,8 +47,12 @@ export class Renderer {
   }
 
   async start() {
-    const simulator = new Simulator();
-    await simulator.start({ device: !!process.env.DEVICE });
+    const dac = new DAC();
+    dac.use(new Simulator());
+    if (process.env.DEVICE) {
+      dac.use(new EtherDream());
+    }
+    await dac.start();
 
     const scene = new Scene();
     const self = this;
@@ -89,6 +95,6 @@ export class Renderer {
     }
 
     scene.start(renderFrame, 60);
-    simulator.stream(scene, 25000);
+    dac.stream(scene, 25000);
   }
 }

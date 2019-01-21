@@ -1,9 +1,15 @@
+import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, Rect, Path, Line } from '@laser-dac/draw';
 
 (async () => {
-  const simulator = new Simulator();
-  await simulator.start({ device: !!process.env.DEVICE });
+  const dac = new DAC();
+  dac.use(new Simulator());
+  if (process.env.DEVICE) {
+    dac.use(new EtherDream());
+  }
+  await dac.start();
 
   const scene = new Scene({
     resolution: 500
@@ -64,5 +70,5 @@ import { Scene, Rect, Path, Line } from '@laser-dac/draw';
   }
 
   scene.start(renderFrame);
-  simulator.stream(scene);
+  dac.stream(scene);
 })();
