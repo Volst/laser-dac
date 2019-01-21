@@ -4,7 +4,6 @@ import { twohex } from './parse';
 import { Device } from '@laser-dac/core';
 
 const DEFAULT_POINTS_RATE = 30000;
-const BLANKING_AMOUNT = 24;
 
 export interface IDevice {
   ip: string;
@@ -129,49 +128,8 @@ export class EtherDream extends Device {
     if (!this.connection) {
       throw new Error('Call start() first');
     }
-    let currentPointId = 0;
-    let lastPoint: IPoint;
-    // TODO temporary code
-    if (process.env.ETHER_DREAM_EXP) {
-      console.log('Engaging in Ether Dream experimental code!');
-      this.connection.streamFrames(pointsRate, callback => {
-        callback(scene.points);
-      });
-      return;
-    }
-    // TODO: this code is duplicated in the simulator package. We should really fix this.
-    this.connection.streamPoints(pointsRate, (numpoints, callback) => {
-      const pointsBuffer = scene.points;
-      const frameHasChanged =
-        lastPoint &&
-        pointsBuffer[currentPointId] &&
-        lastPoint !== pointsBuffer[currentPointId];
-
-      // The Ether Dream device can only render a given number of points (numpoints), in practice max 1799.
-      // So here we limit the points given to the max accepted, and then keep track of where we cut it off (currentPointId).
-      // So when this function is invoked again, it starts rendering from that point.
-      const streamPoints: IPoint[] = [];
-
-      if (pointsBuffer.length) {
-        // Add blanking points on new if current point has changed.
-        if (frameHasChanged) {
-          const { x, y } = pointsBuffer[currentPointId];
-          const point = { x, y, r: 0, g: 0, b: 0 };
-          for (let index = 0; index < BLANKING_AMOUNT; index++) {
-            streamPoints.push(point);
-          }
-        }
-
-        const drawPointsAmount = numpoints - streamPoints.length;
-        for (var i = 0; i < drawPointsAmount; i++) {
-          currentPointId++;
-          currentPointId %= pointsBuffer.length;
-
-          streamPoints.push(pointsBuffer[currentPointId]);
-        }
-      }
-      lastPoint = streamPoints[streamPoints.length - 1];
-      callback(streamPoints);
+    this.connection.streamFrames(pointsRate, callback => {
+      callback(scene.points);
     });
   }
 }
