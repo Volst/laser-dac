@@ -1,5 +1,5 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, Ilda, loadIldaFile } from '@ether-dream/draw';
+import { Simulator } from '@laser-dac/simulator';
+import { Scene, Ilda, loadIldaFile } from '@laser-dac/draw';
 import * as path from 'path';
 
 const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));

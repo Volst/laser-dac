@@ -102,7 +102,7 @@ const ilda = new Ilda({
 scene.add(ilda);
 ```
 
-The `frame` option controls what frame you want to display; it's easy to animate this and play all frames on whatever speed you like. See the [ilda-animation](https://github.com/Volst/ether-dream-tools/tree/master/examples/ilda-animation) example.
+The `frame` option controls what frame you want to display; it's easy to animate this and play all frames on whatever speed you like. See the [ilda-animation](https://github.com/Volst/laser-dac/tree/master/examples/ilda-animation) example.
 
 ### `Svg()`
 

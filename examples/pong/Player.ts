@@ -1,4 +1,4 @@
-import { Line } from '@ether-dream/draw';
+import { Line } from '@laser-dac/draw';
 import { AREA_HEIGHT, AREA_WIDTH } from './renderer';
 
 const GAP = 0.02;

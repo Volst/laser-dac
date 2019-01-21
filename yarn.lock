@@ -18,7 +18,7 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@ether-dream/core@file:packages/core":
+"@laser-dac/core@file:packages/core":
   version "0.1.0"
   dependencies:
     pvec "^1.1.0"
