@@ -2,8 +2,8 @@
 // We need this number as the correct scale values for many parameters.
 // Source: https://github.com/j4cbo/j4cDAC/blob/e592ebcb7c9b6fb521be2005f4b85de54bc04f0f/common/protocol.h
 export const XY_RESOLUTION = parseInt(process.env.XY_RESOLUTION!) || 65535;
-// Ether Dream uses 8-bit integers for color resolution.
-export const COLOR_RESOLUTION = parseInt(process.env.COLOR_RESOLUTION!) || 1023;
+export const COLOR_RESOLUTION =
+  parseInt(process.env.COLOR_RESOLUTION!) || 65535;
 
 // TODO: find out what this does exactly
 export const RESOLUTION = 150;
