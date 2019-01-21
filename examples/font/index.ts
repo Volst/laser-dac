@@ -1,4 +1,6 @@
+import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, IldaFont, loadIldaFile, Timeline } from '@laser-dac/draw';
 import * as path from 'path';
 import * as mapping from './fontMap.json';
@@ -36,8 +38,12 @@ const textAnimation = new Timeline({
 });
 
 (async () => {
-  const simulator = new Simulator();
-  await simulator.start({ device: !!process.env.DEVICE });
+  const dac = new DAC();
+  dac.use(new Simulator());
+  if (process.env.DEVICE) {
+    dac.use(new EtherDream());
+  }
+  await dac.start();
 
   const scene = new Scene();
   function renderFrame() {
@@ -45,5 +51,5 @@ const textAnimation = new Timeline({
   }
 
   scene.start(renderFrame);
-  simulator.stream(scene, 20000);
+  dac.stream(scene, 20000);
 })();

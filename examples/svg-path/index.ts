@@ -9,8 +9,10 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
 (async () => {
   const dac = new DAC();
   dac.use(new Simulator());
-  dac.use(new EtherDream());
-  dac.start();
+  if (process.env.DEVICE) {
+    dac.use(new EtherDream());
+  }
+  await dac.start();
 
   const scene = new Scene({
     resolution: 150

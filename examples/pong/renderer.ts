@@ -1,4 +1,6 @@
+import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, Rect } from '@laser-dac/draw';
 import { Player } from './Player';
 import { Ball } from './Ball';
@@ -24,8 +26,12 @@ export class Renderer {
   }
 
   async start() {
-    const simulator = new Simulator();
-    await simulator.start({ device: !!process.env.DEVICE });
+    const dac = new DAC();
+    dac.use(new Simulator());
+    if (process.env.DEVICE) {
+      dac.use(new EtherDream());
+    }
+    await dac.start();
 
     const ball = new Ball({
       players: {
@@ -55,6 +61,6 @@ export class Renderer {
     }
 
     scene.start(renderFrame, 100);
-    simulator.stream(scene);
+    dac.stream(scene);
   }
 }

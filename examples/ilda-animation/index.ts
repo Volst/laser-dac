@@ -1,12 +1,18 @@
+import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, Ilda, loadIldaFile } from '@laser-dac/draw';
 import * as path from 'path';
 
 const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
 
 (async () => {
-  const simulator = new Simulator();
-  await simulator.start({ device: !!process.env.DEVICE });
+  const dac = new DAC();
+  dac.use(new Simulator());
+  if (process.env.DEVICE) {
+    dac.use(new EtherDream());
+  }
+  await dac.start();
 
   const scene = new Scene();
   let frame = 0;
@@ -25,5 +31,5 @@ const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
   }
 
   scene.start(renderFrame);
-  simulator.stream(scene);
+  dac.stream(scene);
 })();
