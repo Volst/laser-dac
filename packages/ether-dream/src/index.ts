@@ -131,6 +131,14 @@ export class EtherDream extends Device {
     }
     let currentPointId = 0;
     let lastPoint: IPoint;
+    // TODO temporary code
+    if (process.env.ETHER_DREAM_EXP) {
+      console.log('Engaging in Ether Dream experimental code!');
+      this.connection.streamFrames(pointsRate, callback => {
+        callback(scene.points);
+      });
+      return;
+    }
     // TODO: this code is duplicated in the simulator package. We should really fix this.
     this.connection.streamPoints(pointsRate, (numpoints, callback) => {
       const pointsBuffer = scene.points;
