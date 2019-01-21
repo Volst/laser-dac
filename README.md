@@ -1,8 +1,8 @@
-# Ether Dream Tools
+# Laser DAC
 
 [![CircleCI branch](https://img.shields.io/circleci/project/github/Volst/laser-dac/master.svg)](https://circleci.com/gh/Volst/laser-dac)
 
-This is a collection of unofficial tools that contains everything you need to get started with programming on the [Ether Dream](https://ether-dream.com/); a high-performance laser DAC.
+This is a collection of tools that contain everything you need to get started with programming on a laser DAC like the [Ether Dream](https://ether-dream.com/) or [Helios](http://pages.bitlasers.com/helios/) (soon).
 
 Our goal is to make it as easy as possible to develop **interactive laser drawings**. Laser drawing software has existed for years, but making it interactive (e.g. creating a basic webapp using websockets to allow someone to control your laser) is something different!
 
@@ -13,6 +13,10 @@ The tools use Node.js and are published on npm under the `@laser-dac` scope.
 The tools consist of three packages. Click on the title for more information.
 
 ## [`@laser-dac/core`](./packages/core)
+
+This package allows you to easily configure everything, but it does nothing on it's own.
+
+## [`@laser-dac/ether-dream`](./packages/ether-dream)
 
 This package takes care of the communication to the Ether Dream device. It can establish a connection to the Ether Dream and stream points to it.
 

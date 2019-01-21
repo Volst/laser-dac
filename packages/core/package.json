@@ -1,14 +1,15 @@
 {
   "name": "@laser-dac/core",
   "version": "0.1.1",
-  "description": "Ether-Dream laser interface for Node.js",
+  "description": "Control your show laser via Node.js!",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
   "repository": "Volst/laser-dac",
   "keywords": [
-    "etherdream",
     "laser",
-    "ether-dream"
+    "dac",
+    "ether-dream",
+    "helios"
   ],
   "engines": {
     "node": ">=8.0"
