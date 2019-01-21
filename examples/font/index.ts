@@ -1,5 +1,5 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, IldaFont, loadIldaFile, Timeline } from '@ether-dream/draw';
+import { Simulator } from '@laser-dac/simulator';
+import { Scene, IldaFont, loadIldaFile, Timeline } from '@laser-dac/draw';
 import * as path from 'path';
 import * as mapping from './fontMap.json';
 

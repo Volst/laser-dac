@@ -1,10 +1,10 @@
 {
-  "name": "@ether-dream/draw",
+  "name": "@laser-dac/draw",
   "version": "0.1.7",
   "description": "Ether-Dream laser drawing tools inspired by the canvas API",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
-  "repository": "Volst/ether-dream-tools",
+  "repository": "Volst/laser-dac",
   "keywords": [
     "etherdream",
     "laser",

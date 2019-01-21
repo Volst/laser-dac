@@ -1,5 +1,5 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, Rect } from '@ether-dream/draw';
+import { Simulator } from '@laser-dac/simulator';
+import { Scene, Rect } from '@laser-dac/draw';
 import { Player } from './Player';
 import { Ball } from './Ball';
 

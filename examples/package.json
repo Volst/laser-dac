@@ -1,9 +1,9 @@
 {
-  "name": "@ether-dream/examples",
+  "name": "@laser-dac/examples",
   "version": "0.0.3",
   "private": true,
   "license": "MIT",
-  "repository": "Volst/ether-dream-tools",
+  "repository": "Volst/laser-dac",
   "engines": {
     "node": ">=8.0"
   },

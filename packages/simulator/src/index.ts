@@ -1,16 +1,9 @@
-import {
-  EtherDream,
-  EtherConn,
-  StreamSourceFn,
-  IPoint,
-  IDevice
-} from '@ether-dream/core';
 import { Server as WebSocketServer } from 'ws';
+import { IPoint } from '@laser-dac/core';
 import { throttle } from './helpers';
 import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
-import { BLANKING_AMOUNT } from '@ether-dream/draw/dist/constants';
 
 // When there is no real device, we fake an interval.
 // We've measured how fast the real device streams, which was 4ms.
@@ -21,20 +14,13 @@ const STREAM_INTERVAL = 4;
 const REQUESTED_POINTS_COUNT = 500;
 const PORT = 8080;
 const DEFAULT_POINTS_RATE = 30000;
+const BLANKING_AMOUNT = 24;
 
 export class Simulator {
   server?: http.Server;
   wss?: WebSocketServer;
-  deviceConn?: EtherConn;
 
-  async start(opts: { device?: boolean } = {}) {
-    if (opts.device) {
-      await this.startDevice();
-    }
-    await this.startSimulator();
-  }
-
-  startSimulator() {
+  start() {
     return new Promise((resolve, reject) => {
       this.server = http.createServer();
       const app = express();
@@ -49,56 +35,9 @@ export class Simulator {
     });
   }
 
-  stopSimulator() {
+  stop() {
     if (this.server) {
       this.server.close();
-    }
-  }
-
-  async searchDevices() {
-    const manualAddress = process.env.ETHER_ADDRESS;
-    if (manualAddress) {
-      console.log('Manual EtherDream address given,', manualAddress);
-      const [ip, port] = manualAddress.split(':');
-      return { ip, port: parseInt(port) } as IDevice;
-    } else {
-      console.log('Looking for EtherDream hosts...');
-      const devices = await EtherDream.findFirst();
-      if (!devices.length) {
-        throw new Error('No Etherdream device found on network.');
-      }
-      return devices[0];
-    }
-  }
-
-  async startDevice() {
-    const device = await this.searchDevices();
-    const conn = await EtherDream.connect(
-      device.ip,
-      device.port
-    );
-    if (!conn) {
-      throw new Error(
-        `Could not connect to device on ${device.ip}:${device.port}`
-      );
-    }
-    this.deviceConn = conn;
-  }
-
-  streamPoints(rate: number, pointSource: StreamSourceFn) {
-    if (!this.deviceConn) {
-      setInterval(() => {
-        pointSource(REQUESTED_POINTS_COUNT, streamPoints => {
-          this.sendPointsToSimulator(streamPoints);
-        });
-      }, STREAM_INTERVAL);
-    } else {
-      this.deviceConn.streamPoints(rate, (numpoints, callback) => {
-        pointSource(numpoints, streamPoints => {
-          callback(streamPoints);
-          this.sendPointsToSimulator(streamPoints);
-        });
-      });
     }
   }
 
@@ -108,7 +47,8 @@ export class Simulator {
   ) {
     let currentPointId = 0;
     let lastPoint: IPoint;
-    this.streamPoints(pointsRate, (numpoints, callback) => {
+    const numpoints = REQUESTED_POINTS_COUNT;
+    setInterval(() => {
       const pointsBuffer = scene.points;
       const frameHasChanged =
         lastPoint &&
@@ -139,9 +79,9 @@ export class Simulator {
         }
       }
       lastPoint = streamPoints[streamPoints.length - 1];
+      this.sendPointsToSimulator(streamPoints);
       this.sendPointInfoToSimulator(numpoints, pointsBuffer.length);
-      callback(streamPoints);
-    });
+    }, STREAM_INTERVAL);
   }
 
   private sendToSimulator(data: any) {

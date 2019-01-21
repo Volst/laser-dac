@@ -1,4 +1,4 @@
-import { Rect } from '@ether-dream/draw';
+import { Rect } from '@laser-dac/draw';
 import { AREA_HEIGHT, AREA_WIDTH } from './renderer';
 import { PADDLE_WIDTH } from './Player';
 import Victor = require('victor');

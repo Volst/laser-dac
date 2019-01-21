@@ -1,20 +1,10 @@
 {
-  "name": "@ether-dream/core",
+  "name": "@laser-dac/core",
   "version": "0.1.1",
   "description": "Ether-Dream laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
-  "contributors": [
-    {
-      "name": "Per-Olov Jernberg",
-      "email": "possan@possan.se"
-    },
-    {
-      "name": "Matt Stone",
-      "email": "matthew.d.stone@gmail.com"
-    }
-  ],
-  "repository": "Volst/ether-dream-tools",
+  "repository": "Volst/laser-dac",
   "keywords": [
     "etherdream",
     "laser",
@@ -30,9 +20,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "pvec": "^1.1.0"
-  },
+  "dependencies": {},
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",

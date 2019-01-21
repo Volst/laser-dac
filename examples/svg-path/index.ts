@@ -1,12 +1,16 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, Svg, loadSvgFile } from '@ether-dream/draw';
+import { DAC } from '@laser-dac/core';
+import { Simulator } from '@laser-dac/simulator';
+import { EtherDream } from '@laser-dac/ether-dream';
+import { Scene, Svg, loadSvgFile } from '@laser-dac/draw';
 import * as path from 'path';
 
 const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
 
 (async () => {
-  const simulator = new Simulator();
-  await simulator.start({ device: !!process.env.DEVICE });
+  const dac = new DAC();
+  dac.use(new Simulator());
+  dac.use(new EtherDream());
+  dac.start();
 
   const scene = new Scene({
     resolution: 150
@@ -24,5 +28,5 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
   }
 
   scene.start(renderFrame);
-  simulator.stream(scene);
+  dac.stream(scene);
 })();

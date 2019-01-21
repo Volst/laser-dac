@@ -1,85 +1,33 @@
-import * as dgram from 'dgram';
-import { EtherConn, StreamSourceFn, IPoint } from './EtherConn';
-import { twohex } from './parse';
+const DEFAULT_POINTS_RATE = 30000;
 
-export interface IDevice {
-  ip: string;
-  port: number;
-  name: string;
-  hw_revision: number;
-  sw_revision: number;
+export interface IPoint {
+  x: number;
+  y: number;
+  r: number;
+  g: number;
+  b: number;
 }
 
-export class EtherDream {
-  static _find = function(limit: number, timeout: number): Promise<IDevice[]> {
-    const ips: string[] = [];
-    const devices: IDevice[] = [];
+export class DAC {
+  // TODO dont use any
+  devices: any[] = [];
 
-    const server = dgram.createSocket('udp4');
+  use(device: any) {
+    this.devices.push(device);
+  }
 
-    return new Promise(resolve => {
-      const timeouttimer = setTimeout(function() {
-        server.close();
-        resolve(devices);
-      }, timeout);
+  async start() {
+    for (const device of this.devices) {
+      await device.start();
+    }
+  }
 
-      server.on('message', function(msg, rinfo) {
-        const ip = rinfo.address;
-        if (ips.indexOf(ip) != -1) return;
-        ips.push(ip);
-
-        const name =
-          'EtherDream @ ' +
-          twohex(msg[0]) +
-          ':' +
-          twohex(msg[1]) +
-          ':' +
-          twohex(msg[2]) +
-          ':' +
-          twohex(msg[3]) +
-          ':' +
-          twohex(msg[4]) +
-          ':' +
-          twohex(msg[5]);
-
-        devices.push({
-          ip: ip,
-          port: 7765,
-          name: name,
-          hw_revision: msg[6],
-          sw_revision: msg[7]
-        });
-
-        if (devices.length >= limit) {
-          server.close();
-          clearTimeout(timeouttimer);
-          resolve(devices);
-        }
-      });
-
-      server.bind(7654);
-
-      // wait two seconds for data to come back...
-    });
-  };
-
-  static find = function() {
-    return EtherDream._find(99, 2000);
-  };
-
-  static findFirst = function() {
-    return EtherDream._find(1, 4000);
-  };
-
-  static connect = function(ip: string, port: number) {
-    const conn = new EtherConn();
-    return conn
-      .connect(
-        ip,
-        port
-      )
-      .then(success => (success ? conn : null));
-  };
+  stream(
+    scene: { points: IPoint[] },
+    pointsRate: number = DEFAULT_POINTS_RATE
+  ) {
+    for (const device of this.devices) {
+      device.stream(scene, pointsRate);
+    }
+  }
 }
-
-export { EtherConn, StreamSourceFn, IPoint };

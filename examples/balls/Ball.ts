@@ -1,4 +1,4 @@
-import { Rect } from '@ether-dream/draw';
+import { Rect } from '@laser-dac/draw';
 import Victor = require('victor');
 
 interface BallOptions {

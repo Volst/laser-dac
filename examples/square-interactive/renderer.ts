@@ -1,5 +1,5 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, Rect, loadIldaFile, Ilda } from '@ether-dream/draw';
+import { Simulator } from '@laser-dac/simulator';
+import { Scene, Rect, loadIldaFile, Ilda } from '@laser-dac/draw';
 import * as path from 'path';
 
 const horseFile = loadIldaFile(path.resolve(__dirname, './horse.ild'));

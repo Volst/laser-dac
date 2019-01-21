@@ -1,5 +1,5 @@
-import { Simulator } from '@ether-dream/simulator';
-import { Scene, Rect, Path, Line } from '@ether-dream/draw';
+import { Simulator } from '@laser-dac/simulator';
+import { Scene, Rect, Path, Line } from '@laser-dac/draw';
 
 (async () => {
   const simulator = new Simulator();
