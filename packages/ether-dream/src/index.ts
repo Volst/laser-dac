@@ -117,7 +117,11 @@ export class EtherDream extends Device {
 
   stop() {
     if (this.connection) {
-      this.connection.sendStop(() => null);
+      this.connection.sendEmergencyStop(() => {
+        if (this.connection) {
+          this.connection.close();
+        }
+      });
     }
   }
 

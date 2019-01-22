@@ -17,6 +17,7 @@ const PORT = 8080;
 export class Simulator extends Device {
   server?: http.Server;
   wss?: WebSocketServer;
+  interval?: NodeJS.Timer;
 
   start(): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -37,9 +38,17 @@ export class Simulator extends Device {
     if (this.server) {
       this.server.close();
     }
+    this.stopInterval();
+  }
+
+  private stopInterval() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
   }
 
   stream(scene: Scene, pointsRate?: number) {
+    this.stopInterval();
     const self = this;
     const frameBuffer: Point[] = [];
 
@@ -61,7 +70,7 @@ export class Simulator extends Device {
       }
     }
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       innerStream(REQUESTED_POINTS_COUNT, streamPoints => {
         this.sendPointsToSimulator(streamPoints);
       });
