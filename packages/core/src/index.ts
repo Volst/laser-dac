@@ -25,9 +25,22 @@ export class DAC {
     this.devices.push(device);
   }
 
+  remove(device: Device) {
+    const index = this.devices.indexOf(device);
+    if (index) {
+      this.devices.splice(index, 1);
+    }
+  }
+
   async start() {
     for (const device of this.devices) {
       await device.start();
+    }
+  }
+
+  async stop() {
+    for (const device of this.devices) {
+      await device.stop();
     }
   }
 
