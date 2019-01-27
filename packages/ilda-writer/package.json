@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/ilda-writer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Write JSON points to ILDA (.ild) files",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
@@ -26,7 +26,6 @@
     "manual-test": "ts-node test.ts",
     "prepublishOnly": "npm run -s build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^23.3.3",
     "jest": "^23.6.0",
