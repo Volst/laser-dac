@@ -27,7 +27,7 @@ export function toByteArray(sections: Section[]) {
           p.writeSignedShort(point.y);
           p.writeSignedShort(point.z!);
           let st = 0;
-          st |= point.color! & 0x7f;
+          st |= point.color! & 127;
           if (point.blanking) st |= BlankingBit;
           if (i == section.points.length - 1) st |= LastBit;
           p.writeShort(st);
@@ -49,33 +49,10 @@ export function toByteArray(sections: Section[]) {
           p.writeSignedShort(point.x);
           p.writeSignedShort(point.y);
           let st = 0;
-          st |= point.color! & 0x7f;
+          st |= point.color! & 127;
           if (point.blanking) st |= BlankingBit;
           if (i == section.points.length - 1) st |= LastBit;
           p.writeShort(st);
-        }
-        break;
-      case SectionTypes.TWO_DIMENSIONAL_TRUECOLOR:
-        p.writeString('ILDA', 4);
-        p.writeLong(section.type);
-        p.writeString(section.name, 8);
-        p.writeString(section.company || DEFAULT_COMPANY_NAME, 8);
-        p.writeShort(section.points.length);
-        p.writeShort(si);
-        p.writeShort(section.total || total);
-        p.writeByte(section.head || 0);
-        p.writeByte(0);
-        for (let i = 0; i < section.points.length; i++) {
-          const point = section.points[i];
-          p.writeSignedShort(point.x);
-          p.writeSignedShort(point.y);
-          let st = 0;
-          if (point.blanking) st |= BlankingBit;
-          if (i == section.points.length - 1) st |= LastBit;
-          p.writeShort(st);
-          p.writeShort(point.b!);
-          p.writeShort(point.g!);
-          p.writeShort(point.r!);
         }
         break;
       case SectionTypes.COLOR_TABLE:
