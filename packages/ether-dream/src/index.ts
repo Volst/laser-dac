@@ -62,6 +62,12 @@ export class EtherDream extends Device {
         }
       });
 
+      server.on('error', () => {
+        server.close();
+        clearTimeout(timeouttimer);
+        resolve(devices);
+      });
+
       server.bind(7654);
 
       // wait two seconds for data to come back...
