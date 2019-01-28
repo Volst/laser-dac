@@ -84,12 +84,7 @@ export class EtherDream extends Device {
 
   static connect = function(ip: string, port: number) {
     const conn = new EtherConn();
-    return conn
-      .connect(
-        ip,
-        port
-      )
-      .then(success => (success ? conn : null));
+    return conn.connect(ip, port).then(success => (success ? conn : null));
   };
 
   async search() {
@@ -108,10 +103,7 @@ export class EtherDream extends Device {
 
   async start() {
     const device = await this.search();
-    const conn = await EtherDream.connect(
-      device.ip,
-      device.port
-    );
+    const conn = await EtherDream.connect(device.ip, device.port);
     if (!conn) {
       throw new Error(
         `Could not connect to device on ${device.ip}:${device.port}`
@@ -136,7 +128,9 @@ export class EtherDream extends Device {
     pointsRate: number = DEFAULT_POINTS_RATE
   ) {
     if (!this.connection) {
-      throw new Error('Call start() first');
+      throw new Error(
+        'No active connection to the Ether Dream, call start() first'
+      );
     }
     this.connection.streamFrames(pointsRate, callback => {
       callback(scene.points);

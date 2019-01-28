@@ -47,6 +47,8 @@ export class EtherConn {
   streamSource?: StreamSourceFn;
   frameSource?: FrameSourceFn;
   frameBuffer?: IPoint[];
+  ip?: string;
+  port?: number;
 
   _send(sendcommand: string) {
     this.client!.write(Buffer.from(sendcommand, 'binary'));
@@ -66,6 +68,8 @@ export class EtherConn {
   }
 
   connect(ip: string, port: number) {
+    this.ip = ip;
+    this.port = port;
     const self = this;
 
     console.log('SOCKET: Connecting to ' + ip + ':' + port + ' ...');
@@ -118,6 +122,14 @@ export class EtherConn {
         console.log('SOCKET END: client disconnected');
       });
     });
+  }
+
+  reconnect() {
+    if (!this.ip || !this.port) {
+      throw new Error('Connect before attemping a reconnect');
+    }
+    this.close();
+    return this.connect(this.ip, this.port);
   }
 
   waitForResponse(size: number, callback: HandlerCallbackFn) {
@@ -242,7 +254,14 @@ export class EtherConn {
           callback();
         }
       } else {
-        throw new Error('Got invalid response from Ether Dream');
+        // When we receive an invalid response, the Ether Dream seems to kinda crash so we need to make a new connection.
+        // This is a big, big hack. Need to improve.
+        _this.reconnect().then(() => {
+          setTimeout(() => {
+            _this.streamFrames();
+          }, 100);
+        });
+        // throw new Error('Got invalid response from Ether Dream');
       }
     });
   }
@@ -304,9 +323,14 @@ export class EtherConn {
     });
   }
 
-  streamFrames(rate: number, frameSource: FrameSourceFn) {
+  streamFrames(rate?: number, frameSource?: FrameSourceFn) {
     const _this = this;
-    this.frameSource = frameSource;
+    if (rate) {
+      this.rate = rate;
+    }
+    if (frameSource) {
+      this.frameSource = frameSource;
+    }
     this.frameBuffer = [];
 
     function innerStream(numpoints: number, pointcallback: Function) {
@@ -324,10 +348,21 @@ export class EtherConn {
       }
     }
 
-    this.streamPoints(rate, innerStream);
+    this.streamPoints(this.rate!, innerStream);
   }
 
   close() {
+    this.inputqueue = [];
+    this.inputhandlerqueue = [];
+    this.timer = 0;
+    this.acks = 0;
+    this.fullness = 0;
+    this.points_in_buffer = 0;
+    this.playback_state = 0;
+    this.playsent = false;
+    this.beginsent = false;
+    this.preparesent = false;
+    this.valid = true;
     if (this.client) {
       this.client.destroy();
       this.client = undefined;
