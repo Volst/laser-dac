@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/ether-dream",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Ether-Dream laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
