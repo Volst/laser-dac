@@ -22,29 +22,10 @@
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "test": "jest",
     "manual-test": "ts-node test.ts",
     "prepublishOnly": "npm run -s build"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.3",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.3",
     "ts-node": "^8.0.2"
-  },
-  "jest": {
-    "roots": [
-      "./src"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|ts)$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
   }
 }
