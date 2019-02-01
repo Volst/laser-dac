@@ -1,32 +1,20 @@
 import { Device } from '@laser-dac/core';
-import { HeliosLib } from './HeliosLib';
-import { promisify } from 'util';
-
-const delay = promisify((a: number, f: any) => setTimeout(f, a));
+import * as heliosLib from './HeliosLib';
 
 const DEFAULT_POINTS_RATE = 30000;
+
+const FPS = 30;
 
 export class Helios extends Device {
   private interval?: NodeJS.Timer;
 
   async start() {
     this.stop();
-    const numDevices = HeliosLib.OpenDevices();
-    if (numDevices) {
-      let status = HeliosLib.GetStatus(0);
-      if (status !== 1) {
-        await delay(2000);
-        status = HeliosLib.GetStatus(0);
-      }
-      if (status === 1) {
-        return true;
-      }
-    }
-    return false;
+    return !!heliosLib.openDevices();
   }
 
   stop() {
-    HeliosLib.CloseDevices();
+    heliosLib.closeDevices();
     if (this.interval) {
       clearInterval(this.interval);
     }
@@ -37,14 +25,10 @@ export class Helios extends Device {
       if (!scene.points.length) {
         return;
       }
-      const success = HeliosLib.WriteFrame(
-        0,
-        pointsRate,
-        0,
-        scene.points,
-        scene.points.length
-      );
-      console.log('writing5?', success);
-    }, 100);
+      if (heliosLib.getStatus(0) !== 1) {
+        return;
+      }
+      heliosLib.writeFrame(0, pointsRate, 0, scene.points, scene.points.length);
+    }, 1000 / FPS);
   }
 }
