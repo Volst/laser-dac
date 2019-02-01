@@ -9,7 +9,7 @@ export function throttle(
   return function() {
     const args = arguments;
     if (!inThrottle) {
-      func.apply(context, args);
+      func.apply(context, args as any);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
