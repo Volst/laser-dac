@@ -32,6 +32,10 @@ export class DAC {
     }
   }
 
+  removeAll() {
+    this.devices = [];
+  }
+
   async start() {
     for (const device of this.devices) {
       await device.start();
