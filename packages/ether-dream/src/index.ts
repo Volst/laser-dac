@@ -2,6 +2,7 @@ import * as dgram from 'dgram';
 import { EtherConn, StreamSourceFn, IPoint } from './EtherConn';
 import { twohex } from './parse';
 import { Device } from '@laser-dac/core';
+import { relativeToPosition, relativeToColor } from './convert';
 
 const DEFAULT_POINTS_RATE = 30000;
 
@@ -123,6 +124,16 @@ export class EtherDream extends Device {
     }
   }
 
+  private convertPoint(p: IPoint) {
+    return {
+      x: relativeToPosition(p.x),
+      y: relativeToPosition(p.y),
+      r: relativeToColor(p.r),
+      g: relativeToColor(p.g),
+      b: relativeToColor(p.b)
+    };
+  }
+
   stream(
     scene: { points: IPoint[] },
     pointsRate: number = DEFAULT_POINTS_RATE
@@ -133,7 +144,8 @@ export class EtherDream extends Device {
       );
     }
     this.connection.streamFrames(pointsRate, callback => {
-      callback(scene.points);
+      const points = scene.points.map(this.convertPoint);
+      callback(points);
     });
   }
 }

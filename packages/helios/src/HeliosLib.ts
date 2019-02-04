@@ -50,3 +50,12 @@ export function writeFrame(
     numOfPoints
   );
 }
+
+export interface IPoint {
+  x: number;
+  y: number;
+  r: number;
+  g: number;
+  b: number;
+  i?: number;
+}

@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as IldaReader from './ilda/reader';
 import { Shape } from './Shape';
 import { File } from './ilda/file';
-import { relativeToPosition, positionToRelative } from './helpers';
 
 interface IldaOptions {
   x?: number;
@@ -45,8 +44,8 @@ export class Ilda extends Shape {
     const size = this.size || 1;
     return section.points.map(point => {
       return {
-        x: relativeToPosition(x + positionToRelative(point.x) * size),
-        y: relativeToPosition(y + positionToRelative(point.y) * size),
+        x: x + point.x * size,
+        y: y + point.y * size,
         r: point.r,
         g: point.g,
         b: point.b

@@ -1,9 +1,8 @@
 import { Point } from '../Point';
-import { relativeToPosition } from '../helpers';
 const PerspectiveTransform = require('perspective-transform');
 
-const minimumPosition = relativeToPosition(0);
-const maximumPosition = relativeToPosition(1);
+const minimumPosition = 0;
+const maximumPosition = 1;
 
 // These values may seem weird but it's just all the max corner coordinates clockwise.
 const SOURCE_CORNERS = [
@@ -46,8 +45,8 @@ export function distort(
 
     return points.map(point => {
       const coordinates = perspective.transform(point.x, point.y);
-      point.x = relativeToPosition(coordinates[0]);
-      point.y = relativeToPosition(coordinates[1]);
+      point.x = coordinates[0];
+      point.y = coordinates[1];
       return point;
     });
   };

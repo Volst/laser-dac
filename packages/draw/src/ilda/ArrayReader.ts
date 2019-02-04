@@ -1,5 +1,7 @@
 export type ByteArray = number[];
 
+const XY_RESOLUTION = 65535;
+
 export class ArrayReader {
   bytes: ByteArray;
   length: number;
@@ -48,7 +50,7 @@ export class ArrayReader {
   }
 
   convertCoordinate(xy: number) {
-    return xy;
+    return -(2 * xy - XY_RESOLUTION) / (XY_RESOLUTION * 2);
   }
 
   readLong() {

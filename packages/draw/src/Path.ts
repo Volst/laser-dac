@@ -9,7 +9,6 @@ import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
 import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 import arcToBezier = require('svg-arc-to-cubic-bezier');
-import { positionToRelative, colorToRelative } from './helpers';
 
 interface PathOptions {
   x?: number;
@@ -234,13 +233,9 @@ export class Path extends Shape {
             ) / Math.PI;
 
           const waitShape = new Wait({
-            x: positionToRelative(lastPoint.x),
-            y: positionToRelative(lastPoint.y),
-            color: [
-              colorToRelative(lastPoint.r),
-              colorToRelative(lastPoint.g),
-              colorToRelative(lastPoint.b)
-            ],
+            x: lastPoint.x,
+            y: lastPoint.y,
+            color: [lastPoint.r, lastPoint.g, lastPoint.b],
             amount: Math.floor(MAX_WAIT_AMOUNT * relativeAngle)
           });
           wait = waitShape.draw();

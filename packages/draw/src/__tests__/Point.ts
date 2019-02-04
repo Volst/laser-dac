@@ -6,8 +6,8 @@ test('render blanking point', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: 26214,
-    y: 19661
+    x: 0.1,
+    y: 0.2
   });
 });
 
@@ -15,21 +15,21 @@ test('render green point', () => {
   const point = new Point(0, 0, [0, 1, 0]);
   expect(point).toEqual({
     r: 0,
-    g: 65535,
+    g: 1,
     b: 0,
-    x: 32768,
-    y: 32768
+    x: 0,
+    y: 0
   });
 });
 
 test('render red point', () => {
   const point = new Point(0, 0, [1, 0, 0]);
   expect(point).toEqual({
-    r: 65535,
+    r: 1,
     g: 0,
     b: 0,
-    x: 32768,
-    y: 32768
+    x: 0,
+    y: 0
   });
 });
 
@@ -38,9 +38,9 @@ test('render blue point', () => {
   expect(point).toEqual({
     r: 0,
     g: 0,
-    b: 65535,
-    x: 32768,
-    y: 32768
+    b: 1,
+    x: 0,
+    y: 0
   });
 });
 
@@ -50,8 +50,8 @@ test('render point in exactly the middle', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: -0,
-    y: -0
+    x: 0.5,
+    y: 0.5
   });
 });
 
@@ -61,7 +61,7 @@ test('render point in bottom right', () => {
     r: 0,
     g: 0,
     b: 0,
-    x: -32767,
-    y: -32767
+    x: 1,
+    y: 1
   });
 });

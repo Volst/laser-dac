@@ -1,5 +1,3 @@
-import { COLOR_RESOLUTION } from '../constants';
-
 export const defaultColors = [
   '#F00',
   '#F10',
@@ -95,8 +93,8 @@ export function parseColor(st: any) {
   }
   const rgb = hexToRgb(hex);
   return {
-    r: Math.floor(COLOR_RESOLUTION * (rgb.r / 255)),
-    g: Math.floor(COLOR_RESOLUTION * (rgb.g / 255)),
-    b: Math.floor(COLOR_RESOLUTION * (rgb.b / 255))
+    r: rgb.r / 255,
+    g: rgb.g / 255,
+    b: rgb.b / 255
   };
 }

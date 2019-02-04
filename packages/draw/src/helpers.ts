@@ -1,21 +1,4 @@
-import { XY_RESOLUTION, COLOR_RESOLUTION } from './constants';
 import { Point } from './Point';
-
-export function relativeToPosition(n: number) {
-  return Math.floor(n * XY_RESOLUTION - XY_RESOLUTION / 2) * -1;
-}
-
-export function positionToRelative(n: number) {
-  return -(2 * n - XY_RESOLUTION) / (XY_RESOLUTION * 2);
-}
-
-export function relativeToColor(color: number) {
-  return Math.floor(COLOR_RESOLUTION * color);
-}
-
-export function colorToRelative(color: number) {
-  return color / COLOR_RESOLUTION;
-}
 
 const RGB_HEX = /^#?(?:([\da-f]{3})[\da-f]?|([\da-f]{6})(?:[\da-f]{2})?)$/i;
 
