@@ -31,8 +31,9 @@ export function closeDevices(): void {
 HeliosLib.struct(
   'struct HeliosPoint { uint16 x; uint16 y; uint8 r; uint8 g; uint8 b; uint8 i }'
 );
+HeliosLib.array('HeliosPoint[] HeliosPoints');
 HeliosLib.function(
-  'int WriteFrame(uint dacNum, int pps, uint8 flags, HeliosPoint* points, int numOfPoints)'
+  'int WriteFrame(uint dacNum, int pps, uint8 flags, HeliosPoints* points, int numOfPoints)'
 );
 export function writeFrame(
   dacNum: number,
