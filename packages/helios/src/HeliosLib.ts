@@ -1,40 +1,60 @@
-import * as os from 'os';
 import * as path from 'path';
-const { Library } = require('fastcall');
+import * as Struct from 'ref-struct';
+import * as ArrayType from 'ref-array';
+import * as ffi from 'ffi';
 
-let libSubPath = '../sdk/libHeliosDacAPI.so';
-if (os.platform() === 'darwin') {
-  libSubPath = '../sdk/libHeliosDacAPI.dylib';
-} else if (os.platform() === 'win32') {
-  libSubPath = '../sdk/libHeliosDacAPI.dll';
-}
+const HeliosPoint = Struct({
+  x: 'uint16',
+  y: 'uint16',
+  r: 'uint8',
+  g: 'uint8',
+  b: 'uint8',
+  i: 'uint8'
+});
 
-const libPath = path.join(__dirname, libSubPath);
+const HeliosPointArray = ArrayType(HeliosPoint);
 
-const HeliosLib = new Library(libPath);
+const libPath = path.join(__dirname, '../sdk/libHeliosDACAPI');
 
-HeliosLib.function('int OpenDevices()');
+const HeliosLib = ffi.Library(libPath, {
+  //initializes drivers, opens connection to all devices.
+  //Returns number of available devices.
+  //NB: To re-scan for newly connected DACs after this function has once been called before, you must first call CloseDevices()
+  OpenDevices: ['int', []],
+  //Gets status from the specified dac.
+  //Return 1 if ready to receive new frame, 0 if not, -1 if communcation failed
+  GetStatus: ['int', ['int']],
+  //stops, blanks and centers output on the specified dac
+  //returns 1 if successful
+  Stop: ['int', ['int']],
+  //closes connection to all dacs and frees resources
+  //should be called when library is no longer needed (program exit for example)
+  CloseDevices: ['void', []],
+  //writes and outputs a frame to the speficied dac
+  //dacNum: dac number (0 to n where n+1 is the return value from OpenDevices() )
+  //pps: rate of output in points per second
+  //flags: (default is 0)
+  //	Bit 0 (LSB) = if true, start output immediately, instead of waiting for current frame (if there is one) to finish playing
+  //	Bit 1 = if true, play frame only once, instead of repeating until another frame is written
+  //	Bit 2-7 = reserved
+  //points: pointer to point data. See point structure documentation in HeliosDac.h
+  //numOfPoints: number of points in the frame
+  //returns 1 if successful
+  WriteFrame: ['int', ['uint', 'int', 'uint', HeliosPointArray, 'int']]
+});
+
 export function openDevices(): number {
-  return HeliosLib.interface.OpenDevices();
+  return HeliosLib.OpenDevices();
 }
 
-HeliosLib.function('int GetStatus(int dacNum)');
 export function getStatus(dacNum: number): number {
-  return HeliosLib.interface.GetStatus(dacNum);
+  return HeliosLib.GetStatus(dacNum);
 }
 
-HeliosLib.function('void CloseDevices()');
 export function closeDevices(): void {
-  return HeliosLib.interface.CloseDevices();
+  return HeliosLib.CloseDevices();
 }
 
-HeliosLib.struct(
-  'struct HeliosPoint { uint16 x; uint16 y; uint8 r; uint8 g; uint8 b; uint8 i }'
-);
-HeliosLib.array('HeliosPoint[] HeliosPoints');
-HeliosLib.function(
-  'int WriteFrame(uint dacNum, int pps, uint8 flags, HeliosPoints* points, int numOfPoints)'
-);
 export function writeFrame(
   dacNum: number,
   pps: number,
@@ -42,13 +62,7 @@ export function writeFrame(
   points: any[],
   numOfPoints: number
 ): number {
-  return HeliosLib.interface.WriteFrame(
-    dacNum,
-    pps,
-    flags,
-    points,
-    numOfPoints
-  );
+  return HeliosLib.WriteFrame(dacNum, pps, flags, points, numOfPoints);
 }
 
 export interface IPoint {
