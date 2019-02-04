@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/helios",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Helios laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
@@ -22,7 +22,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@laser-dac/core": "^0.2.2",
+    "@laser-dac/core": "^0.3.0",
     "fastcall": "^0.2.6"
   },
   "scripts": {
