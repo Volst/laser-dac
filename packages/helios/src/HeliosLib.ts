@@ -14,7 +14,11 @@ const HeliosPoint = Struct({
 
 const HeliosPointArray = ArrayType(HeliosPoint);
 
-const libPath = path.join(__dirname, '../sdk/libHeliosDACAPI');
+const libPath = path
+  .join(__dirname, '../sdk/libHeliosDACAPI')
+  // Super super dirty hack to make this work with Electron; native dependencies
+  // dont'get placed inside the "app.asar" bundle, but instead get placed in a separate directory called "app.asar.unpacked"
+  .replace('app.asar', 'app.asar.unpacked');
 
 const HeliosLib = ffi.Library(libPath, {
   //initializes drivers, opens connection to all devices.
