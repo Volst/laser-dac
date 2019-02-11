@@ -14,6 +14,7 @@ const HeliosPoint = Struct({
 
 const HeliosPointArray = ArrayType(HeliosPoint);
 
+// Windows 32-bit is not supported currently
 const libPath = path
   .join(__dirname, '../sdk/libHeliosDACAPI')
   // Super super dirty hack to make this work with Electron; native dependencies
