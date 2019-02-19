@@ -1,0 +1,38 @@
+{
+  "name": "@laser-dac/beyond",
+  "version": "0.1.0",
+  "description": "Pangolin Beyond laser interface for Node.js",
+  "license": "MIT",
+  "author": "Kees Kluskens <kees@volst.nl>",
+  "repository": "Volst/laser-dac",
+  "keywords": [
+    "etherdream",
+    "laser",
+    "ether-dream"
+  ],
+  "engines": {
+    "node": ">=8.0"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "sdk",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@laser-dac/core": "^0.3.0",
+    "@types/ffi": "^0.2.1",
+    "@types/ref-array": "^0.0.28",
+    "@types/ref-struct": "^0.0.29",
+    "ffi": "^2.3.0",
+    "ref-array": "^1.2.0",
+    "ref-struct": "^1.1.0"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "prepublishOnly": "npm run -s build"
+  }
+}
