@@ -12,14 +12,14 @@ import * as ref from 'ref';
 // Zero - usigned byte. leave it zero.
 
 const BeyondPoint = Struct({
-  x: 'float',
-  y: 'float',
-  z: 'float',
-  pointColor: 'int',
-  repCount: 'uchar',
-  focus: 'uchar',
-  status: 'uchar',
-  zero: 'uchar'
+  X: 'float',
+  Y: 'float',
+  Z: 'float',
+  Color: 'int',
+  RepCount: 'uchar',
+  Focus: 'uchar',
+  Status: 'uchar',
+  Zero: 'uchar'
 });
 
 const BeyondPointArray = ArrayType(BeyondPoint);
@@ -36,12 +36,14 @@ const BeyondLib = ffi.Library(libPath, {
   ldbCreate: ['int', []],
   ldbDestroy: ['int', []],
   ldbBeyondExeReady: ['int', []],
+  ldbBeyondExeStarted: ['int', []],
+  ldbGetZoneCount: ['int', []],
   // Params: char* imageName, int numPointsInFrame, void* firstPoint, void* zoneArrayPtr, int scanRate
   ldbSendFrameToImage: [
     'int',
-    ['char', 'int', BeyondPointArray, ZoneIndiceArray, 'int']
+    ['string', 'int', BeyondPointArray, ZoneIndiceArray, 'int']
   ],
-  ldbCreateZoneImage: ['int', ['int', 'uchar']]
+  ldbCreateZoneImage: ['int', ['int', 'string']]
 });
 
 export function ldbCreate(): number {
@@ -54,6 +56,14 @@ export function ldbDestroy(): number {
 
 export function ldbBeyondExeReady(): number {
   return BeyondLib.ldbBeyondExeReady();
+}
+
+export function ldbBeyondExeStarted(): number {
+  return BeyondLib.ldbBeyondExeStarted();
+}
+
+export function ldbGetZoneCount(): number {
+  return BeyondLib.ldbGetZoneCount();
 }
 
 export function ldbCreateZoneImage(zoneIndex: number, name: string): number {

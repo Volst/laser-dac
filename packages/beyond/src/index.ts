@@ -1,8 +1,10 @@
 import { Device } from '@laser-dac/core';
 import * as beyondLib from './BeyondLib';
-import { relativeToPosition } from './convert';
+import { relativeToPosition, relativeToColor } from './convert';
 
 const DEFAULT_POINTS_RATE = 30000;
+const ZONE_NUMBER = 0;
+const ZONE_NAME = `Laser Dac Demo Z${ZONE_NUMBER}`;
 
 const FPS = 30;
 
@@ -14,10 +16,15 @@ export class Beyond extends Device {
     const created = beyondLib.ldbCreate();
     console.log('created', created);
     const ready = beyondLib.ldbBeyondExeReady();
-    console.log('Beyond exe ready', ready);
-    const zone = beyondLib.ldbCreateZoneImage(0, 'output0');
-    console.log('zone created', zone);
-    return !!ready;
+    console.log('Beyond exe ready', beyondLib.ldbBeyondExeStarted(), ready);
+    console.log('Zone count', beyondLib.ldbGetZoneCount());
+
+    if (ready === 1) {
+      const zone = beyondLib.ldbCreateZoneImage(ZONE_NUMBER, ZONE_NAME);
+      console.log('zone created', zone);
+      return true;
+    }
+    return false;
   }
 
   stop() {
@@ -29,11 +36,14 @@ export class Beyond extends Device {
 
   private convertPoint(p: beyondLib.IPoint) {
     return {
-      x: relativeToPosition(p.x),
-      y: relativeToPosition(p.y)
-      // r: relativeToColor(p.r),
-      // g: relativeToColor(p.g),
-      // b: relativeToColor(p.b)
+      X: relativeToPosition(p.x),
+      Y: relativeToPosition(p.y),
+      Z: 0,
+      Color: relativeToColor(p.r, p.g, p.b),
+      RepCount: 0,
+      Focus: 0,
+      Status: 0,
+      Zero: 0
     };
   }
 
@@ -46,13 +56,16 @@ export class Beyond extends Device {
         return;
       }
       const points = scene.points.map(this.convertPoint);
-      beyondLib.ldbSendFrameToImage(
-        'output0',
+      const zones = Array(255).fill(0);
+      zones[0] = ZONE_NUMBER;
+      const res = beyondLib.ldbSendFrameToImage(
+        ZONE_NAME,
         points.length,
         points,
-        [0],
+        zones,
         pointsRate
       );
+      console.log('res', res);
     }, 1000 / FPS);
   }
 }
