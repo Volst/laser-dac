@@ -101,6 +101,9 @@ export class EtherDream extends Device {
 
   async start() {
     const device = await this.search();
+    if (!device) {
+      return false;
+    }
     const conn = await EtherDream.connect(device.ip, device.port);
     if (conn) {
       this.connection = conn;
