@@ -38,8 +38,12 @@ export class DAC {
 
   async start() {
     for (const device of this.devices) {
-      await device.start();
+      const success = await device.start();
+      if (!success) {
+        return false;
+      }
     }
+    return true;
   }
 
   async stop() {

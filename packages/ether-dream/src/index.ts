@@ -95,9 +95,6 @@ export class EtherDream extends Device {
       return { ip, port: parseInt(port) } as IDevice;
     } else {
       const devices = await EtherDream.findFirst();
-      if (!devices.length) {
-        throw new Error('No Etherdream device found on network.');
-      }
       return devices[0];
     }
   }
@@ -105,13 +102,11 @@ export class EtherDream extends Device {
   async start() {
     const device = await this.search();
     const conn = await EtherDream.connect(device.ip, device.port);
-    if (!conn) {
-      throw new Error(
-        `Could not connect to device on ${device.ip}:${device.port}`
-      );
+    if (conn) {
+      this.connection = conn;
+      return true;
     }
-    this.connection = conn;
-    return true;
+    return false;
   }
 
   stop() {
