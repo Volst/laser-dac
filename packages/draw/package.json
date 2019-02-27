@@ -27,6 +27,7 @@
     "prepublishOnly": "npm run -s build"
   },
   "dependencies": {
+    "@laser-dac/ilda-reader": "0.0.0",
     "@types/bezier-js": "^0.0.7",
     "@types/svg-parser": "^1.0.0",
     "bezier-js": "^2.2.15",
