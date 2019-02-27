@@ -2,11 +2,19 @@
 
 This package can write an array of points to an [ILDA](http://ilda.com/) file (`.ild`).
 
-For a full example see `./test.json` and `./test.ts` in the repository.
+This is heavily inspired by [ilda.js](https://github.com/possan/ilda.js), but this tool only works in the browser and we wanted to be able to use it in both Nodejs and the browser.
 
-This is heavily inspired by [ilda.js](https://github.com/possan/ilda.js), but since the tool only worked in the browser
+To convert an ILDA file to a JSON array of points, see its counterpart [ilda-reader](https://github.com/Volst/laser-dac/tree/master/packages/ilda-reader).
+
+## Install
+
+```
+npm install @laser-dac/ilda-writer
+```
 
 ## Usage
+
+For a full example see `./test.json` and `./test.ts` in the repository.
 
 ```js
 import { toByteArray } from '@laser-dac/ilda-writer';

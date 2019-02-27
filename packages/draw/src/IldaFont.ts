@@ -1,6 +1,5 @@
 import { Shape } from './Shape';
-import { File } from './ilda/file';
-import { Ilda } from './Ilda';
+import { Ilda, File } from './Ilda';
 import { flatten } from './helpers';
 import { Point } from './Point';
 

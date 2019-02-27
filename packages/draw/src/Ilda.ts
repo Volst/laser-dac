@@ -1,7 +1,10 @@
 import * as fs from 'fs';
-import * as IldaReader from './ilda/reader';
+import { fromByteArray, Section } from '@laser-dac/ilda-reader';
 import { Shape } from './Shape';
-import { File } from './ilda/file';
+
+export interface File {
+  sections: Section[];
+}
 
 interface IldaOptions {
   x?: number;
@@ -54,9 +57,9 @@ export class Ilda extends Shape {
   }
 }
 
-export function loadIldaFile(path: string) {
+export function loadIldaFile(path: string): File {
   const buffer = fs.readFileSync(path);
   const byteArray = Array.prototype.slice.call(buffer, 0) as number[];
 
-  return IldaReader.fromByteArray(byteArray);
+  return { sections: fromByteArray(byteArray) };
 }

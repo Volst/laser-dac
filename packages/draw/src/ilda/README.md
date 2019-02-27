@@ -1,1 +1,0 @@
-This code is mostly copied from https://github.com/possan/ilda.js/, so credits go to Per-Olov Jernberg.

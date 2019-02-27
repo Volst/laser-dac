@@ -1,0 +1,31 @@
+{
+  "name": "@laser-dac/ilda-reader",
+  "version": "0.1.3",
+  "description": "Read ILDA (.ild) files as JSON data",
+  "license": "MIT",
+  "author": "Kees Kluskens <kees@volst.nl>",
+  "repository": "Volst/laser-dac",
+  "keywords": [
+    "laser",
+    "ilda"
+  ],
+  "engines": {
+    "node": ">=8.0"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json --watch",
+    "manual-test": "ts-node test.ts",
+    "prepublishOnly": "npm run -s build"
+  },
+  "devDependencies": {
+    "ts-node": "^8.0.2"
+  }
+}
