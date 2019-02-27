@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@laser-dac/ilda-reader": "0.1.4",
-    "@types/bezier-js": "^0.0.7",
+    "@types/bezier-js": "^0.0.8",
     "@types/svg-parser": "^1.0.0",
     "bezier-js": "^2.2.15",
     "change-perspective": "^1.0.0",
@@ -37,9 +37,9 @@
     "svg-pathdata": "^5.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.3",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.3"
+    "@types/jest": "^24.0.9",
+    "jest": "^24.1.0",
+    "ts-jest": "^24.0.0"
   },
   "jest": {
     "roots": [

@@ -5,7 +5,7 @@
     "examples"
   ],
   "devDependencies": {
-    "@types/node": "^10.11.3",
+    "@types/node": "^11.9.5",
     "husky": "^1.1.0",
     "lerna": "^3.4.0",
     "prettier": "^1.14.3",
