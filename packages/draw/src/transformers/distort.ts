@@ -1,11 +1,11 @@
 import { Point } from '../Point';
-const PerspectiveTransform = require('perspective-transform');
+import changePerspective, { QuadPoints } from 'change-perspective';
 
 const minimumPosition = 0;
 const maximumPosition = 1;
 
 // These values may seem weird but it's just all the max corner coordinates clockwise.
-const SOURCE_CORNERS = [
+const SOURCE_CORNERS: QuadPoints = [
   minimumPosition,
   minimumPosition,
   maximumPosition,
@@ -28,7 +28,7 @@ export function distort(
   bottomLeft: Coordinates
 ) {
   return function(points: Point[]) {
-    const destinationCorners = [
+    const destinationCorners: QuadPoints = [
       topLeft.x,
       topLeft.y,
       topRight.x,
@@ -38,13 +38,10 @@ export function distort(
       bottomLeft.x,
       bottomLeft.y
     ];
-    const perspective = PerspectiveTransform(
-      SOURCE_CORNERS,
-      destinationCorners
-    );
+    const perspective = changePerspective(SOURCE_CORNERS, destinationCorners);
 
     return points.map(point => {
-      const coordinates = perspective.transform(point.x, point.y);
+      const coordinates = perspective(point.x, point.y);
       point.x = coordinates[0];
       point.y = coordinates[1];
       return point;
