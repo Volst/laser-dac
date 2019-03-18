@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/laserdock",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Laserdock laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
