@@ -16,8 +16,9 @@ export class Laserdock extends Device {
   async start() {
     this.stop();
     laserdockLib.init();
+    const output = laserdockLib.enableOutput();
     laserdockLib.clearRingBuffer();
-    return !!laserdockLib.enableOutput();
+    return !!output;
   }
 
   stop() {
@@ -30,8 +31,8 @@ export class Laserdock extends Device {
   private convertPoint(p: laserdockLib.IPoint) {
     return {
       x: relativeToPosition(p.x),
-      y: relativeToPosition(p.y),
-      r: relativeToRedGreen(p.r, p.g),
+      y: relativeToPosition(1 - p.y),
+      rg: relativeToRedGreen(p.r, p.g),
       b: relativeToBlue(p.b)
     };
   }
