@@ -24,6 +24,10 @@ This package takes care of the communication to the [Ether Dream DAC](https://et
 
 This package takes care of the communication to the [Helios DAC](http://pages.bitlasers.com/helios/).
 
+## [`@laser-dac/laserdock`](./packages/laserdock)
+
+This package takes care of the communication to the [Laserdock](https://www.wickedlasers.com/laserdock).
+
 ## [`@laser-dac/beyond`](./packages/beyond)
 
 This package takes care of communication to [Pangolin Beyond software](https://pangolin.com/pages/beyond). **This isn't finished yet!**
