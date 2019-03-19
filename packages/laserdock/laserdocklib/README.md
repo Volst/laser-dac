@@ -12,6 +12,14 @@ This library has three targets
 
 Tested under OS X 10.11 and comes with libusb 1.0 dylib.
 
+# How to build
+
+```
+rm -rf build && mkdir build && cd build
+cmake ..
+make
+```
+
 # How to build for Android:
 
 1.

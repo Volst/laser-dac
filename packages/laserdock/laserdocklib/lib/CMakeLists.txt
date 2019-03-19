@@ -5,6 +5,8 @@ set(LASERDOCKLIB_SOURCE_FILES
         LaserdockDeviceManager.cpp
         LaserdockDeviceManager.h
         LaserdockDeviceManager_p.h
+        LaserdockNode.cpp
+        LaserdockNode.h
         )
 
 if(ANDROID)

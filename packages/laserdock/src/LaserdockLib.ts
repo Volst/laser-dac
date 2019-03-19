@@ -14,7 +14,7 @@ const LaserdockPointArray = ArrayType(LaserdockPoint);
 
 // Windows 32-bit is not supported currently
 const libPath = path
-  .join(__dirname, '../sdk/liblaserdock')
+  .join(__dirname, '../sdk/liblaserdocklib')
   // Super super dirty hack to make this work with Electron; native dependencies
   // dont'get placed inside the "app.asar" bundle, but instead get placed in a separate directory called "app.asar.unpacked"
   .replace('app.asar', 'app.asar.unpacked');
