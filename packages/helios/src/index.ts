@@ -2,10 +2,6 @@ import { Device } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
 import { relativeToPosition, relativeToColor } from './convert';
 
-const DEFAULT_POINTS_RATE = 30000;
-
-const FPS = 30;
-
 export class Helios extends Device {
   private interval?: NodeJS.Timer;
 
@@ -33,7 +29,8 @@ export class Helios extends Device {
 
   stream(
     scene: { points: heliosLib.IPoint[] },
-    pointsRate: number = DEFAULT_POINTS_RATE
+    pointsRate: number,
+    fps: number
   ) {
     this.interval = setInterval(() => {
       if (!scene.points.length) {
@@ -44,6 +41,6 @@ export class Helios extends Device {
       }
       const points = scene.points.map(this.convertPoint);
       heliosLib.writeFrame(0, pointsRate, 0, points, points.length);
-    }, 1000 / FPS);
+    }, 1000 / fps);
   }
 }

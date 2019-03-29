@@ -6,10 +6,6 @@ import {
   relativeToBlue
 } from './convert';
 
-const DEFAULT_POINTS_RATE = 30000;
-
-const FPS = 30;
-
 export class Laserdock extends Device {
   private interval?: NodeJS.Timer;
 
@@ -39,7 +35,8 @@ export class Laserdock extends Device {
 
   stream(
     scene: { points: laserdockLib.IPoint[] },
-    pointsRate: number = DEFAULT_POINTS_RATE
+    pointsRate: number,
+    fps: number
   ) {
     laserdockLib.setDacRate(pointsRate);
     this.interval = setInterval(() => {
@@ -48,6 +45,6 @@ export class Laserdock extends Device {
       }
       const points = scene.points.map(this.convertPoint);
       laserdockLib.sendSamples(points, points.length);
-    }, 1000 / FPS);
+    }, 1000 / fps);
   }
 }
