@@ -2,6 +2,10 @@ import { Device } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
 import { relativeToPosition, relativeToColor } from './convert';
 
+// This controls the intensity signal of points written to the DAC.
+// For many laser projectors this won't make a difference, but some projectors map this to the shutter so the laser won't turn on if we don't pass the max value.
+const INTENSITY = 255;
+
 export class Helios extends Device {
   private interval?: NodeJS.Timer;
 
@@ -23,7 +27,8 @@ export class Helios extends Device {
       y: relativeToPosition(p.y),
       r: relativeToColor(p.r),
       g: relativeToColor(p.g),
-      b: relativeToColor(p.b)
+      b: relativeToColor(p.b),
+      i: INTENSITY
     };
   }
 
