@@ -35,6 +35,10 @@ const HeliosLib = ffi.Library(libPath, {
   //closes connection to all dacs and frees resources
   //should be called when library is no longer needed (program exit for example)
   CloseDevices: ['void', []],
+  //sets the shutter of the specified dac.
+  //value 1 = shutter open, value 0 = shutter closed
+  //returns 1 if successful
+  SetShutter: ['int', ['uint', 'bool']],
   //writes and outputs a frame to the speficied dac
   //dacNum: dac number (0 to n where n+1 is the return value from OpenDevices() )
   //pps: rate of output in points per second
@@ -58,6 +62,10 @@ export function getStatus(dacNum: number): number {
 
 export function closeDevices(): void {
   return HeliosLib.CloseDevices();
+}
+
+export function setShutter(dacNum: number, shutterValue: boolean): number {
+  return HeliosLib.SetShutter(dacNum, shutterValue);
 }
 
 export function writeFrame(

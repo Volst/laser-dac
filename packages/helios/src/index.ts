@@ -11,7 +11,12 @@ export class Helios extends Device {
 
   async start() {
     this.stop();
-    return !!heliosLib.openDevices();
+    const devices = heliosLib.openDevices();
+    if (devices) {
+      heliosLib.setShutter(0, true);
+      return true;
+    }
+    return false;
   }
 
   stop() {
