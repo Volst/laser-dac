@@ -67,6 +67,23 @@ export function toByteArray(sections: Section[]) {
           p.writeByte(color.b);
         }
         break;
+      case SectionTypes.TREE_DIMENSIONAL_TRUECOLOR:
+        writeHeader(p, section, si, total);
+        for (let i = 0; i < section.points.length; i++) {
+          const point = section.points[i];
+          p.writeSignedShort(point.x);
+          p.writeSignedShort(point.y);
+          p.writeSignedShort(point.z!);
+          let st = 0;
+          if (point.blanking) st |= BlankingBit;
+          if (i == section.points.length - 1) st |= LastBit;
+          p.writeByte(st);
+          // Sidenote: we trust on the user providing correct r,g,b values
+          p.writeByte(point.b!);
+          p.writeByte(point.g!);
+          p.writeByte(point.r!);
+        }
+        break;
       case SectionTypes.TWO_DIMENSIONAL_TRUECOLOR:
         writeHeader(p, section, si, total);
         for (let i = 0; i < section.points.length; i++) {
