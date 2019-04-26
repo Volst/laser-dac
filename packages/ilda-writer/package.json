@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/ilda-writer",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Write JSON points to ILDA (.ild) files",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
