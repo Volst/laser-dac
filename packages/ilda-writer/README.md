@@ -1,6 +1,6 @@
 # ILDA Writer
 
-This package can write an array of points to an [ILDA](http://ilda.com/) file (`.ild`).
+This package can write an array of points to an [ILDA](http://ilda.com/) file (`.ild`). ILDA formats 0, 1, 2, 3 and 5 are supported.
 
 This is heavily inspired by [ilda.js](https://github.com/possan/ilda.js), but this tool only works in the browser and we wanted to be able to use it in both Nodejs and the browser.
 
@@ -33,6 +33,34 @@ const sections = [
         x: -4214,
         y: 2011,
         z: 0
+      }
+    ]
+  }
+];
+
+const byteArray = toByteArray(sections);
+
+const b = new Buffer(byteArray);
+writeFileSync('test.ild', b);
+```
+
+Or with ILDA format 5:
+
+```js
+import { toByteArray } from '@laser-dac/ilda-writer';
+import { writeFileSync } from 'fs';
+
+const sections = [
+  {
+    type: 5,
+    points: [
+      {
+        blanking: false,
+        x: -4214,
+        y: 2011,
+        r: 255,
+        g: 0,
+        b: 0
       }
     ]
   }
