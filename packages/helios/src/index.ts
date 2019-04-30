@@ -20,6 +20,7 @@ export class Helios extends Device {
   }
 
   stop() {
+    heliosLib.setShutter(0, false);
     heliosLib.closeDevices();
     if (this.interval) {
       clearInterval(this.interval);
