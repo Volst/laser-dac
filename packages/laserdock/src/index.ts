@@ -7,7 +7,7 @@ import {
 } from './convert';
 
 export class Laserdock extends Device {
-  private interval?: NodeJS.Timer;
+  private interval?: NodeJS.Timeout;
 
   async start() {
     this.stop();
@@ -20,7 +20,7 @@ export class Laserdock extends Device {
   stop() {
     laserdockLib.disableOutput();
     if (this.interval) {
-      clearInterval(this.interval);
+      clearTimeout(this.interval);
     }
   }
 
@@ -39,12 +39,12 @@ export class Laserdock extends Device {
     fps: number
   ) {
     laserdockLib.setDacRate(pointsRate);
-    this.interval = setInterval(() => {
-      if (!scene.points.length) {
-        return;
-      }
+    const callback = () => {
+      const len = scene.points.length;
+      this.interval = setTimeout(callback, (len / pointsRate) * 1000);
       const points = scene.points.map(this.convertPoint);
-      laserdockLib.sendSamples(points, points.length);
-    }, 1000 / fps);
+      laserdockLib.sendSamples(points, len);
+    };
+    this.interval = setTimeout(callback, 0);
   }
 }
