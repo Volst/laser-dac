@@ -32,6 +32,10 @@ This package takes care of the communication to the [Laserdock](https://www.wick
 
 This package takes care of communication to [Pangolin Beyond software](https://pangolin.com/pages/beyond). **This isn't finished yet!**
 
+## [`@laser-dac/easylase`](./packages/easylase)
+
+This package takes care of communication to [Easylase](http://www.jmlaser.com/EasyLase_D.htm). **This isn't finished yet!**
+
 ## [`@laser-dac/simulator`](./packages/simulator)
 
 This package can simulate a physical laser DAC so you can develop without having a laser or DAC at all. It has a web-based simulator for the laser, that also tries its best to mimick the limitations of the laser.
