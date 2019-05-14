@@ -8,7 +8,7 @@ Our goal is to make it as easy as possible to develop **interactive laser drawin
 
 The tools use Node.js and are published on npm under the `@laser-dac` scope.
 
-**Currently this is in early development.**
+Documentation is still very limited. This project is used in our modular synthesizer app, **[Modulaser](https://modulaser.app/)**.
 
 The tools consist of a couple of packages. Click on the title for more information.
 
