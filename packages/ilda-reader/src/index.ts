@@ -17,15 +17,8 @@ export function fromByteArray(arr: ByteArray) {
     };
     switch (section.type) {
       case SectionTypes.THREE_DIMENSIONAL:
-        // 3D frame
-        section.name = p.readString(8);
-        section.company = p.readString(8);
-        const np1 = p.readShort();
-        p.readShort(); // this is the `index`, but we ignore that for now
-        section.total = p.readShort();
-        section.head = p.readByte();
-        p.readByte();
-        for (let i = 0; i < np1; i++) {
+        const pointLength = readHeader(p, section);
+        for (let i = 0; i < pointLength; i++) {
           const x = p.convertCoordinate(p.readSignedShort());
           const y = p.convertCoordinate(p.readSignedShort());
           // TODO: does it work like this?
@@ -43,15 +36,8 @@ export function fromByteArray(arr: ByteArray) {
         }
         break;
       case SectionTypes.TWO_DIMENSIONAL:
-        // 2D frame
-        section.name = p.readString(8);
-        section.company = p.readString(8);
-        const np2 = p.readShort();
-        p.readShort(); // this is the `index`, but we ignore that for now
-        section.total = p.readShort();
-        section.head = p.readByte();
-        p.readByte();
-        for (let i = 0; i < np2; i++) {
+        const pointLength2 = readHeader(p, section);
+        for (let i = 0; i < pointLength2; i++) {
           const x = p.convertCoordinate(p.readSignedShort());
           const y = p.convertCoordinate(p.readSignedShort());
           const rgb = parseColor(p.readShort());
@@ -66,16 +52,8 @@ export function fromByteArray(arr: ByteArray) {
         }
         break;
       case SectionTypes.COLOR_TABLE:
-        // color table
-        section.name = p.readString(8);
-        section.company = p.readString(8);
-        const np3 = p.readShort();
-        p.readShort(); // this is the `index`, but we ignore that for now
-        p.readByte();
-        p.readByte();
-        section.head = p.readByte();
-        p.readByte();
-        for (let i = 0; i < np3; i++) {
+        const colorLength = readHeader(p, section);
+        for (let i = 0; i < colorLength; i++) {
           const color = {
             r: p.readByte(),
             g: p.readByte(),
@@ -97,10 +75,61 @@ export function fromByteArray(arr: ByteArray) {
           section.colors.push(color);
         }
         break;
+      case SectionTypes.TREE_DIMENSIONAL_TRUECOLOR:
+        const pointLength3 = readHeader(p, section);
+        for (let i = 0; i < pointLength3; i++) {
+          const x = p.convertCoordinate(p.readSignedShort());
+          const y = p.convertCoordinate(p.readSignedShort());
+          const z = p.readSignedShort();
+          p.readByte();
+          const b = p.readByte();
+          const g = p.readByte();
+          const r = p.readByte();
+          const point = {
+            x,
+            y,
+            z,
+            r,
+            g,
+            b
+          };
+          section.points.push(point);
+        }
+        break;
+      case SectionTypes.TWO_DIMENSIONAL_TRUECOLOR:
+        const pointLength4 = readHeader(p, section);
+        for (let i = 0; i < pointLength4; i++) {
+          const x = p.convertCoordinate(p.readSignedShort());
+          const y = p.convertCoordinate(p.readSignedShort());
+          p.readByte();
+          const b = p.readByte() / 255;
+          const g = p.readByte() / 255;
+          const r = p.readByte() / 255;
+          const point = {
+            x,
+            y,
+            r,
+            g,
+            b
+          };
+          section.points.push(point);
+        }
+        break;
     }
     sections.push(section);
   }
   return sections;
+}
+
+function readHeader(p: ArrayReader, section: Section) {
+  section.name = p.readString(8);
+  section.company = p.readString(8);
+  const length = p.readShort();
+  p.readShort(); // this is the `index`, but we ignore that for now
+  section.total = p.readShort();
+  section.head = p.readByte();
+  p.readByte();
+  return length;
 }
 
 export { Section };

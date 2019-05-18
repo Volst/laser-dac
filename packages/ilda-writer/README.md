@@ -1,6 +1,6 @@
 # ILDA Writer
 
-This package can write an array of points to an [ILDA](http://ilda.com/) file (`.ild`). ILDA formats 0, 1, 2, 3 and 5 are supported.
+This package can write an array of points to an [ILDA](http://ilda.com/) file (`.ild`). All ILDA formats are supported (0 to 5).
 
 This is heavily inspired by [ilda.js](https://github.com/possan/ilda.js), but this tool only works in the browser and we wanted to be able to use it in both Nodejs and the browser.
 
