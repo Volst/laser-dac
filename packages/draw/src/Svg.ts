@@ -6,6 +6,7 @@ import { Color, Point } from './Point';
 import { hexToRgb, flatten } from './helpers';
 
 const DEFAULT_COLOR: Color = [0, 1, 0];
+const ALLOWED_NODES = ['path', 'polyline', 'polygon'];
 
 interface SvgOptions {
   x: number;
@@ -56,7 +57,7 @@ export class Svg extends Shape {
   }
 
   nodeWalker = (child: Node) => {
-    if (child.name === 'path') {
+    if (ALLOWED_NODES.includes(child.name)) {
       this.pathNodes.push(child);
     } else if (child.children) {
       child.children.forEach(this.nodeWalker);
@@ -72,16 +73,17 @@ export class Svg extends Shape {
     this.pathNodes = [];
     this.nodeWalker(this.file);
 
-    const points = this.pathNodes.map(node =>
-      new Path({
+    const points = this.pathNodes.map(_node => {
+      const node = convertToPath(_node);
+      return new Path({
         path: node.attributes.d as string,
         color: this.parseHexToRelativeColor(node.attributes.fill as string),
         x: this.x,
         y: this.y,
         width,
         height
-      }).draw(resolution)
-    );
+      }).draw(resolution);
+    });
 
     return flatten(points) as Point[];
   }
@@ -91,4 +93,17 @@ export function loadSvgFile(path: string) {
   const buffer = fs.readFileSync(path);
   const content = buffer.toString();
   return parse(content);
+}
+
+// Many SVG elements can be replaced to <path/>, which makes life easier for us.
+function convertToPath(node: Node) {
+  if (node.name === 'polyline' || node.name === 'polygon') {
+    node.attributes.d = `M${node.attributes.points}`;
+    if (node.name === 'polygon') node.attributes.d += 'z';
+    node.name = 'path';
+    node.attributes.points = '';
+  }
+  // TODO: implement line/circle/ellipse
+  // very easy, see: https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js#L67
+  return node;
 }
