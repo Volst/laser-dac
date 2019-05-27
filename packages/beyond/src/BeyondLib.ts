@@ -12,14 +12,14 @@ import * as ref from 'ref';
 // Zero - usigned byte. leave it zero.
 
 const BeyondPoint = Struct({
-  X: 'float',
-  Y: 'float',
-  Z: 'float',
-  Color: 'int',
-  RepCount: 'uchar',
-  Focus: 'uchar',
-  Status: 'uchar',
-  Zero: 'uchar'
+  x: 'float',
+  y: 'float',
+  z: 'float',
+  color: 'int',
+  repCount: 'uchar',
+  focus: 'uchar',
+  status: 'uchar',
+  zero: 'uchar'
 });
 
 const BeyondPointArray = ArrayType(BeyondPoint);

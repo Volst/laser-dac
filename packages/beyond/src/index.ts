@@ -2,11 +2,8 @@ import { Device } from '@laser-dac/core';
 import * as beyondLib from './BeyondLib';
 import { relativeToPosition, relativeToColor } from './convert';
 
-const DEFAULT_POINTS_RATE = 30000;
-const ZONE_NUMBER = 0;
-const ZONE_NAME = `Laser Dac Demo Z${ZONE_NUMBER}`;
-
-const FPS = 30;
+const ZONE_NUMBER = 1;
+const ZONE_NAME = `Laserdac Demo Z${ZONE_NUMBER}`;
 
 export class Beyond extends Device {
   private interval?: NodeJS.Timer;
@@ -36,21 +33,24 @@ export class Beyond extends Device {
 
   private convertPoint(p: beyondLib.IPoint) {
     return {
-      X: relativeToPosition(p.x),
-      Y: relativeToPosition(p.y),
-      Z: 0,
-      Color: relativeToColor(p.r, p.g, p.b),
-      RepCount: 0,
-      Focus: 0,
-      Status: 0,
-      Zero: 0
+      x: relativeToPosition(p.x),
+      y: relativeToPosition(p.y),
+      z: 0,
+      pointColor: relativeToColor(p.r, p.g, p.b),
+      repCount: 0,
+      focus: 0,
+      status: 0,
+      zero: 0
     };
   }
 
   stream(
     scene: { points: beyondLib.IPoint[] },
-    pointsRate: number = DEFAULT_POINTS_RATE
+    pointsRate: number,
+    fps: number
   ) {
+    // Scan rate is a relative value, percents of defalt sample rate. 100 means 100% of default projector sample rate. If value of ARate is negative, this this is sample rate. Sorry, a bit tricky, the idea is use one variable for two possible options. So, of value is negative then it is sample rate. If you want 30K, then value should be -30000 (minus thirty k). Sample rate means - points per second.
+    pointsRate = 100;
     this.interval = setInterval(() => {
       if (!scene.points.length) {
         return;
@@ -66,6 +66,6 @@ export class Beyond extends Device {
         pointsRate
       );
       console.log('res', res);
-    }, 1000 / FPS);
+    }, 1000 / fps);
   }
 }
