@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as Struct from 'ref-struct';
 import * as ArrayType from 'ref-array';
 import * as ffi from 'ffi';
+import * as ref from 'ref';
 
 /*
     typedef struct {
@@ -32,41 +33,71 @@ const libPath = path
   .replace('app.asar', 'app.asar.unpacked');
 
 const EasylaseLib = ffi.Library(libPath, {
-  EasyLaseGetCardNum: ['int', []],
-  EasyLaseStop: ['int', ['int']],
-  EasyLaseClose: ['int', []],
-  EasyLaseGetStatus: ['int', ['int']],
-  EasyLaseWriteFrame: ['int', ['int', EasylasePointArray, 'uint', 'uint']]
+  jmLaserEnumerateDevices: ['int', []],
+  jmLaserStopOutput: ['int', ['int']],
+  jmLaserCloseDevice: ['int', ['int']],
+  jmLaserStartOutput: ['int', ['int']],
+  jmLaserOpenDevice: ['int', ['char*']],
+  jmLaserGetDeviceListEntry: ['int', ['uint', 'char*', 'uint']],
+  jmLaserGetDeviceListEntryLength: ['int', ['uint']],
+  jmLaserIsDeviceReady: ['int', ['int']],
+  jmLaserWriteFrame: [
+    'int',
+    ['int', EasylasePointArray, 'uint', 'uint', 'uint']
+  ]
 });
 
-export function getCardNum(): number {
-  return EasylaseLib.EasyLaseGetCardNum();
+export function enumerateDevices(): number {
+  return EasylaseLib.jmLaserEnumerateDevices();
 }
 
-export function stop(cardNumber: number): number {
-  return EasylaseLib.EasyLaseStop(cardNumber);
+export function stopOutput(handle: number): number {
+  return EasylaseLib.jmLaserStopOutput(handle);
 }
 
-export function close(): number {
-  return EasylaseLib.EasyLaseClose();
+export function closeDevice(handle: number): number {
+  return EasylaseLib.jmLaserCloseDevice(handle);
 }
 
-export function getStatus(cardNumber: number): number {
-  return EasylaseLib.EasyLaseGetStatus(cardNumber);
+export function startOutput(handle: number): number {
+  return EasylaseLib.jmLaserStartOutput(handle);
+}
+
+export function openDevice(deviceNameBuf: Buffer): number {
+  // console.log('open device', deviceNameBuf);
+  // const buf = new Buffer(deviceName.length);
+  // buf.write(deviceName)
+  return EasylaseLib.jmLaserOpenDevice(deviceNameBuf);
+}
+
+export function getDeviceListEntry(index: number): Buffer {
+  const length = EasylaseLib.jmLaserGetDeviceListEntryLength(index);
+  const buf = Buffer.alloc(length);
+  (buf as any).type = ref.types.char;
+  EasylaseLib.jmLaserGetDeviceListEntry(index, buf as any, length);
+  // We pass the buffer right through to `openDevice()`,
+  // but if you ever need to actually read the deviceName:
+  // const deviceName = buf.toString('utf8');
+  return buf;
+}
+
+export function isDeviceReady(handle: number): number {
+  return EasylaseLib.jmLaserIsDeviceReady(handle);
 }
 
 export function writeFrame(
-  cardNumber: number,
+  handle: number,
   points: IPoint[],
   numOfPoints: number,
-  speed: number
+  speed: number,
+  repetitions: number
 ): number {
-  return EasylaseLib.EasyLaseWriteFrame(
-    cardNumber,
+  return EasylaseLib.jmLaserWriteFrame(
+    handle,
     points,
-    numOfPoints * 8,
     numOfPoints,
-    speed
+    speed,
+    repetitions
   );
 }
 
