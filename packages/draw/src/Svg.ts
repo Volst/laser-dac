@@ -58,7 +58,7 @@ export class Svg extends Shape {
   nodeWalker = (child: Node) => {
     if (child.name === 'path') {
       this.pathNodes.push(child);
-    } else {
+    } else if (child.children) {
       child.children.forEach(this.nodeWalker);
     }
   };

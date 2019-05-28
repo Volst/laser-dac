@@ -1,4 +1,5 @@
 const DEFAULT_POINTS_RATE = 30000;
+const DEFAULT_FPS = 30;
 
 export interface Point {
   x: number;
@@ -15,7 +16,7 @@ export interface Scene {
 export abstract class Device {
   abstract start(): Promise<boolean>;
   abstract stop(): void;
-  abstract stream(scene: Scene, pointsRate: number): void;
+  abstract stream(scene: Scene, pointsRate: number, fps: number): void;
 }
 
 export class DAC {
@@ -52,9 +53,9 @@ export class DAC {
     }
   }
 
-  stream(scene: Scene, pointsRate: number = DEFAULT_POINTS_RATE) {
+  stream(scene: Scene, pointsRate = DEFAULT_POINTS_RATE, fps = DEFAULT_FPS) {
     for (const device of this.devices) {
-      device.stream(scene, pointsRate);
+      device.stream(scene, pointsRate, fps);
     }
   }
 }

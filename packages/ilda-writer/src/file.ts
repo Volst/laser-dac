@@ -3,6 +3,8 @@ export enum SectionTypes {
   TWO_DIMENSIONAL = 1,
   COLOR_TABLE = 2,
   TRUECOLOR_TABLE = 3,
+  TREE_DIMENSIONAL_TRUECOLOR = 4,
+  TWO_DIMENSIONAL_TRUECOLOR = 5,
   UNKNOWN = 99
 }
 
@@ -12,6 +14,9 @@ export interface Point {
   z?: number;
   blanking: boolean;
   color?: number;
+  r?: number;
+  g?: number;
+  b?: number;
 }
 
 export interface Color {

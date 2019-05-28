@@ -8,7 +8,7 @@ Our goal is to make it as easy as possible to develop **interactive laser drawin
 
 The tools use Node.js and are published on npm under the `@laser-dac` scope.
 
-**Currently this is in early development.**
+Documentation is still very limited. This project is used in our modular synthesizer app, **[Modulaser](https://modulaser.app/)**.
 
 The tools consist of a couple of packages. Click on the title for more information.
 
@@ -31,6 +31,10 @@ This package takes care of the communication to the [Laserdock](https://www.wick
 ## [`@laser-dac/beyond`](./packages/beyond)
 
 This package takes care of communication to [Pangolin Beyond software](https://pangolin.com/pages/beyond). **This isn't finished yet!**
+
+## [`@laser-dac/easylase`](./packages/easylase)
+
+This package takes care of communication to [Easylase](http://www.jmlaser.com/EasyLase_D.htm). **This isn't finished yet!**
 
 ## [`@laser-dac/simulator`](./packages/simulator)
 

@@ -1,6 +1,6 @@
 # ILDA Reader
 
-This package can read an [ILDA](http://ilda.com/) file (`.ild`) and convert it to a JSON array of points.
+This package can read an [ILDA](http://ilda.com/) file (`.ild`) and convert it to a JSON array of points. All ILDA formats are supported (0 to 5).
 
 This is heavily inspired by [ilda.js](https://github.com/possan/ilda.js), but this tool only works in the browser and we wanted to be able to use it in both Nodejs and the browser.
 

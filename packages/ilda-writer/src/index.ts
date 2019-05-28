@@ -11,16 +11,7 @@ export function toByteArray(sections: Section[]) {
     const colors = section.colors || [];
     switch (section.type) {
       case SectionTypes.THREE_DIMENSIONAL:
-        // 3d frame
-        p.writeString('ILDA', 4);
-        p.writeLong(section.type);
-        p.writeString(section.name, 8);
-        p.writeString(section.company || DEFAULT_COMPANY_NAME, 8);
-        p.writeShort(section.points.length);
-        p.writeShort(si);
-        p.writeShort(section.total || total);
-        p.writeByte(section.head || 0);
-        p.writeByte(0);
+        writeHeader(p, section, si, total);
         for (let i = 0; i < section.points.length; i++) {
           const point = section.points[i];
           p.writeSignedShort(point.x);
@@ -34,16 +25,7 @@ export function toByteArray(sections: Section[]) {
         }
         break;
       case SectionTypes.TWO_DIMENSIONAL:
-        // 2d frame
-        p.writeString('ILDA', 4);
-        p.writeLong(section.type);
-        p.writeString(section.name, 8);
-        p.writeString(section.company || DEFAULT_COMPANY_NAME, 8);
-        p.writeShort(section.points.length);
-        p.writeShort(si);
-        p.writeShort(section.total || total);
-        p.writeByte(section.head || 0);
-        p.writeByte(0);
+        writeHeader(p, section, si, total);
         for (let i = 0; i < section.points.length; i++) {
           const point = section.points[i];
           p.writeSignedShort(point.x);
@@ -56,7 +38,6 @@ export function toByteArray(sections: Section[]) {
         }
         break;
       case SectionTypes.COLOR_TABLE:
-        // color palette
         p.writeString('ILDA', 4);
         p.writeLong(section.type);
         p.writeString(section.name, 8);
@@ -75,7 +56,6 @@ export function toByteArray(sections: Section[]) {
         }
         break;
       case SectionTypes.TRUECOLOR_TABLE:
-        // truecolor
         p.writeString('ILDA', 4);
         p.writeLong(section.type);
         p.writeLong(colors.length * 3 + 4);
@@ -87,7 +67,57 @@ export function toByteArray(sections: Section[]) {
           p.writeByte(color.b);
         }
         break;
+      case SectionTypes.TREE_DIMENSIONAL_TRUECOLOR:
+        writeHeader(p, section, si, total);
+        for (let i = 0; i < section.points.length; i++) {
+          const point = section.points[i];
+          p.writeSignedShort(point.x);
+          p.writeSignedShort(point.y);
+          p.writeSignedShort(point.z!);
+          let st = 0;
+          if (point.blanking) st |= BlankingBit;
+          if (i == section.points.length - 1) st |= LastBit;
+          p.writeByte(st);
+          // Sidenote: we trust on the user providing correct r,g,b values
+          p.writeByte(point.b!);
+          p.writeByte(point.g!);
+          p.writeByte(point.r!);
+        }
+        break;
+      case SectionTypes.TWO_DIMENSIONAL_TRUECOLOR:
+        writeHeader(p, section, si, total);
+        for (let i = 0; i < section.points.length; i++) {
+          const point = section.points[i];
+          p.writeSignedShort(point.x);
+          p.writeSignedShort(point.y);
+          let st = 0;
+          if (point.blanking) st |= BlankingBit;
+          if (i == section.points.length - 1) st |= LastBit;
+          p.writeByte(st);
+          // Sidenote: we trust on the user providing correct r,g,b values
+          p.writeByte(point.b!);
+          p.writeByte(point.g!);
+          p.writeByte(point.r!);
+        }
+        break;
     }
   }
   return p.bytes;
+}
+
+function writeHeader(
+  p: ArrayWriter,
+  section: Section,
+  sectionIndex: number,
+  total: number
+) {
+  p.writeString('ILDA', 4);
+  p.writeLong(section.type);
+  p.writeString(section.name, 8);
+  p.writeString(section.company || DEFAULT_COMPANY_NAME, 8);
+  p.writeShort(section.points.length);
+  p.writeShort(sectionIndex);
+  p.writeShort(section.total || total);
+  p.writeByte(section.head || 0);
+  p.writeByte(0);
 }
