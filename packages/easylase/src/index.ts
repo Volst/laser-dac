@@ -14,6 +14,7 @@ export class Easylase extends Device {
 
   stop() {
     const cards = easylaseLib.getCardNum();
+    console.log('cards', cards);
     // TODO is manual stop necessary?
     if (cards) {
       easylaseLib.stop(0);

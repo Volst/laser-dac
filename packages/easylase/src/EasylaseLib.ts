@@ -32,27 +32,27 @@ const libPath = path
   .replace('app.asar', 'app.asar.unpacked');
 
 const EasylaseLib = ffi.Library(libPath, {
-  easyLaseGetCardNum: ['int', []],
-  easyLaseStop: ['int', ['int']],
-  easyLaseClose: ['int', []],
-  easyLaseGetStatus: ['int', ['int']],
-  easyLaseWriteFrame: ['int', ['int', EasylasePointArray, 'uint', 'uint']]
+  EasyLaseGetCardNum: ['int', []],
+  EasyLaseStop: ['int', ['int']],
+  EasyLaseClose: ['int', []],
+  EasyLaseGetStatus: ['int', ['int']],
+  EasyLaseWriteFrame: ['int', ['int', EasylasePointArray, 'uint', 'uint']]
 });
 
 export function getCardNum(): number {
-  return EasylaseLib.easyLaseGetCardNum();
+  return EasylaseLib.EasyLaseGetCardNum();
 }
 
 export function stop(cardNumber: number): number {
-  return EasylaseLib.easyLaseStop(cardNumber);
+  return EasylaseLib.EasyLaseStop(cardNumber);
 }
 
 export function close(): number {
-  return EasylaseLib.easyLaseClose();
+  return EasylaseLib.EasyLaseClose();
 }
 
 export function getStatus(cardNumber: number): number {
-  return EasylaseLib.easyLaseGetStatus(cardNumber);
+  return EasylaseLib.EasyLaseGetStatus(cardNumber);
 }
 
 export function writeFrame(
@@ -61,7 +61,7 @@ export function writeFrame(
   numOfPoints: number,
   speed: number
 ): number {
-  return EasylaseLib.easyLaseWriteFrame(
+  return EasylaseLib.EasyLaseWriteFrame(
     cardNumber,
     points,
     numOfPoints * 8,
