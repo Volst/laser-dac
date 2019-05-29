@@ -9,7 +9,6 @@ export class Easylase extends Device {
   async start() {
     this.stop();
     const cards = easylaseLib.enumerateDevices();
-    console.log('cards:', cards);
     if (cards) {
       const deviceName = easylaseLib.getDeviceListEntry(cards - 1);
       const handle = easylaseLib.openDevice(deviceName);
@@ -40,7 +39,11 @@ export class Easylase extends Device {
       r: relativeToColor(p.r),
       g: relativeToColor(p.g),
       b: relativeToColor(p.b),
-      i: 255
+      i: 255,
+      deepblue: 0,
+      yellow: 0,
+      cyan: 0,
+      user4: 0
     };
   }
 
@@ -51,19 +54,17 @@ export class Easylase extends Device {
       }
       if (this.deviceHandle == null) return;
       const ready = easylaseLib.isDeviceReady(this.deviceHandle);
-      console.log('ready', ready);
       if (ready !== 1) {
         return;
       }
       const points = scene.points.map(this.convertPoint);
-      const res = easylaseLib.writeFrame(
+      easylaseLib.writeFrame(
         this.deviceHandle,
         points,
         points.length,
         pointsRate,
         0
       );
-      console.log('res', res);
     }, 1000 / fps);
   }
 }

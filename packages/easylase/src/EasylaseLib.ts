@@ -16,12 +16,16 @@ import * as ref from 'ref';
 */
 
 const EasylasePoint = Struct({
-  x: 'uint16',
-  y: 'uint16',
-  r: 'uint8',
-  g: 'uint8',
-  b: 'uint8',
-  i: 'uint8'
+  x: 'int',
+  y: 'int',
+  r: 'ushort',
+  g: 'ushort',
+  b: 'ushort',
+  i: 'ushort',
+  deepblue: 'ushort',
+  yellow: 'ushort',
+  cyan: 'ushort',
+  user4: 'ushort'
 });
 
 const EasylasePointArray = ArrayType(EasylasePoint);
