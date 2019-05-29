@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/ilda-reader",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Read ILDA (.ild) files as JSON data",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",

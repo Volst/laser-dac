@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/beyond",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Pangolin Beyond laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",

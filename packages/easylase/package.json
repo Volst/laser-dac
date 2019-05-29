@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/easylase",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Easylase laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
