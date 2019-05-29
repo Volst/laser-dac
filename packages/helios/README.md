@@ -1,22 +1,20 @@
-# @laser-dac/easylase
+# @laser-dac/helios
 
-This package makes Laser DAC compatible with the Easylase USB II and NetLase by [JMLaser](http://www.jmlaser.com/).
-
-This package works on Windows only since JMLaser only provides drivers for Windows.
+This package makes Laser DAC compatible with the [Helios](http://pages.bitlasers.com/helios/). Currently macOS + Windows only.
 
 ```
-yarn add @laser-dac/easylase
-npm i @laser-dac/easylase
+yarn add @laser-dac/helios
+npm i @laser-dac/helios
 ```
 
 ## Usage
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { Easylase } from '@laser-dac/easylase';
+import { Helios } from '@laser-dac/helios';
 
 const dac = new DAC();
-dac.use(new Easylase());
+dac.use(new Helios());
 const started = await dac.start();
 if (started) {
   const pps = 30000; // points per second

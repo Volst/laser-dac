@@ -1,10 +1,10 @@
-# Ether Dream Drawer
+# @laser-dac/draw
 
 This package makes it easy for you to make laser drawings using programming. Of course there are many professional laser tools that you can use, but the advantage of this package is that since you can program it, it can handle interactive drawings.
 
 There is also first-class support for using ILDA files (a standard used by the laser community for generating laser drawings with animations). You can include multiple ILDA files, control playback and position them anywhere you want on the scene.
 
-There also will be support for SVG files. This way you don't need expensive laser software to generate ILDA files!
+There is support for converting SVG files as well, albeit it doesn't support all SVG syntax.
 
 ## Usage
 

@@ -1,26 +1,25 @@
-# @laser-dac/easylase
+# @laser-dac/ether-dream
 
-This package makes Laser DAC compatible with the Easylase USB II and NetLase by [JMLaser](http://www.jmlaser.com/).
+This package makes Laser DAC compatible with the [Ether Dream](https://ether-dream.com/). Should work on all operating systems.
 
-This package works on Windows only since JMLaser only provides drivers for Windows.
+This package is originally based on [node-etherdream](https://github.com/possan/node-etherdream) but with many changes.
 
 ```
-yarn add @laser-dac/easylase
-npm i @laser-dac/easylase
+yarn add @laser-dac/ether-dream
+npm i @laser-dac/ether-dream
 ```
 
 ## Usage
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { Easylase } from '@laser-dac/easylase';
+import { EtherDream } from '@laser-dac/ether-dream';
 
 const dac = new DAC();
-dac.use(new Easylase());
+dac.use(new EtherDream());
 const started = await dac.start();
 if (started) {
   const pps = 30000; // points per second
-  const fps = 120; // frames per second
   // draw a horizontal red line from left to right in the center
   // @laser-dac/draw can help you with drawing points!
   const scene = {
@@ -29,7 +28,7 @@ if (started) {
       { x: 0.9, y: 0.5, r: 1, g: 0, b: 0 }
     ]
   };
-  dac.stream(scene, pps, fps);
+  dac.stream(scene, pps);
 }
 ```
 

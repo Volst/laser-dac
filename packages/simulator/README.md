@@ -1,26 +1,22 @@
-# @laser-dac/easylase
+# @laser-dac/simulator
 
-This package makes Laser DAC compatible with the Easylase USB II and NetLase by [JMLaser](http://www.jmlaser.com/).
-
-This package works on Windows only since JMLaser only provides drivers for Windows.
+This package can simulate a physical laser DAC so you can develop without having a laser or DAC at all. It has a web-based simulator for the laser, that tries its best to mimick the limitations of the laser.
 
 ```
-yarn add @laser-dac/easylase
-npm i @laser-dac/easylase
+yarn add @laser-dac/simulator
+npm i @laser-dac/simulator
 ```
 
 ## Usage
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { Easylase } from '@laser-dac/easylase';
+import { Simulator } from '@laser-dac/simulator';
 
 const dac = new DAC();
-dac.use(new Easylase());
+dac.use(new Simulator());
 const started = await dac.start();
 if (started) {
-  const pps = 30000; // points per second
-  const fps = 120; // frames per second
   // draw a horizontal red line from left to right in the center
   // @laser-dac/draw can help you with drawing points!
   const scene = {
@@ -29,7 +25,7 @@ if (started) {
       { x: 0.9, y: 0.5, r: 1, g: 0, b: 0 }
     ]
   };
-  dac.stream(scene, pps, fps);
+  dac.stream(scene);
 }
 ```
 

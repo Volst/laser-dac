@@ -1,22 +1,24 @@
-# @laser-dac/easylase
+# @laser-dac/beyond
 
-This package makes Laser DAC compatible with the Easylase USB II and NetLase by [JMLaser](http://www.jmlaser.com/).
+This package makes Laser DAC compatible with the [Pangolin Beyond software](https://pangolin.com/pages/beyond).
 
-This package works on Windows only since JMLaser only provides drivers for Windows.
+**Package is not finished yet.**
+
+Pangolin does not provide any way to talk to a Pangolin FB3 or FB4 directly, so this means you need to run Pangolin Beyond on the same PC as well. This also means it only works on Windows.
 
 ```
-yarn add @laser-dac/easylase
-npm i @laser-dac/easylase
+yarn add @laser-dac/beyond
+npm i @laser-dac/beyond
 ```
 
 ## Usage
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { Easylase } from '@laser-dac/easylase';
+import { Beyond } from '@laser-dac/beyond';
 
 const dac = new DAC();
-dac.use(new Easylase());
+dac.use(new Beyond());
 const started = await dac.start();
 if (started) {
   const pps = 30000; // points per second

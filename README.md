@@ -34,7 +34,7 @@ This package takes care of communication to [Pangolin Beyond software](https://p
 
 ## [`@laser-dac/easylase`](./packages/easylase)
 
-This package takes care of communication to [Easylase](http://www.jmlaser.com/EasyLase_D.htm). **This isn't finished yet!**
+This package takes care of communication to [EasyLase](http://www.jmlaser.com/EasyLase_D.htm) and NetLase. Windows only!
 
 ## [`@laser-dac/simulator`](./packages/simulator)
 
