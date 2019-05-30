@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/ether-dream",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Ether-Dream laser interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
@@ -31,7 +31,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@laser-dac/core": "^0.4.0"
+    "@laser-dac/core": "^0.4.1"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
