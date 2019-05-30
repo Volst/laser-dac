@@ -15,7 +15,7 @@ const BeyondPoint = Struct({
   x: 'float',
   y: 'float',
   z: 'float',
-  color: 'int',
+  pointColor: 'int',
   repCount: 'uchar',
   focus: 'uchar',
   status: 'uchar',
@@ -77,11 +77,20 @@ export function ldbSendFrameToImage(
   zones: number[],
   scanRate: number
 ): number {
+  // TODO: maybe use ref.address to get buffer address???
+  const rPoints = new BeyondPointArray(points.length);
+  points.forEach((p, i) => {
+    rPoints[i] = new BeyondPoint(p);
+  });
+  const rZones = new ZoneIndiceArray(zones.length);
+  zones.forEach((z, i) => {
+    rZones[i] = ref.alloc(ref.types.int, z);
+  });
   return BeyondLib.ldbSendFrameToImage(
     imageName,
     numPoints,
-    points,
-    zones,
+    (rPoints[0] as any).ref(),
+    rZones[0],
     scanRate
   );
 }
