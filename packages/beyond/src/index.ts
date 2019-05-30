@@ -10,10 +10,12 @@ const ZONE_REF = beyondLib.getZoneRef(ZONES);
 
 export class Beyond extends Device {
   private interval?: NodeJS.Timer;
+  private started = false;
 
   async start() {
     this.stop();
     beyondLib.ldbCreate();
+    this.started = true;
     const ready = beyondLib.ldbBeyondExeReady();
 
     if (ready === 1) {
@@ -23,6 +25,12 @@ export class Beyond extends Device {
   }
 
   stop() {
+    if (this.started) {
+      // Beyond doesn't give us an easy way to clear the image.
+      // I'd expect `ldbDeleteZoneImage` would also clear, but nope.
+      beyondLib.ldbSendFrameToImage(ZONE_NAME, 0, [], ZONE_REF, 100);
+      this.started = false;
+    }
     beyondLib.ldbDestroy();
     if (this.interval) {
       clearInterval(this.interval);
@@ -53,7 +61,7 @@ export class Beyond extends Device {
         points.length,
         points,
         ZONE_REF,
-        pointsRate
+        -pointsRate // positive pointsRate means percentage, negative is absolute value like we want
       );
     }, 1000 / fps);
   }

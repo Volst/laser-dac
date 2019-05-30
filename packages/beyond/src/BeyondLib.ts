@@ -35,7 +35,8 @@ const BeyondLib = ffi.Library(libPath, {
     'int',
     ['string', 'int', BeyondPointArray, ZoneIndiceArray, 'int']
   ],
-  ldbCreateZoneImage: ['int', ['int', 'string']]
+  ldbCreateZoneImage: ['int', ['int', 'string']],
+  ldbDeleteZoneImage: ['int', ['string']]
 });
 
 export function ldbCreate(): number {
@@ -56,6 +57,10 @@ export function ldbBeyondExeStarted(): number {
 
 export function ldbCreateZoneImage(zoneIndex: number, name: string): number {
   return BeyondLib.ldbCreateZoneImage(zoneIndex, name);
+}
+
+export function ldbDeleteZoneImage(name: string): number {
+  return BeyondLib.ldbDeleteZoneImage(name);
 }
 
 export function getZoneRef(zones: number[]): any {
