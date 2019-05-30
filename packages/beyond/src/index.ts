@@ -1,25 +1,23 @@
-import { Device } from '@laser-dac/core';
+import { Device, Point } from '@laser-dac/core';
 import * as beyondLib from './BeyondLib';
 import { relativeToPosition, relativeToColor } from './convert';
 
 const ZONE_NUMBER = 1;
 const ZONE_NAME = `Laserdac Demo Z${ZONE_NUMBER}`;
+const ZONES = Array(255).fill(0);
+ZONES[0] = ZONE_NUMBER;
+const ZONE_REF = beyondLib.getZoneRef(ZONES);
 
 export class Beyond extends Device {
   private interval?: NodeJS.Timer;
 
   async start() {
     this.stop();
-    const created = beyondLib.ldbCreate();
-    console.log('created', created);
+    beyondLib.ldbCreate();
     const ready = beyondLib.ldbBeyondExeReady();
-    console.log('Beyond exe ready', beyondLib.ldbBeyondExeStarted(), ready);
-    console.log('Zone count', beyondLib.ldbGetZoneCount());
 
     if (ready === 1) {
-      const zone = beyondLib.ldbCreateZoneImage(ZONE_NUMBER, ZONE_NAME);
-      console.log('zone created', zone);
-      return true;
+      return !!beyondLib.ldbCreateZoneImage(ZONE_NUMBER, ZONE_NAME);
     }
     return false;
   }
@@ -31,7 +29,7 @@ export class Beyond extends Device {
     }
   }
 
-  private convertPoint(p: beyondLib.IPoint) {
+  private convertPoint(p: Point) {
     return {
       x: relativeToPosition(p.x),
       y: relativeToPosition(p.y),
@@ -44,28 +42,19 @@ export class Beyond extends Device {
     };
   }
 
-  stream(
-    scene: { points: beyondLib.IPoint[] },
-    pointsRate: number,
-    fps: number
-  ) {
-    // Scan rate is a relative value, percents of defalt sample rate. 100 means 100% of default projector sample rate. If value of ARate is negative, this this is sample rate. Sorry, a bit tricky, the idea is use one variable for two possible options. So, of value is negative then it is sample rate. If you want 30K, then value should be -30000 (minus thirty k). Sample rate means - points per second.
-    pointsRate = 100;
+  stream(scene: { points: Point[] }, pointsRate: number, fps: number) {
     this.interval = setInterval(() => {
       if (!scene.points.length) {
         return;
       }
       const points = scene.points.map(this.convertPoint);
-      const zones = Array(255).fill(0);
-      zones[0] = ZONE_NUMBER;
-      const res = beyondLib.ldbSendFrameToImage(
+      beyondLib.ldbSendFrameToImage(
         ZONE_NAME,
         points.length,
         points,
-        zones,
+        ZONE_REF,
         pointsRate
       );
-      console.log('res', res);
     }, 1000 / fps);
   }
 }

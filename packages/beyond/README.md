@@ -4,7 +4,7 @@ This package makes Laser DAC compatible with the [Pangolin Beyond software](http
 
 **Package is not finished yet.**
 
-Pangolin does not provide any way to talk to a Pangolin FB3 or FB4 directly, so this means you need to run Pangolin Beyond on the same PC as well. This also means it only works on Windows.
+Pangolin does not provide any way to talk to a Pangolin FB3 or FB4 directly, so this means you need to run Pangolin Beyond on the same PC as well. This also means it **only works on Windows**.
 
 ```
 yarn add @laser-dac/beyond

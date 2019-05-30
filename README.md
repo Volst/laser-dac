@@ -46,7 +46,7 @@ This package takes care of the communication to the [Laserdock](https://www.wick
 
 ### [`@laser-dac/beyond`](./packages/beyond)
 
-This package takes care of communication to [Pangolin Beyond software](https://pangolin.com/pages/beyond). **This isn't finished yet!**
+This package takes care of communication to [Pangolin Beyond software](https://pangolin.com/pages/beyond) (Windows-only).
 
 ### [`@laser-dac/easylase`](./packages/easylase)
 
