@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { fromByteArray, Section } from '@laser-dac/ilda-reader';
 import { Shape } from './Shape';
+import { Point } from './Point';
 
 export interface File {
   sections: Section[];
@@ -45,7 +46,7 @@ export class Ilda extends Shape {
     const x = this.x || 0;
     const y = this.y || 0;
     const size = this.size || 1;
-    return section.points.map(point => {
+    return section.points.map((point: Point) => {
       return {
         x: x + point.x * size,
         y: y + point.y * size,
