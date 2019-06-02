@@ -86,6 +86,19 @@ const line = new Line({
 scene.add(line);
 ```
 
+### `Circle()`
+
+```js
+const circle = new Circle({
+  radius: 0.2,
+  x: 0.5,
+  y: 0.5,
+  color: [0, 1, 0]
+});
+
+scene.add(line);
+```
+
 ### `Ilda()`
 
 ILDA files (`.ild`) can be used directly by the drawing tool. This file format is widely supported by laser drawing tools. An example:
