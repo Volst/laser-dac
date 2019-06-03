@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { fromByteArray, Section } from '@laser-dac/ilda-reader';
 import { Shape } from './Shape';
-import { Color } from './Point';
+import { Color, Point } from './Point';
 
 export interface File {
   sections: Section[];
@@ -56,14 +56,15 @@ export class Ilda extends Shape {
 
     return section.points.map(point => {
       const isBlank = point.r === 0 && point.g === 0 && point.b === 0;
-      return {
-        x: x + point.x * size,
-        y: y + point.y * size,
-        r: color !== undefined && !isBlank ? color[0] : point.r,
-        g: color !== undefined && !isBlank ? color[1] : point.g,
-        b: color !== undefined && !isBlank ? color[2] : point.b
-      };
-    });
+      return section.points.map((point: Point) => {
+        return {
+          x: x + point.x * size,
+          y: y + point.y * size,
+          r: color !== undefined && !isBlank ? color[0] : point.r,
+          g: color !== undefined && !isBlank ? color[1] : point.g,
+          b: color !== undefined && !isBlank ? color[2] : point.b
+        };
+      });
   }
 }
 
