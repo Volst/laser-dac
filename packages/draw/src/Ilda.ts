@@ -54,17 +54,16 @@ export class Ilda extends Shape {
     const color = this.color;
     const size = this.size || 1;
 
-    return section.points.map(point => {
+    return section.points.map((point: Point) => {
       const isBlank = point.r === 0 && point.g === 0 && point.b === 0;
-      return section.points.map((point: Point) => {
-        return {
-          x: x + point.x * size,
-          y: y + point.y * size,
-          r: color !== undefined && !isBlank ? color[0] : point.r,
-          g: color !== undefined && !isBlank ? color[1] : point.g,
-          b: color !== undefined && !isBlank ? color[2] : point.b
-        };
-      });
+      return {
+        x: x + point.x * size,
+        y: y + point.y * size,
+        r: color !== undefined && !isBlank ? color[0] : point.r,
+        g: color !== undefined && !isBlank ? color[1] : point.g,
+        b: color !== undefined && !isBlank ? color[2] : point.b
+      };
+    });
   }
 }
 
