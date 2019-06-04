@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/draw",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Show laser drawing tools inspired by the canvas API",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
@@ -27,7 +27,7 @@
     "prepublishOnly": "npm run -s build"
   },
   "dependencies": {
-    "@laser-dac/ilda-reader": "^0.2.0",
+    "@laser-dac/ilda-reader": "^0.3.0",
     "@types/bezier-js": "^0.0.8",
     "@types/svg-parser": "^1.0.0",
     "bezier-js": "^2.2.15",
