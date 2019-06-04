@@ -19,8 +19,8 @@ export function fromByteArray(arr: ByteArray) {
       case SectionTypes.THREE_DIMENSIONAL:
         const pointLength = readHeader(p, section);
         for (let i = 0; i < pointLength; i++) {
-          const x = p.convertCoordinate(p.readSignedShort());
-          const y = p.convertCoordinate(p.readSignedShort());
+          const x = p.readSignedShort();
+          const y = p.readSignedShort();
           // TODO: does it work like this?
           const z = p.readSignedShort();
           const rgb = parseColor(p.readShort());
@@ -38,8 +38,8 @@ export function fromByteArray(arr: ByteArray) {
       case SectionTypes.TWO_DIMENSIONAL:
         const pointLength2 = readHeader(p, section);
         for (let i = 0; i < pointLength2; i++) {
-          const x = p.convertCoordinate(p.readSignedShort());
-          const y = p.convertCoordinate(p.readSignedShort());
+          const x = p.readSignedShort();
+          const y = p.readSignedShort();
           const rgb = parseColor(p.readShort());
           const point = {
             x,
@@ -78,8 +78,8 @@ export function fromByteArray(arr: ByteArray) {
       case SectionTypes.TREE_DIMENSIONAL_TRUECOLOR:
         const pointLength3 = readHeader(p, section);
         for (let i = 0; i < pointLength3; i++) {
-          const x = p.convertCoordinate(p.readSignedShort());
-          const y = p.convertCoordinate(p.readSignedShort());
+          const x = p.readSignedShort();
+          const y = p.readSignedShort();
           const z = p.readSignedShort();
           p.readByte();
           const b = p.readByte();
@@ -99,8 +99,8 @@ export function fromByteArray(arr: ByteArray) {
       case SectionTypes.TWO_DIMENSIONAL_TRUECOLOR:
         const pointLength4 = readHeader(p, section);
         for (let i = 0; i < pointLength4; i++) {
-          const x = p.convertCoordinate(p.readSignedShort());
-          const y = p.convertCoordinate(p.readSignedShort());
+          const x = p.readSignedShort();
+          const y = p.readSignedShort();
           p.readByte();
           const b = p.readByte() / 255;
           const g = p.readByte() / 255;
