@@ -96,7 +96,7 @@ const circle = new Circle({
   color: [0, 1, 0]
 });
 
-scene.add(line);
+scene.add(circle);
 ```
 
 ### `Ilda()`
