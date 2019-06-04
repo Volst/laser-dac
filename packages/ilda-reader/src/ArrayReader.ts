@@ -1,4 +1,4 @@
-export type ByteArray = number[];
+export type ByteArray = Uint8Array | number[];
 
 const XY_RESOLUTION = 65535;
 
@@ -8,7 +8,7 @@ export class ArrayReader {
   position = 0;
 
   constructor(bytes: ByteArray) {
-    this.bytes = bytes || [];
+    this.bytes = bytes;
     this.length = this.bytes.length;
   }
 
