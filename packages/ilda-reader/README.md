@@ -18,8 +18,7 @@ For a full example see `./test.ild` and `./test.ts` in the repository.
 
 ```js
 const buffer = fs.readFileSync('./test.ild');
-const byteArray = Array.prototype.slice.call(buffer, 0);
-const output = fromByteArray(byteArray);
+const output = fromByteArray(new Uint8Array(buffer));
 
 console.log(output);
 ```
