@@ -8,5 +8,6 @@ jobs:
     steps:
       - checkout
 
+      - run: ls -l node_modules/@laser-dac
       - run: yarn install
       - run: yarn test
