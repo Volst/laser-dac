@@ -50,7 +50,7 @@ export class Ilda extends Shape {
     return section.points.map((point: Point) => {
       const isBlank = point.r === 0 && point.g === 0 && point.b === 0;
       return {
-        x: x + convertCoordinate(point.x) * size,
+        x: x + (1 - convertCoordinate(point.x)) * size,
         y: y + convertCoordinate(point.y) * size,
         r: color !== undefined && !isBlank ? color[0] : point.r,
         g: color !== undefined && !isBlank ? color[1] : point.g,
