@@ -1,3 +1,5 @@
+import { BlankingBit } from './file';
+
 export const defaultColors = [
   '#F00',
   '#F10',
@@ -84,11 +86,10 @@ export function hexToRgb(hex: string) {
 }
 
 export function parseColor(st: any) {
-  // TODO: no idea what this does but it is necessary
   const colorIndex = (st >> 0) & 0x7f;
-
+  const blanking = st & BlankingBit;
   const hex = defaultColors[colorIndex % defaultColors.length];
-  if (!colorIndex) {
+  if (blanking) {
     return { r: 0, g: 0, b: 0 };
   }
   const rgb = hexToRgb(hex);
