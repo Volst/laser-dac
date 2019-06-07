@@ -1,101 +1,80 @@
 import { BlankingBit } from './file';
 
-export const defaultColors = [
-  '#F00',
-  '#F10',
-  '#F20',
-  '#F30',
-  '#F40',
-  '#F50',
-  '#F60',
-  '#F70',
-  '#F80',
-  '#F90',
-  '#FA0',
-  '#FB0',
-  '#FC0',
-  '#FD0',
-  '#FE0',
-  '#FF0',
-  '#FF0',
-  '#EF0',
-  '#CF0',
-  '#AF0',
-  '#8F0',
-  '#6F0',
-  '#4F0',
-  '#2F0',
-  '#0F0',
-  '#0F2',
-  '#0F4',
-  '#0F6',
-  '#0F8',
-  '#0FA',
-  '#0FC',
-  '#0FE',
-  '#08F',
-  '#07F',
-  '#06F',
-  '#06F',
-  '#05F',
-  '#04F',
-  '#04F',
-  '#02F',
-  '#00F',
-  '#20F',
-  '#40F',
-  '#60F',
-  '#80F',
-  '#A0F',
-  '#C0F',
-  '#E0F',
-  '#F0F',
-  '#F2F',
-  '#F4F',
-  '#F6F',
-  '#F8F',
-  '#FAF',
-  '#FCF',
-  '#FEF',
-  '#FFF',
-  '#FEE',
-  '#FCC',
-  '#FAA',
-  '#F88',
-  '#F66',
-  '#F44',
-  '#022'
-];
-
-export function hexToRgb(hex: string) {
-  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-    return r + r + g + g + b + b;
-  });
-
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) {
-    return { r: 0, g: 0, b: 0 };
-  }
-  return {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  };
-}
-
 export function parseColor(st: any) {
   const colorIndex = (st >> 0) & 0x7f;
   const blanking = st & BlankingBit;
-  const hex = defaultColors[colorIndex % defaultColors.length];
-  if (blanking) {
+  const rgb = defaultColors[colorIndex % defaultColors.length];
+  if (blanking || !rgb) {
     return { r: 0, g: 0, b: 0 };
   }
-  const rgb = hexToRgb(hex);
-  return {
-    r: rgb.r / 255,
-    g: rgb.g / 255,
-    b: rgb.b / 255
-  };
+  return rgb;
 }
+
+// This is the official suggested default color palette (64 colors), as found in https://www.ilda.com/resources/StandardsDocs/ILDA_IDTF14_rev011.pdf
+// There is also software out there that uses a palette of 255 colors, however this is not standardized.
+export const defaultColors = [
+  { r: 1, g: 0, b: 0 },
+  { r: 1, g: 0.06666666666666667, b: 0 },
+  { r: 1, g: 0.13333333333333333, b: 0 },
+  { r: 1, g: 0.2, b: 0 },
+  { r: 1, g: 0.26666666666666666, b: 0 },
+  { r: 1, g: 0.3333333333333333, b: 0 },
+  { r: 1, g: 0.4, b: 0 },
+  { r: 1, g: 0.4666666666666667, b: 0 },
+  { r: 1, g: 0.5333333333333333, b: 0 },
+  { r: 1, g: 0.6, b: 0 },
+  { r: 1, g: 0.6666666666666666, b: 0 },
+  { r: 1, g: 0.7333333333333333, b: 0 },
+  { r: 1, g: 0.8, b: 0 },
+  { r: 1, g: 0.8666666666666667, b: 0 },
+  { r: 1, g: 0.9333333333333333, b: 0 },
+  { r: 1, g: 1, b: 0 },
+  { r: 1, g: 1, b: 0 },
+  { r: 0.9333333333333333, g: 1, b: 0 },
+  { r: 0.8, g: 1, b: 0 },
+  { r: 0.6666666666666666, g: 1, b: 0 },
+  { r: 0.5333333333333333, g: 1, b: 0 },
+  { r: 0.4, g: 1, b: 0 },
+  { r: 0.26666666666666666, g: 1, b: 0 },
+  { r: 0.13333333333333333, g: 1, b: 0 },
+  { r: 0, g: 1, b: 0 },
+  { r: 0, g: 1, b: 0.13333333333333333 },
+  { r: 0, g: 1, b: 0.26666666666666666 },
+  { r: 0, g: 1, b: 0.4 },
+  { r: 0, g: 1, b: 0.5333333333333333 },
+  { r: 0, g: 1, b: 0.6666666666666666 },
+  { r: 0, g: 1, b: 0.8 },
+  { r: 0, g: 1, b: 0.9333333333333333 },
+  { r: 0, g: 0.5333333333333333, b: 1 },
+  { r: 0, g: 0.4666666666666667, b: 1 },
+  { r: 0, g: 0.4, b: 1 },
+  { r: 0, g: 0.4, b: 1 },
+  { r: 0, g: 0.3333333333333333, b: 1 },
+  { r: 0, g: 0.26666666666666666, b: 1 },
+  { r: 0, g: 0.26666666666666666, b: 1 },
+  { r: 0, g: 0.13333333333333333, b: 1 },
+  { r: 0, g: 0, b: 1 },
+  { r: 0.13333333333333333, g: 0, b: 1 },
+  { r: 0.26666666666666666, g: 0, b: 1 },
+  { r: 0.4, g: 0, b: 1 },
+  { r: 0.5333333333333333, g: 0, b: 1 },
+  { r: 0.6666666666666666, g: 0, b: 1 },
+  { r: 0.8, g: 0, b: 1 },
+  { r: 0.9333333333333333, g: 0, b: 1 },
+  { r: 1, g: 0, b: 1 },
+  { r: 1, g: 0.13333333333333333, b: 1 },
+  { r: 1, g: 0.26666666666666666, b: 1 },
+  { r: 1, g: 0.4, b: 1 },
+  { r: 1, g: 0.5333333333333333, b: 1 },
+  { r: 1, g: 0.6666666666666666, b: 1 },
+  { r: 1, g: 0.8, b: 1 },
+  { r: 1, g: 0.9333333333333333, b: 1 },
+  { r: 1, g: 1, b: 1 },
+  { r: 1, g: 0.9333333333333333, b: 0.9333333333333333 },
+  { r: 1, g: 0.8, b: 0.8 },
+  { r: 1, g: 0.6666666666666666, b: 0.6666666666666666 },
+  { r: 1, g: 0.5333333333333333, b: 0.5333333333333333 },
+  { r: 1, g: 0.4, b: 0.4 },
+  { r: 1, g: 0.26666666666666666, b: 0.26666666666666666 },
+  { r: 0, g: 0.13333333333333333, b: 0.13333333333333333 }
+];
