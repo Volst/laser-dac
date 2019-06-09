@@ -117,6 +117,26 @@ scene.add(ilda);
 
 The `frame` option controls what frame you want to display; it's easy to animate this and play all frames on whatever speed you like. See the [ilda-animation](https://github.com/Volst/laser-dac/tree/master/examples/ilda-animation) example.
 
+### `HersheyFont()`
+
+Hershey Font Files (`.jhf`) can be used to draw text. Hershey fonts can be found at https://emergent.unpythonic.net/software/hershey. The font `futural.jhf` is very usefull as it is a single stroke font.
+
+```js
+const font = loadHersheyFont(path.resolve(__dirname, './futural.jhf'));
+
+const text = new HersheyFont({
+  font,
+  text,
+  x: 0,
+  y: 0,
+  color: [1, 0, 0],
+  spacingFactor: 1.0,
+  charWidth: 0.1
+});
+```
+
+Note that the char width provided is the average char width, each individual character can have a different width.
+
 ### `Svg()`
 
 SVG files can also be used directly by the drawing tool!

@@ -1,21 +1,20 @@
 import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
 import { EtherDream } from '@laser-dac/ether-dream';
-import { Scene, IldaFont, loadIldaFile, Timeline } from '@laser-dac/draw';
+import { Scene, HersheyFont, loadHersheyFont, Timeline } from '@laser-dac/draw';
 import * as path from 'path';
-import * as mapping from './fontMap.json';
 
-const fontFile = loadIldaFile(path.resolve(__dirname, './font.ild'));
+const font = loadHersheyFont(path.resolve(__dirname, './futural.jhf'));
 
 function renderText(text: string) {
   return () =>
-    new IldaFont({
-      file: fontFile,
-      mapping,
+    new HersheyFont({
+      font,
       text,
-      x: 0,
-      size: 0.5,
-      fontWidth: 0.3
+      x: 0.1,
+      y: 0.4,
+      color: [1, 0, 0],
+      charWidth: 0.08
     });
 }
 
