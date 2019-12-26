@@ -6,7 +6,7 @@ import { Color, Point } from './Point';
 import { hexToRgb, flatten } from './helpers';
 
 const DEFAULT_COLOR: Color = [0, 1, 0];
-const ALLOWED_NODES = ['path', 'polyline', 'polygon'];
+const ALLOWED_NODES = ['path', 'polyline', 'polygon', 'rect', 'line'];
 
 interface SvgOptions {
   x: number;
@@ -102,8 +102,36 @@ function convertToPath(node: Node) {
     if (node.name === 'polygon') node.attributes.d += 'z';
     node.name = 'path';
     node.attributes.points = '';
+  } else if (node.name === 'rect') {
+    const x = +node.attributes.x;
+    const y = +node.attributes.y;
+    const width = +node.attributes.width;
+    const height = +node.attributes.height;
+
+    // TODO: this only works when the "px" postfix is not used
+    // TODO: Calculate sizes from % and non-px units if possible.
+    if (isNaN(x - y + width - height)) return node;
+
+    node.name = 'path';
+    node.attributes.d = `M${x} ${y}H${x + width}V${y + height}H${x}z`;
+    node.attributes.x = '';
+    node.attributes.y = '';
+    node.attributes.width = '';
+    node.attributes.height = '';
+  } else if (node.name === 'line') {
+    const x1 = +node.attributes.x1;
+    const y1 = +node.attributes.y1;
+    const x2 = +node.attributes.x2;
+    const y2 = +node.attributes.y2;
+    if (isNaN(x1 - y1 + x2 - y2)) return node;
+    node.name = 'path';
+    node.attributes.d = `M${x1} ${y1}L${x2} ${y2}`;
+    node.attributes.x1 = '';
+    node.attributes.y1 = '';
+    node.attributes.x2 = '';
+    node.attributes.y2 = '';
   }
-  // TODO: implement line/circle/ellipse
+  // TODO: implement circle/ellipse
   // very easy, see: https://github.com/svg/svgo/blob/master/plugins/convertShapeToPath.js#L67
   return node;
 }
