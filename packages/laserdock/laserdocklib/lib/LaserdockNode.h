@@ -14,6 +14,7 @@
 LaserdockDevice* device;
 
 LASERDOCKNODE_EXPORT int nodeInit();
+LASERDOCKNODE_EXPORT int nodeForceInit();
 LASERDOCKNODE_EXPORT int nodeEnableOutput();
 LASERDOCKNODE_EXPORT int nodeDisableOutput();
 LASERDOCKNODE_EXPORT int nodeSetDacRate(uint32_t rate);

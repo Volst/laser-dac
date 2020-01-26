@@ -6,19 +6,16 @@ import {
   relativeToBlue
 } from './convert';
 
-// Important quirk; the Laserdock lib code can only be initialized once per process!
-let initialized = false;
-
 export class Laserdock extends Device {
   private interval?: NodeJS.Timeout;
 
   async start() {
     this.stop();
 
-    if (!initialized) {
-      laserdockLib.init();
+    const status = laserdockLib.init();
+    if (!status) {
+      return false;
     }
-    initialized = true;
 
     const output = laserdockLib.enableOutput();
     laserdockLib.clearRingBuffer();
