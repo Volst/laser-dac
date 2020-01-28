@@ -13,7 +13,7 @@ export class Laserdock extends Device {
     this.stop();
 
     const status = laserdockLib.init();
-    if (!status) {
+    if (status < 1) {
       return false;
     }
 
