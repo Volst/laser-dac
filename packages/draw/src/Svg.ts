@@ -75,9 +75,10 @@ export class Svg extends Shape {
 
     const points = this.pathNodes.map(_node => {
       const node = convertToPath(_node);
+      const color = node.attributes.stroke || node.attributes.fill;
       return new Path({
         path: node.attributes.d as string,
-        color: this.parseHexToRelativeColor(node.attributes.fill as string),
+        color: this.parseHexToRelativeColor(color as string),
         x: this.x,
         y: this.y,
         width,
