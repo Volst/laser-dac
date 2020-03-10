@@ -14,6 +14,8 @@ interface LineOptions {
   color: Color;
   blankBefore?: boolean;
   blankAfter?: boolean;
+  waitAmount?: number;
+  blankingAmount?: number;
 }
 
 export class Line extends Shape {
@@ -23,6 +25,9 @@ export class Line extends Shape {
   blankBefore: boolean;
   blankAfter: boolean;
 
+  waitAmount: number;
+  blankingAmount: number;
+
   constructor(options: LineOptions) {
     super();
     this.from = options.from;
@@ -30,6 +35,9 @@ export class Line extends Shape {
     this.color = options.color;
     this.blankBefore = options.blankBefore || false;
     this.blankAfter = options.blankAfter || false;
+
+    this.waitAmount = options.waitAmount || MAX_WAIT_AMOUNT;
+    this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
   }
 
   draw(resolution: number) {
@@ -47,7 +55,7 @@ export class Line extends Shape {
         x: this.from.x,
         y: this.from.y,
         color: [0, 0, 0],
-        amount: BLANKING_AMOUNT
+        amount: this.blankingAmount
       }).draw();
     }
 
@@ -69,7 +77,7 @@ export class Line extends Shape {
           x: this.to.x,
           y: this.to.y,
           color: this.color,
-          amount: MAX_WAIT_AMOUNT / 2
+          amount: this.waitAmount / 2
         }).draw()
       ];
     }

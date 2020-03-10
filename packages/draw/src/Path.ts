@@ -17,6 +17,8 @@ interface PathOptions {
   height?: number;
   color: Color;
   path: string;
+  waitAmount?: number;
+  blankingAmount?: number;
 }
 
 export class Path extends Shape {
@@ -29,6 +31,9 @@ export class Path extends Shape {
   // Works exactly like SVG path. Learn everything about it: https://css-tricks.com/svg-path-syntax-illustrated-guide/
   path: string;
 
+  waitAmount: number;
+  blankingAmount: number;
+
   constructor(options: PathOptions) {
     super();
     this.x = options.x || 0;
@@ -37,6 +42,9 @@ export class Path extends Shape {
     this.height = options.height || 1;
     this.color = options.color;
     this.path = options.path;
+
+    this.waitAmount = options.waitAmount || MAX_WAIT_AMOUNT;
+    this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
   }
 
   transformSize = (command: SVGCommand) => {
@@ -95,7 +103,7 @@ export class Path extends Shape {
             commandPoints = new Wait({
               x: command.x,
               y: command.y,
-              amount: BLANKING_AMOUNT
+              amount: this.blankingAmount
             }).draw();
 
             lastMoveCommand = command;
@@ -111,7 +119,9 @@ export class Path extends Shape {
             commandPoints = new Line({
               from: { x: prevX, y: prevY },
               to: { x: toX, y: toY },
-              color: this.color
+              color: this.color,
+              waitAmount: this.waitAmount,
+              blankingAmount: this.blankingAmount
             }).draw(resolution);
             prevX = toX;
             prevY = toY;
@@ -193,7 +203,9 @@ export class Path extends Shape {
               from: { x: prevX, y: prevY },
               to: { x: lastMoveCommand.x, y: lastMoveCommand.y },
               color: this.color,
-              blankAfter: true
+              blankAfter: true,
+              waitAmount: this.waitAmount,
+              blankingAmount: this.blankingAmount
             }).draw(resolution);
             prevX = lastMoveCommand.x;
             prevY = lastMoveCommand.y;
@@ -236,7 +248,7 @@ export class Path extends Shape {
             x: lastPoint.x,
             y: lastPoint.y,
             color: [lastPoint.r, lastPoint.g, lastPoint.b],
-            amount: Math.floor(MAX_WAIT_AMOUNT * relativeAngle)
+            amount: Math.floor(this.waitAmount * relativeAngle)
           });
           wait = waitShape.draw();
         }
