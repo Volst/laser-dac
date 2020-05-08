@@ -5,6 +5,7 @@ import { relativeToPosition, relativeToColor } from './convert';
 // This controls the intensity signal of points written to the DAC.
 // For many laser projectors this won't make a difference, but some projectors map this to the shutter so the laser won't turn on if we don't pass the max value.
 const INTENSITY = 255;
+const MAX_POINTS = 4094;
 
 export class Helios extends Device {
   private interval?: NodeJS.Timer;
@@ -50,7 +51,7 @@ export class Helios extends Device {
       if (heliosLib.getStatus(0) !== 1) {
         return;
       }
-      const points = scene.points.map(this.convertPoint);
+      const points = scene.points.map(this.convertPoint).slice(0, MAX_POINTS);
       heliosLib.writeFrame(0, pointsRate, 0, points, points.length);
     }, 1000 / fps);
   }

@@ -6,6 +6,8 @@ import {
   relativeToBlue
 } from './convert';
 
+const MAX_POINTS = 4095;
+
 export class Laserdock extends Device {
   private interval?: NodeJS.Timeout;
 
@@ -47,7 +49,7 @@ export class Laserdock extends Device {
     const callback = () => {
       const len = scene.points.length;
       this.interval = setTimeout(callback, (len / pointsRate) * 1000);
-      const points = scene.points.map(this.convertPoint);
+      const points = scene.points.map(this.convertPoint).splice(0, MAX_POINTS);
       laserdockLib.sendSamples(points, len);
     };
     this.interval = setTimeout(callback, 0);
