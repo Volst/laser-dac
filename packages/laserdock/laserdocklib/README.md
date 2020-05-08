@@ -16,9 +16,8 @@ Tested under OS X 10.11 and comes with libusb 1.0 dylib.
 
 ```
 rm -rf build && mkdir build && cd build
-cmake ..
-make
-# or for windows: cmake --build . --target ALL_BUILD --config Release
+cmake .. # for windows: cmake .. -G "Visual Studio 15 2017 Win64"
+make # or for windows: cmake --build . --target ALL_BUILD --config Release
 ```
 
 ## On Mac
