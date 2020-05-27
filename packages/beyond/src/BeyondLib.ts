@@ -1,8 +1,9 @@
 import * as path from 'path';
-import * as Struct from 'ref-struct';
-import * as ArrayType from 'ref-array';
-import * as ffi from 'ffi';
-import * as ref from 'ref';
+import * as ffi from 'ffi-napi';
+import * as ref from 'ref-napi';
+
+const ArrayType = require('ref-array-di')(ref);
+const Struct = require('ref-struct-di')(ref);
 
 const BeyondPoint = Struct({
   x: 'float',
@@ -16,7 +17,7 @@ const BeyondPoint = Struct({
 });
 
 const BeyondPointArray = ArrayType(BeyondPoint);
-const ZoneIndiceArray = ArrayType<number>(ref.types.int);
+const ZoneIndiceArray = ArrayType(ref.types.int);
 
 // Windows 32-bit is not supported currently
 const libPath = path

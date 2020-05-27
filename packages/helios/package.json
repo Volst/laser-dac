@@ -23,12 +23,12 @@
   },
   "dependencies": {
     "@laser-dac/core": "^0.4.1",
-    "@types/ffi": "^0.2.1",
-    "@types/ref-array": "^0.0.28",
-    "@types/ref-struct": "^0.0.29",
-    "ffi": "^2.3.0",
-    "ref-array": "^1.2.0",
-    "ref-struct": "^1.1.0"
+    "@types/ffi-napi": "^2.4.2",
+    "@types/ref-napi": "^1.4.1",
+    "ffi-napi": "^3.0.0",
+    "ref-array-di": "^1.2.1",
+    "ref-napi": "^2.0.1",
+    "ref-struct-di": "^1.1.0"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",

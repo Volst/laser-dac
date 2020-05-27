@@ -1,7 +1,9 @@
 import * as path from 'path';
-import * as Struct from 'ref-struct';
-import * as ArrayType from 'ref-array';
-import * as ffi from 'ffi';
+import * as ffi from 'ffi-napi';
+import * as ref from 'ref-napi';
+
+const ArrayType = require('ref-array-di')(ref);
+const Struct = require('ref-struct-di')(ref);
 
 const HeliosPoint = Struct({
   x: 'uint16',
