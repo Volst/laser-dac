@@ -28,6 +28,10 @@ export class Helios extends Device {
     }
   }
 
+  onShutdownSync() {
+    heliosLib.closeDevices();
+  }
+
   private convertPoint(p: heliosLib.IPoint) {
     return {
       x: relativeToPosition(p.x),
