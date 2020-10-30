@@ -17,6 +17,10 @@ export abstract class Device {
   abstract start(): Promise<boolean>;
   abstract stop(): void;
   abstract stream(scene: Scene, pointsRate: number, fps: number): void;
+
+  isSupported(): boolean {
+    return true;
+  };
 }
 
 export class DAC {
