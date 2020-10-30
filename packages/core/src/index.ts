@@ -22,6 +22,10 @@ export abstract class Device {
   // This is for any last-minute synchronous cleanup so the laser doesn't
   // stay on after the program stops.
   onShutdownSync(): void {};
+
+  isSupported(): boolean {
+    return true;
+  };
 }
 
 export class DAC {
@@ -30,6 +34,10 @@ export class DAC {
   use(device: Device) {
     this.devices.push(device);
     shutdownCallbacks.push(device.onShutdownSync);
+  }
+
+  useAll(devices: Device[]) {
+    devices.forEach((device) => this.use(device));
   }
 
   remove(device: Device) {
