@@ -7,6 +7,10 @@ export class Easylase extends Device {
   deviceHandle?: number;
 
   async start() {
+    if (!this.isSupported()) {
+      return false;
+    }
+
     this.stop();
     const cards = easylaseLib.enumerateDevices();
     if (cards) {
@@ -30,6 +34,10 @@ export class Easylase extends Device {
     if (this.interval) {
       clearInterval(this.interval);
     }
+  }
+
+  isSupported(): boolean {
+    return process.platform === "win32";
   }
 
   private convertPoint(p: Point) {

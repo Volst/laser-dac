@@ -13,6 +13,9 @@ export class Beyond extends Device {
   private started = false;
 
   async start() {
+    if (!this.isSupported()) {
+      return false;
+    }
     this.stop();
     beyondLib.ldbCreate();
     this.started = true;
@@ -35,6 +38,10 @@ export class Beyond extends Device {
     if (this.interval) {
       clearInterval(this.interval);
     }
+  }
+
+  isSupported(): boolean {
+    return process.platform === "win32";
   }
 
   private convertPoint(p: Point) {
