@@ -30,6 +30,10 @@ export class DAC {
     this.devices.push(device);
   }
 
+  useAll(devices: Device[]) {
+    devices.forEach((device) => this.use(device));
+  }
+
   remove(device: Device) {
     const index = this.devices.indexOf(device);
     if (index) {
