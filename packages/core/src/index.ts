@@ -36,6 +36,10 @@ export class DAC {
     shutdownCallbacks.push(device.onShutdownSync);
   }
 
+  useAll(devices: Device[]) {
+    devices.forEach((device) => this.use(device));
+  }
+
   remove(device: Device) {
     const index = this.devices.indexOf(device);
     if (index) {
