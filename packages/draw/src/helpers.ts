@@ -27,6 +27,6 @@ export function flatten(arr: any[], result: any[] = []) {
   return result;
 }
 
-export function isBlankingPoint(point: Point) {
+export function isBlankingPoint(point: Pick<Point, 'r' | 'g' | 'b'>) {
   return !point.r && !point.g && !point.b;
 }

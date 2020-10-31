@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { fromByteArray, Section } from '@laser-dac/ilda-reader';
 import { Shape } from './Shape';
 import { Color, Point } from './Point';
+import { isBlankingPoint } from './helpers';
 
 export const XY_RESOLUTION = 65535;
 
@@ -47,15 +48,16 @@ export class Ilda extends Shape {
     const color = this.color;
     const size = this.size || 1;
 
-    return section.points.map((point: Point) => {
-      const isBlank = point.r === 0 && point.g === 0 && point.b === 0;
-      return {
-        x: x + (1 - convertCoordinate(point.x)) * size,
-        y: y + convertCoordinate(point.y) * size,
-        r: color !== undefined && !isBlank ? color[0] : point.r,
-        g: color !== undefined && !isBlank ? color[1] : point.g,
-        b: color !== undefined && !isBlank ? color[2] : point.b
-      };
+    // These are Point objects from the ilda file,
+    // not laser-dac Point objects.
+    return section.points.map((point) => {
+      const pointColor: Color = color !== undefined && !isBlankingPoint(point)
+        ? color
+        : [point.r, point.g, point.b];
+      return new Point(
+        x + (1 - convertCoordinate(point.x)) * size,
+        y + convertCoordinate(point.y) * size,
+        pointColor);
     });
   }
 }
