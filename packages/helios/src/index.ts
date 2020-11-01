@@ -1,6 +1,6 @@
 import { Device } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
-import { relativeToPosition, relativeToColor } from './convert';
+import { relativeToX, relativeToY, relativeToColor } from './convert';
 
 // This controls the intensity signal of points written to the DAC.
 // For many laser projectors this won't make a difference, but some projectors map this to the shutter so the laser won't turn on if we don't pass the max value.
@@ -30,8 +30,8 @@ export class Helios extends Device {
 
   private convertPoint(p: heliosLib.IPoint) {
     return {
-      x: relativeToPosition(p.x),
-      y: relativeToPosition(p.y),
+      x: relativeToX(p.x),
+      y: relativeToY(p.y),
       r: relativeToColor(p.r),
       g: relativeToColor(p.g),
       b: relativeToColor(p.b),
