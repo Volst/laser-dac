@@ -27,6 +27,7 @@ export class Scene {
     if (transformer) {
       points = transformer(points);
     }
+    points.forEach(point => point.clamp());
     this.points = this.points.concat(points);
   }
 
