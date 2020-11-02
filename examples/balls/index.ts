@@ -14,8 +14,8 @@ const NUMBER_OF_BALLS = 4;
   for (let i = 0; i < NUMBER_OF_BALLS; i++) {
     balls.push(
       new Ball({
-        x: 0.5,
-        y: 0.5,
+        x: Math.random(),
+        y: Math.random(),
         radius: Math.random() / 5 + 0.05
       })
     );
@@ -24,6 +24,8 @@ const NUMBER_OF_BALLS = 4;
   const scene = new Scene({
     resolution: 70
   });
+
+  let lastTime = Date.now();
   function renderFrame() {
     const bounds = new Rect({
       x: 0,
@@ -34,10 +36,13 @@ const NUMBER_OF_BALLS = 4;
     });
     scene.add(bounds);
 
+    const curTime = Date.now();
+    const timeStep = (curTime - lastTime) / 1000;
     balls.forEach(ball => {
-      ball.update();
+      ball.update(timeStep);
       scene.add(ball.draw());
     });
+    lastTime = curTime;
   }
 
   scene.start(renderFrame);

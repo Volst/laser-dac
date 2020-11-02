@@ -12,8 +12,8 @@ export class Ball {
   x: number;
   y: number;
   vector: Victor = new Victor(
-    (Math.random() - 0.5) / 200,
-    (Math.random() - 0.5) / 200
+    (Math.random() - 0.5) / 2,
+    (Math.random() - 0.5) / 2
   );
 
   constructor(options: BallOptions) {
@@ -22,9 +22,9 @@ export class Ball {
     this.radius = options.radius;
   }
 
-  update = () => {
-    this.x += this.vector.x;
-    this.y += this.vector.y;
+  update = (timeStep: number) => {
+    this.x += this.vector.x * timeStep;
+    this.y += this.vector.y * timeStep;
 
     this.updateBounds();
   };
