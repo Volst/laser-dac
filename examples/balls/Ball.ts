@@ -32,21 +32,25 @@ export class Ball {
   updateBounds = () => {
     // Left bound.
     if (this.x - this.radius <= 0) {
+      this.x = this.radius;
       this.vector.invertX();
     }
 
     // Right bound.
-    if (this.x + this.radius >= 1) {
+    if (this.x + this.radius > 1) {
+      this.x = 1 - this.radius;
       this.vector.invertX();
     }
 
     // Top bound.
     if (this.y - this.radius <= 0) {
+      this.y = this.radius;
       this.vector.invertY();
     }
 
     // Bottom bound.
-    if (this.y + this.radius >= 1) {
+    if (this.y + this.radius > 1) {
+      this.y = 1 - this.radius;
       this.vector.invertY();
     }
   };
