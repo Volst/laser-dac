@@ -1,4 +1,4 @@
-import { Rect } from '@laser-dac/draw';
+import { Circle } from '@laser-dac/draw';
 import Victor = require('victor');
 
 interface BallOptions {
@@ -56,11 +56,10 @@ export class Ball {
   };
 
   draw = () =>
-    new Rect({
-      x: this.x - this.radius,
-      y: this.y - this.radius,
-      width: this.radius * 2,
-      height: this.radius * 2,
+    new Circle({
+      x: this.x,
+      y: this.y,
+      radius: this.radius,
       color: [0, 1, 0]
     });
 }
