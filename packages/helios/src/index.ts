@@ -1,4 +1,4 @@
-import { Device } from '@laser-dac/core';
+import { Device, Point } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
 import { relativeToX, relativeToY, relativeToColor } from './convert';
 
@@ -32,7 +32,7 @@ export class Helios extends Device {
     heliosLib.closeDevices();
   }
 
-  private convertPoint(p: heliosLib.IPoint) {
+  private convertPoint(p: Point): heliosLib.IPoint {
     return {
       x: relativeToX(p.x),
       y: relativeToY(p.y),
@@ -55,7 +55,7 @@ export class Helios extends Device {
       if (heliosLib.getStatus(0) !== 1) {
         return;
       }
-      const points = scene.points.map(this.convertPoint).slice(0, MAX_POINTS);
+      const points = scene.points.slice(0, MAX_POINTS).map(this.convertPoint);
       heliosLib.writeFrame(0, pointsRate, 0, points, points.length);
     }, 1000 / fps);
   }
