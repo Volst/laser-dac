@@ -1,5 +1,6 @@
 import { Point } from './Point';
 import { Shape } from './Shape';
+import { clamp } from './helpers';
 
 // Frames per second; 30fps will be enough for most use-cases.
 const DEFAULT_FPS = 30;
@@ -27,7 +28,7 @@ export class Scene {
     if (transformer) {
       points = transformer(points);
     }
-    points.forEach(point => point.clamp());
+    points = clamp(points);
     this.points = this.points.concat(points);
   }
 
