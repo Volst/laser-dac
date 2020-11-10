@@ -20,7 +20,7 @@ export class Helios extends Device {
 
   private stats = {
     startTime: 0,
-    expectedFrameTime: 0,
+    expectedFrameMs: 0,
     maxFramePoints: 0,
     pps: 0,
     fps: 0,
@@ -94,7 +94,7 @@ export class Helios extends Device {
     pointsRate: number,
     fps: number
   ) {
-    const frameTime = this.stats.expectedFrameTime = Math.round(1000 / fps);
+    const frameTime = this.stats.expectedFrameMs = Math.round(1000 / fps);
     this.stats.maxFramePoints = Math.round(pointsRate / fps);
     console.log(`Streaming at ${pointsRate} pps, ${fps} fps`);
     console.log(`${frameTime}ms per frame, ${this.stats.maxFramePoints} points per frame`);
@@ -120,7 +120,6 @@ export class Helios extends Device {
           console.error("Helios not ready.");
           break;
       }
-
     }, frameTime);
   }
 
@@ -135,20 +134,41 @@ export class Helios extends Device {
     const successPpsRatio = successPps / this.stats.pps;
     const attemptedPpsRatio = attemptedPps / this.stats.pps;
 
+    const avgFramePoints = Math.round(this.stats.points[FrameResult.Success] /
+      this.stats.frames[FrameResult.Success]);
+
+    const avgNominalFrameMs = Math.round(1000 * avgFramePoints / this.stats.pps);
+
+    const totalFrames = this.stats.frames[FrameResult.Success] +
+      this.stats.frames[FrameResult.NotReady] +
+      this.stats.frames[FrameResult.Fail] +
+      this.stats.frames[FrameResult.Empty];
+
+    const notReadyRatio = this.stats.frames[FrameResult.NotReady] / totalFrames;
+
     return {
       duration,
       successPps,
       attemptedPps,
       successPpsRatio,
       attemptedPpsRatio,
+      avgFramePoints,
+      avgNominalFrameMs,
+      notReadyRatio,
     }
   }
 
   private printStats() {
     const calc = this.calculateStats();
+    const duration = Math.round(calc.duration);
     const successPercent = Math.round(100 * calc.successPpsRatio);
     const attemptedPercent = Math.round(100 * calc.attemptedPpsRatio);
+    const notReadyPercent = Math.round(100 * calc.notReadyRatio);
 
-    console.log(`${calc.duration} Success: ${calc.successPps} pps (${successPercent}% max), Attempted: ${calc.attemptedPps} pps (${attemptedPercent}% max)`);
+    console.log(`${duration} ` +
+      `Success: ${calc.successPps} pps (${successPercent}% max), ` +
+      `Attempted: ${calc.attemptedPps} pps (${attemptedPercent}% max), ` +
+      `Avg ${calc.avgFramePoints}p (${calc.avgNominalFrameMs}ms) per frame, ` +
+      `Unready Frames: ${notReadyPercent}%`);
   }
 }
