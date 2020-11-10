@@ -2,6 +2,13 @@ import { Device, Point } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
 import { relativeToX, relativeToY, relativeToColor } from './convert';
 
+enum FrameResult {
+  Success = 'Success',
+  NotReady = 'Not Ready',
+  Fail = 'Fail',
+  Empty = 'Empty'
+}
+
 // This controls the intensity signal of points written to the DAC.
 // For many laser projectors this won't make a difference, but some projectors map this to the shutter so the laser won't turn on if we don't pass the max value.
 const INTENSITY = 255;
@@ -43,20 +50,30 @@ export class Helios extends Device {
     };
   }
 
+  sendFrame(points: Point[], pointsRate: number): FrameResult {
+    if (!points.length) {
+      return FrameResult.Empty;
+    }
+
+    if (heliosLib.getStatus(0) !== 1) {
+      return FrameResult.NotReady;
+    }
+
+    const limitedPoints = points.length > MAX_POINTS ? points.slice(0, MAX_POINTS) : points;
+    const converted = limitedPoints.map(this.convertPoint);
+    const success = heliosLib.writeFrame(0, pointsRate, 0, converted, converted.length);
+    return success === 1 ? FrameResult.Success : FrameResult.Fail;
+  }
+
   stream(
-    scene: { points: heliosLib.IPoint[] },
+    scene: { points: Point[] },
     pointsRate: number,
     fps: number
   ) {
+    const timePerFrame = Math.round(1000 / fps);
     this.interval = setInterval(() => {
-      if (!scene.points.length) {
-        return;
-      }
-      if (heliosLib.getStatus(0) !== 1) {
-        return;
-      }
-      const points = scene.points.slice(0, MAX_POINTS).map(this.convertPoint);
-      heliosLib.writeFrame(0, pointsRate, 0, points, points.length);
-    }, 1000 / fps);
+      const points = scene.points;
+      this.sendFrame(points, pointsRate);
+    }, timePerFrame);
   }
 }
