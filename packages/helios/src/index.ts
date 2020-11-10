@@ -15,7 +15,28 @@ const INTENSITY = 255;
 const MAX_POINTS = 4094;
 
 export class Helios extends Device {
-  private interval?: NodeJS.Timer;
+  private interval?: NodeJS.Timeout;
+  private statsInterval?: NodeJS.Timeout;
+
+  private stats = {
+    startTime: 0,
+    expectedFrameTime: 0,
+    maxFramePoints: 0,
+    pps: 0,
+    fps: 0,
+    points: {
+      [FrameResult.Success]: 0,
+      [FrameResult.NotReady]: 0,
+      [FrameResult.Fail]: 0,
+      [FrameResult.Empty]: 0, // Should always be 0.
+    },
+    frames: {
+      [FrameResult.Success]: 0,
+      [FrameResult.NotReady]: 0,
+      [FrameResult.Fail]: 0,
+      [FrameResult.Empty]: 0,
+    },
+  };
 
   async start() {
     this.stop();
@@ -32,6 +53,9 @@ export class Helios extends Device {
     heliosLib.closeDevices();
     if (this.interval) {
       clearInterval(this.interval);
+    }
+    if (this.statsInterval) {
+      clearInterval(this.statsInterval);
     }
   }
 
@@ -70,10 +94,61 @@ export class Helios extends Device {
     pointsRate: number,
     fps: number
   ) {
-    const timePerFrame = Math.round(1000 / fps);
+    const frameTime = this.stats.expectedFrameTime = Math.round(1000 / fps);
+    this.stats.maxFramePoints = Math.round(pointsRate / fps);
+    console.log(`Streaming at ${pointsRate} pps, ${fps} fps`);
+    console.log(`${frameTime}ms per frame, ${this.stats.maxFramePoints} points per frame`);
+
+    this.stats.fps = fps;
+    this.stats.pps = pointsRate;
+    this.stats.startTime = Date.now();
+
+    this.statsInterval = setInterval(() => { this.printStats(); }, 2000);
+
     this.interval = setInterval(() => {
       const points = scene.points;
-      this.sendFrame(points, pointsRate);
-    }, timePerFrame);
+      const result = this.sendFrame(points, pointsRate);
+
+      this.stats.points[result] += points.length;
+      ++this.stats.frames[result];
+
+      switch (result) {
+        case FrameResult.Fail:
+          console.error("Helios failed sending a frame");
+          break;
+        case FrameResult.NotReady:
+          console.error("Helios not ready.");
+          break;
+      }
+
+    }, frameTime);
+  }
+
+  private calculateStats() {
+    const duration = (Date.now() - this.stats.startTime) / 1000;
+    const successPps = Math.round(this.stats.points[FrameResult.Success] / duration);
+    const attemptedPoints = this.stats.points[FrameResult.Success] +
+      this.stats.points[FrameResult.NotReady] +
+      this.stats.points[FrameResult.Fail];
+
+    const attemptedPps = Math.round(attemptedPoints / duration);
+    const successPpsRatio = successPps / this.stats.pps;
+    const attemptedPpsRatio = attemptedPps / this.stats.pps;
+
+    return {
+      duration,
+      successPps,
+      attemptedPps,
+      successPpsRatio,
+      attemptedPpsRatio,
+    }
+  }
+
+  private printStats() {
+    const calc = this.calculateStats();
+    const successPercent = Math.round(100 * calc.successPpsRatio);
+    const attemptedPercent = Math.round(100 * calc.attemptedPpsRatio);
+
+    console.log(`${calc.duration} Success: ${calc.successPps} pps (${successPercent}% max), Attempted: ${calc.attemptedPps} pps (${attemptedPercent}% max)`);
   }
 }
