@@ -30,3 +30,37 @@ export function flatten(arr: any[], result: any[] = []) {
 export function isBlankingPoint(point: Pick<Point, 'r' | 'g' | 'b'>) {
   return !point.r && !point.g && !point.b;
 }
+
+export function outOfBounds(p: Point): boolean {
+  return Math.min(p.x, p.y, p.r, p.g, p.b) < 0
+    || Math.max(p.x, p.y, p.r, p.g, p.b) > 1;
+}
+
+export function pointsEqual(a: Point, b: Point): boolean {
+  return a.x === b.x
+   && a.y === b.y
+   && a.r === b.r
+   && a.g === b.g
+   && a.b === b.b;
+}
+
+export function makeTransformer(fn: (p: Point) => Point): (points: Point[]) => Point[] {
+  return (points: Point[]) => points.map(fn);
+}
+
+export function clampPoint(point: Point): Point {
+  point.x = point.x < 0 ? 0 : point.x > 1 ? 1 : point.x;
+  point.y = point.y < 0 ? 0 : point.y > 1 ? 1 : point.y;
+  point.r = point.r < 0 ? 0 : point.r > 1 ? 1 : point.r;
+  point.g = point.g < 0 ? 0 : point.g > 1 ? 1 : point.g;
+  point.b = point.b < 0 ? 0 : point.b > 1 ? 1 : point.b;
+  return point;
+}
+
+export function monochromePoint(p: Point): Point {
+  p.r = p.g = p.b = Math.max(p.r, p.g, p.b);
+  return p;
+}
+
+export const clamp = makeTransformer(clampPoint);
+export const monochrome = makeTransformer(monochromePoint);
