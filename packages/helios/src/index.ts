@@ -17,6 +17,7 @@ const MAX_POINTS = 4094;
 export class Helios extends Device {
   private interval?: NodeJS.Timeout;
   private statsInterval?: NodeJS.Timeout;
+  private dacNum: number = 0;
 
   private stats = {
     startTime: 0,
@@ -42,14 +43,14 @@ export class Helios extends Device {
     this.stop();
     const devices = heliosLib.openDevices();
     if (devices) {
-      heliosLib.setShutter(0, true);
+      heliosLib.setShutter(this.dacNum, true);
       return true;
     }
     return false;
   }
 
   stop() {
-    heliosLib.setShutter(0, false);
+    heliosLib.setShutter(this.dacNum, false);
     heliosLib.closeDevices();
     if (this.interval) {
       clearInterval(this.interval);
@@ -79,14 +80,15 @@ export class Helios extends Device {
       return FrameResult.Empty;
     }
 
-    if (heliosLib.getStatus(0) !== 1) {
+    if (heliosLib.getStatus(this.dacNum) !== 1) {
       return FrameResult.NotReady;
     }
 
     const limitedPoints = points.length > MAX_POINTS ? points.slice(0, MAX_POINTS) : points;
     const converted = limitedPoints.map(this.convertPoint);
-    const success = heliosLib.writeFrame(0, pointsRate,
+    const success = heliosLib.writeFrame(this.dacNum, pointsRate,
      heliosLib.FrameMode.QueueLoop, converted, converted.length);
+
     return success === 1 ? FrameResult.Success : FrameResult.Fail;
   }
 
