@@ -85,7 +85,8 @@ export class Helios extends Device {
 
     const limitedPoints = points.length > MAX_POINTS ? points.slice(0, MAX_POINTS) : points;
     const converted = limitedPoints.map(this.convertPoint);
-    const success = heliosLib.writeFrame(0, pointsRate, 0, converted, converted.length);
+    const success = heliosLib.writeFrame(0, pointsRate,
+     heliosLib.FrameMode.QueueLoop, converted, converted.length);
     return success === 1 ? FrameResult.Success : FrameResult.Fail;
   }
 
