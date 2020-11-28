@@ -16,6 +16,8 @@ export interface Scene {
 }
 
 export abstract class Device {
+  protected pointsRate: number = 30000;
+
   abstract start(): Promise<boolean>;
   abstract stop(): void;
   abstract stream(scene: Scene, pointsRate: number, fps: number): void;
@@ -25,7 +27,15 @@ export abstract class Device {
 
   isSupported(): boolean {
     return true;
-  };
+  }
+
+  setPointsRate(pointsRate: number) {
+    this.pointsRate = pointsRate;
+  }
+
+  getPointsRate(): number {
+    return this.pointsRate;
+  }
 }
 
 export class DAC {
@@ -71,6 +81,10 @@ export class DAC {
     for (const device of this.devices) {
       device.stream(scene, pointsRate, fps);
     }
+  }
+
+  setPointsRate(pointsRate: number) {
+    this.devices.forEach((device) => device.setPointsRate(pointsRate));
   }
 }
 

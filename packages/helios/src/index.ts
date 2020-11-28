@@ -1,6 +1,7 @@
 import { Device, Point } from '@laser-dac/core';
 import * as heliosLib from './HeliosLib';
 import { relativeToX, relativeToY, relativeToColor } from './convert';
+import { Scene } from '@laser-dac/draw';
 
 enum FrameResult {
   Success = 'Success',
@@ -18,6 +19,7 @@ export class Helios extends Device {
   private interval?: NodeJS.Timeout;
   private statsInterval?: NodeJS.Timeout;
   private dacNum: number = 0;
+  private sendNextImmediate: boolean = false;
 
   private stats = {
     startTime: 0,
@@ -75,42 +77,54 @@ export class Helios extends Device {
     };
   }
 
+  setPointsRate(pointsRate: number) {
+    this.sendNextImmediate = true;
+    super.setPointsRate(pointsRate);
+  }
+
   sendFrame(points: Point[], pointsRate: number): FrameResult {
     if (!points.length) {
       return FrameResult.Empty;
     }
 
-    if (heliosLib.getStatus(this.dacNum) !== 1) {
+    if (!this.sendNextImmediate && heliosLib.getStatus(this.dacNum) !== 1) {
       return FrameResult.NotReady;
     }
+
+    const frameMode = this.sendNextImmediate
+      ? heliosLib.FrameMode.ImmediateSingle
+      : heliosLib.FrameMode.QueueSingle;
+
+    this.sendNextImmediate = false;
 
     const limitedPoints = points.length > MAX_POINTS ? points.slice(0, MAX_POINTS) : points;
     const converted = limitedPoints.map(this.convertPoint);
     const success = heliosLib.writeFrame(this.dacNum, pointsRate,
-     heliosLib.FrameMode.QueueLoop, converted, converted.length);
+     frameMode, converted, converted.length);
 
     return success === 1 ? FrameResult.Success : FrameResult.Fail;
   }
 
   stream(
-    scene: { points: Point[] },
+    scene: Scene,
     pointsRate: number,
     fps: number
   ) {
+    this.setPointsRate(pointsRate);
     const frameTime = this.stats.expectedFrameMs = Math.round(1000 / fps);
     this.stats.maxFramePoints = Math.round(pointsRate / fps);
     console.log(`Streaming at ${pointsRate} pps, ${fps} fps`);
     console.log(`${frameTime}ms per frame, ${this.stats.maxFramePoints} points per frame`);
 
     this.stats.fps = fps;
-    this.stats.pps = pointsRate;
+    this.stats.pps = this.pointsRate;
     this.stats.startTime = Date.now();
 
     this.statsInterval = setInterval(() => { this.printStats(); }, 2000);
 
     this.interval = setInterval(() => {
       const points = scene.points;
-      const result = this.sendFrame(points, pointsRate);
+      const result = this.sendFrame(points, this.pointsRate);
 
       this.stats.points[result] += points.length;
       ++this.stats.frames[result];
