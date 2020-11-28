@@ -14,6 +14,8 @@ enum FrameResult {
 // For many laser projectors this won't make a difference, but some projectors map this to the shutter so the laser won't turn on if we don't pass the max value.
 const INTENSITY = 255;
 const MAX_POINTS = 4094;
+const MIN_PPS = 7;
+const MAX_PPS = 65535;
 
 export class Helios extends Device {
   private interval?: NodeJS.Timeout;
@@ -78,8 +80,15 @@ export class Helios extends Device {
   }
 
   setPointsRate(pointsRate: number) {
-    this.sendNextImmediate = true;
-    super.setPointsRate(pointsRate);
+    // TODO: Make this throw?
+    if (pointsRate > MAX_PPS) {
+      console.error(`Helios cannot exceed ${MAX_PPS} pps (${pointsRate} requested)`);
+    } else if (pointsRate < MIN_PPS) {
+      console.error(`Helios cannot subsceed ${MIN_PPS} pps (${pointsRate} requested)`);
+    } else {
+      this.sendNextImmediate = true;
+      super.setPointsRate(pointsRate);
+    }
   }
 
   sendFrame(points: Point[], pointsRate: number): FrameResult {
@@ -117,7 +126,6 @@ export class Helios extends Device {
     console.log(`${frameTime}ms per frame, ${this.stats.maxFramePoints} points per frame`);
 
     this.stats.fps = fps;
-    this.stats.pps = this.pointsRate;
     this.stats.startTime = Date.now();
 
     this.statsInterval = setInterval(() => { this.printStats(); }, 2000);
@@ -148,13 +156,13 @@ export class Helios extends Device {
       this.stats.points[FrameResult.Fail];
 
     const attemptedPps = Math.round(attemptedPoints / duration);
-    const successPpsRatio = successPps / this.stats.pps;
-    const attemptedPpsRatio = attemptedPps / this.stats.pps;
+    const successPpsRatio = successPps / this.pointsRate;
+    const attemptedPpsRatio = attemptedPps / this.pointsRate;
 
     const avgFramePoints = Math.round(this.stats.points[FrameResult.Success] /
       this.stats.frames[FrameResult.Success]);
 
-    const avgNominalFrameMs = Math.round(1000 * avgFramePoints / this.stats.pps);
+    const avgNominalFrameMs = Math.round(1000 * avgFramePoints / this.pointsRate);
 
     const totalFrames = this.stats.frames[FrameResult.Success] +
       this.stats.frames[FrameResult.NotReady] +
