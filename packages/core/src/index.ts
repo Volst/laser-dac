@@ -36,6 +36,10 @@ export abstract class Device {
   getPointsRate(): number {
     return this.pointsRate;
   }
+
+  getStats(): ?Object {
+    return null;
+  }
 }
 
 export class DAC {
@@ -85,6 +89,17 @@ export class DAC {
 
   setPointsRate(pointsRate: number) {
     this.devices.forEach((device) => device.setPointsRate(pointsRate));
+  }
+
+  getStats(): Object {
+    const baseStats = {};
+    return this.devices.reduce((stats, device) => {
+      const deviceStats = device.getStats();
+      if (deviceStats) {
+        stats[device.constructor.name] = deviceStats;
+      }
+      return stats;
+    }, baseStats);
   }
 }
 

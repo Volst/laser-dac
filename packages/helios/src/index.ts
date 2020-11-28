@@ -175,6 +175,13 @@ export class Helios extends Device {
     }
   }
 
+  getStats(): Object {
+    return {
+      calculated: this.calculateStats(),
+      ...this.stats
+    };
+  }
+
   private printStats() {
     const calc = this.calculateStats();
     const duration = Math.round(calc.duration);

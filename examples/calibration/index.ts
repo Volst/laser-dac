@@ -21,6 +21,22 @@ server.listen(PORT, function() {
 wss.on('connection', function connection(ws, req) {
   const id = req.url!.replace('/?id=', '');
 
+  function send(type: string, data: any) {
+    ws.send(JSON.stringify({ type, data }));
+  }
+
+  function sendSettings() {
+    send("SettingsToClient", renderer.getParams());
+  }
+
+  function sendStats() {
+    send("stats", renderer.getStats());
+  };
+
+  const statsInterval = setInterval(sendStats, 300);
+  sendSettings();
+  sendStats();
+
   ws.on('message', function incoming(message) {
     // TODO: should handle illegal JSON so the server can't crash...
     const payload = JSON.parse(message as string);
@@ -33,6 +49,6 @@ wss.on('connection', function connection(ws, req) {
   });
 
   ws.on('close', function incoming(message) {
-    renderer.removeClient(id);
+    clearInterval(statsInterval);
   });
 });

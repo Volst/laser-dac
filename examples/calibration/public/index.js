@@ -6,7 +6,7 @@ const ws = new WebsocketClient();
 
 const ppsInput = document.getElementById('pps');
 const resolutionInput = document.getElementById('resolution');
-
+const statsTable = document.getElementById('stats-table');
 
 function sendMessage(msg) {
   console.log("Sending:", msg.data);
@@ -28,6 +28,24 @@ ws.onopen = function() {
 
   ppsInput.addEventListener('input', sendFormValues);
   resolutionInput.addEventListener('input', sendFormValues);
+};
+
+function displayStats(stats) {
+  statsTable.innerText = JSON.stringify(stats, null, 2);
+}
+
+function updateSettings(settings) {
+  ppsInput.value = settings.pps;
+  resolutionInput.value = settings.resolution;
+}
+
+ws.onmessage = function(ev) {
+  const message = JSON.parse(ev.data);
+  switch (message.type) {
+    case 'stats': displayStats(message.data); break;
+    case 'SettingsToClient': updateSettings(message.data); break;
+    default: console.error("Unknown message type: " + message.type, message)
+  }
 };
 
 const uniqueId = uuid();

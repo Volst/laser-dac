@@ -3,9 +3,6 @@ import { getDevices } from '@laser-dac/device-selector';
 import { Scene, Rect, loadIldaFile, Ilda } from '@laser-dac/draw';
 import * as path from 'path';
 
-const horseFile = loadIldaFile(path.resolve(__dirname, './horse.ild'));
-const boomFile = loadIldaFile(path.resolve(__dirname, './boom.ild'));
-
 interface IClient {
   x: number;
   y: number;
@@ -13,8 +10,6 @@ interface IClient {
 }
 
 export class Renderer {
-  activeClients: IClient[] = [];
-
   pps = 25000;
   resolution = 70;
 
@@ -31,10 +26,21 @@ export class Renderer {
     this.start();
   }
 
+  getStats() {
+    return this.dac.getStats();
+  }
+
   updateParams(data: any) {
     this.pps = data.pps;
     this.dac.setPointsRate(this.pps);
     this.resolution = data.resolution;
+  }
+
+  getParams() {
+    return {
+      pps: this.pps,
+      resolution: this.resolution,
+    }
   }
 
   removeClient(id: string) {
