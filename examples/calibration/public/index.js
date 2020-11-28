@@ -4,70 +4,30 @@ import uuid from './uuid.js';
 const host = window.document.location.host.replace(/:.*/, '');
 const ws = new WebsocketClient();
 
+const ppsInput = document.getElementById('pps');
+const resolutionInput = document.getElementById('resolution');
+
+
 function sendMessage(msg) {
+  console.log("Sending:", msg.data);
   ws.send(JSON.stringify(msg));
 }
 
-function startMoving(e) {
-  if (!isTouching) {
-    doubletap();
-  }
-
-  isTouching = true;
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const clientX = e.touches[0].clientX;
-  const clientY = e.touches[0].clientY;
-
-  const x = clientX / windowWidth;
-  const y = clientY / windowHeight;
-  console.log('Touched', 'x:', x, 'y:', y);
-
+function sendFormValues() {
   sendMessage({
-    type: 'MOVE',
+    type: 'UPDATEPARAMS',
     data: {
-      x,
-      y
+      pps: parseInt(ppsInput.value, 10),
+      resolution: parseInt(resolutionInput.value, 10)
     }
   });
-}
-
-function stopMoving() {
-  isTouching = false;
-  sendMessage({
-    type: 'REMOVE'
-  });
-}
-
-function triggerDoublePress(e) {
-  console.log('TIRGGERED');
-  sendMessage({
-    type: 'PRESS'
-  });
-}
-
-var isTouching = false;
-
-var mylatesttap;
-function doubletap() {
-  var now = new Date().getTime();
-  var timesince = now - mylatesttap;
-  if (timesince < 250 && timesince > 0) {
-    triggerDoublePress();
-  }
-  mylatesttap = new Date().getTime();
 }
 
 ws.onopen = function() {
   console.log('Websocket connection opened.');
 
-  document.removeEventListener('touchmove', startMoving);
-  document.removeEventListener('touchstart', startMoving);
-  document.removeEventListener('touchend', startMoving);
-
-  document.addEventListener('touchmove', startMoving, false);
-  document.addEventListener('touchstart', startMoving, false);
-  document.addEventListener('touchend', stopMoving, false);
+  ppsInput.addEventListener('input', sendFormValues);
+  resolutionInput.addEventListener('input', sendFormValues);
 };
 
 const uniqueId = uuid();

@@ -24,15 +24,9 @@ wss.on('connection', function connection(ws, req) {
   ws.on('message', function incoming(message) {
     // TODO: should handle illegal JSON so the server can't crash...
     const payload = JSON.parse(message as string);
-    if (payload.type === 'MOVE') {
-      console.log('Moving x/y', payload.data.x, payload.data.y);
-      renderer.updateClientPosition(id, payload.data.x, payload.data.y);
-    } else if (payload.type === 'REMOVE') {
-      console.log('Removing client');
-      renderer.removeClient(id);
-    } else if (payload.type === 'PRESS') {
-      console.log('Triggering press');
-      renderer.triggerPress();
+    if (payload.type === 'UPDATEPARAMS') {
+      console.log('Updating Parameters', payload.data);
+      renderer.updateParams(payload.data);
     } else {
       console.log('Unknown websocket message', payload);
     }

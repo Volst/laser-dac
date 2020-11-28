@@ -14,24 +14,27 @@ interface IClient {
 
 export class Renderer {
   activeClients: IClient[] = [];
-  isPressed = false;
+
+  pps = 25000;
+  resolution = 70;
+
+  dac: DAC;
+  scene: Scene;
 
   constructor() {
+    this.dac = new DAC();
+
+    this.scene = new Scene({
+      resolution: 70
+    });
+
     this.start();
   }
 
-  updateClientPosition(id: string, x: number, y: number) {
-    const client = this.activeClients.find(client => client.id === id);
-    if (client) {
-      client.x = x;
-      client.y = y;
-    } else {
-      this.activeClients.push({
-        id,
-        x,
-        y
-      });
-    }
+  updateParams(data: any) {
+    this.pps = data.pps;
+    this.dac.setPointsRate(this.pps);
+    this.resolution = data.resolution;
   }
 
   removeClient(id: string) {
@@ -41,56 +44,22 @@ export class Renderer {
     }
   }
 
-  triggerPress() {
-    this.isPressed = true;
+  renderTestPattern() {
+    const bounds = new Rect({
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      color: [1, 1, 1]
+    });
+    this.scene.add(bounds);
   }
 
   async start() {
-    const dac = new DAC();
-    dac.useAll(await getDevices());
-    await dac.start();
+    this.dac.useAll(await getDevices());
+    await this.dac.start();
 
-    const scene = new Scene();
-    const self = this;
-    let horseFrame = 0;
-    let boomFrame = 0;
-    function renderFrame() {
-      self.activeClients.forEach((client, i) => {
-        const rect = new Rect({
-          color: [1, 0, 0],
-          x: client.x,
-          y: client.y,
-          width: 0.1,
-          height: 0.1
-        });
-
-        scene.add(rect);
-      });
-
-      const horse = new Ilda({
-        file: horseFile,
-        frame: horseFrame
-      });
-      scene.add(horse);
-      horseFrame += 1;
-      horseFrame %= horseFile.sections.length;
-
-      if (self.isPressed) {
-        const boom = new Ilda({
-          file: boomFile,
-          frame: boomFrame
-        });
-        scene.add(boom);
-        if (boomFrame > boomFile.sections.length - 2) {
-          boomFrame = 0;
-          self.isPressed = false;
-        } else {
-          boomFrame += 1;
-        }
-      }
-    }
-
-    scene.start(renderFrame, 60);
-    dac.stream(scene, 25000);
+    this.scene.start(this.renderTestPattern.bind(this), 60);
+    this.dac.stream(this.scene, this.pps);
   }
 }
