@@ -25,10 +25,13 @@ export class Helios extends Device {
 
   private stats = {
     startTime: 0,
-    expectedFrameMs: 0,
-    maxFramePoints: 0,
-    pps: 0,
-    fps: 0,
+    microsecondsPerPoint: 0,
+    fixedFrameRate: {
+      fps: 0,
+      allottedFrameMs: 0,
+      allottedFramePoints: 0,
+      frameAllotmentPercentOfDeviceLimit: 0,
+    }
     points: {
       [FrameResult.Success]: 0,
       [FrameResult.NotReady]: 0,
@@ -83,12 +86,16 @@ export class Helios extends Device {
     // TODO: Make this throw?
     if (pointsRate > MAX_PPS) {
       console.error(`Helios cannot exceed ${MAX_PPS} pps (${pointsRate} requested)`);
+      return;
     } else if (pointsRate < MIN_PPS) {
       console.error(`Helios cannot subsceed ${MIN_PPS} pps (${pointsRate} requested)`);
-    } else {
-      this.sendNextImmediate = true;
-      super.setPointsRate(pointsRate);
+      return;
     }
+
+    super.setPointsRate(pointsRate);
+    this.sendNextImmediate = true;
+    this.stats.secondsPerPoint = 1 / pointsRate;
+    this.stats.microsecondsPerPoint = 1000000 * this.stats.secondsPerPoint;
   }
 
   sendFrame(points: Point[], pointsRate: number): FrameResult {
@@ -120,12 +127,15 @@ export class Helios extends Device {
     fps: number
   ) {
     this.setPointsRate(pointsRate);
-    const frameTime = this.stats.expectedFrameMs = Math.round(1000 / fps);
-    this.stats.maxFramePoints = Math.round(pointsRate / fps);
-    console.log(`Streaming at ${pointsRate} pps, ${fps} fps`);
-    console.log(`${frameTime}ms per frame, ${this.stats.maxFramePoints} points per frame`);
+    const frameTime = this.stats.fixedFrameRate.allottedFrameMs = Math.round(1000 / fps);
+    const allottedFramePoints = this.stats.fixedFrameRate.allottedFramePoints = Math.round(pointsRate / fps);
 
-    this.stats.fps = fps;
+    console.log(`Streaming at ${pointsRate} pps, ${fps} fps`);
+    console.log(`${frameTime}ms per frame, ${allottedFramePoints} points per frame`);
+
+    this.stats.fixedFrameRate.fps = fps;
+    this.stats.fixedFrameRate.frameAllotmentPercentOfDeviceLimit =
+     100 * allottedFramePoints / MAX_POINTS;
     this.stats.startTime = Date.now();
 
     this.statsInterval = setInterval(() => { this.printStats(); }, 2000);
@@ -156,30 +166,34 @@ export class Helios extends Device {
       this.stats.points[FrameResult.Fail];
 
     const attemptedPps = Math.round(attemptedPoints / duration);
-    const successPpsRatio = successPps / this.pointsRate;
-    const attemptedPpsRatio = attemptedPps / this.pointsRate;
+    const successPpsPercentOfNominal = 100 * successPps / this.pointsRate;
+    const attemptedPpsPercentOfNominal = 100 * attemptedPps / this.pointsRate;
 
     const avgFramePoints = Math.round(this.stats.points[FrameResult.Success] /
       this.stats.frames[FrameResult.Success]);
 
-    const avgNominalFrameMs = Math.round(1000 * avgFramePoints / this.pointsRate);
+    const avgFrameDisplayMs = Math.round(1000 * avgFramePoints / this.pointsRate);
+    const avgFrameAllotmentUtilization = 100 * avgFramePoints / this.stats.fixedFrameRate.allottedFramePoints;
+    const avgFrameDeviceLimitUtilization = 100 * avgFramePoints / MAX_POINTS;
 
     const totalFrames = this.stats.frames[FrameResult.Success] +
       this.stats.frames[FrameResult.NotReady] +
       this.stats.frames[FrameResult.Fail] +
       this.stats.frames[FrameResult.Empty];
 
-    const notReadyRatio = this.stats.frames[FrameResult.NotReady] / totalFrames;
+    const notReadyFramePercent = 100 * this.stats.frames[FrameResult.NotReady] / totalFrames;
 
     return {
       duration,
       successPps,
       attemptedPps,
-      successPpsRatio,
-      attemptedPpsRatio,
+      successPpsPercentOfNominal,
+      attemptedPpsPercentOfNominal,
       avgFramePoints,
-      avgNominalFrameMs,
-      notReadyRatio,
+      avgFrameDisplayMs,
+      avgFrameAllotmentUtilization,
+      avgFrameDeviceLimitUtilization,
+      notReadyFramePercent,
     }
   }
 
@@ -193,14 +207,14 @@ export class Helios extends Device {
   private printStats() {
     const calc = this.calculateStats();
     const duration = Math.round(calc.duration);
-    const successPercent = Math.round(100 * calc.successPpsRatio);
-    const attemptedPercent = Math.round(100 * calc.attemptedPpsRatio);
-    const notReadyPercent = Math.round(100 * calc.notReadyRatio);
+    const successPercent = Math.round(calc.successPpsPercentOfNominal);
+    const attemptedPercent = Math.round(calc.attemptedPpsPercentOfNominal);
+    const notReadyPercent = Math.round(calc.notReadyFramePercent);
 
     console.log(`${duration} ` +
       `Success: ${calc.successPps} pps (${successPercent}% max), ` +
       `Attempted: ${calc.attemptedPps} pps (${attemptedPercent}% max), ` +
-      `Avg ${calc.avgFramePoints}p (${calc.avgNominalFrameMs}ms) per frame, ` +
+      `Avg ${calc.avgFramePoints}p (${calc.avgFrameDisplayMs}ms) per frame, ` +
       `Unready Frames: ${notReadyPercent}%`);
   }
 }
