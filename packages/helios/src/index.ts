@@ -19,7 +19,6 @@ const MAX_PPS = 65535;
 
 export class Helios extends Device {
   private interval?: NodeJS.Timeout;
-  private statsInterval?: NodeJS.Timeout;
   private dacNum: number = 0;
   private sendNextImmediate: boolean = false;
 
@@ -61,9 +60,6 @@ export class Helios extends Device {
     heliosLib.closeDevices();
     if (this.interval) {
       clearInterval(this.interval);
-    }
-    if (this.statsInterval) {
-      clearInterval(this.statsInterval);
     }
   }
 
@@ -138,8 +134,6 @@ export class Helios extends Device {
      100 * allottedFramePoints / MAX_POINTS;
     this.stats.startTime = Date.now();
 
-    this.statsInterval = setInterval(() => { this.printStats(); }, 2000);
-
     this.interval = setInterval(() => {
       const points = scene.points;
       const result = this.sendFrame(points, this.pointsRate);
@@ -202,19 +196,5 @@ export class Helios extends Device {
       calculated: this.calculateStats(),
       ...this.stats
     };
-  }
-
-  private printStats() {
-    const calc = this.calculateStats();
-    const duration = Math.round(calc.duration);
-    const successPercent = Math.round(calc.successPpsPercentOfNominal);
-    const attemptedPercent = Math.round(calc.attemptedPpsPercentOfNominal);
-    const notReadyPercent = Math.round(calc.notReadyFramePercent);
-
-    console.log(`${duration} ` +
-      `Success: ${calc.successPps} pps (${successPercent}% max), ` +
-      `Attempted: ${calc.attemptedPps} pps (${attemptedPercent}% max), ` +
-      `Avg ${calc.avgFramePoints}p (${calc.avgFrameDisplayMs}ms) per frame, ` +
-      `Unready Frames: ${notReadyPercent}%`);
   }
 }
