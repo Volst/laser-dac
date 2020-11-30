@@ -21,13 +21,18 @@ export class Helios extends Device {
   private interval?: NodeJS.Timeout;
   private dacNum: number = 0;
   private sendNextImmediate: boolean = false;
-  private lastPoint: Point = {
+  private lastPoint?: Point;
+  /*
+  We could initialize lastPoint to the center to capture the initial startup jump
+  but it doesn't seem that useful.
+  {
     x: 0.5,
     y: 0.5,
     r: 0,
     g: 0,
     b: 0,
   };
+   */
 
   private stats = {
     startTime: 0,
@@ -239,6 +244,9 @@ export class Helios extends Device {
   }
 
   recordContentStats(framePoints: Point[]) {
+    if (this.lastPoint === undefined && framePoints.length) {
+      this.lastPoint = framePoints[0];
+    }
     let maxJumpX = 0;
     let maxJumpY = 0;
     let maxJump = 0;
