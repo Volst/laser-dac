@@ -21,16 +21,26 @@ export class Helios extends Device {
   private interval?: NodeJS.Timeout;
   private dacNum: number = 0;
   private sendNextImmediate: boolean = false;
+  private lastPoint: Point = {
+    x: 0.5,
+    y: 0.5,
+    r: 0,
+    g: 0,
+    b: 0,
+  };
 
   private stats = {
     startTime: 0,
+    secondsPerPoint: 0,
+    msPerPoint: 0,
     microsecondsPerPoint: 0,
+    maxTheoreticalAccel: 0,
     fixedFrameRate: {
       fps: 0,
       allottedFrameMs: 0,
       allottedFramePoints: 0,
       frameAllotmentPercentOfDeviceLimit: 0,
-    }
+    },
     points: {
       [FrameResult.Success]: 0,
       [FrameResult.NotReady]: 0,
@@ -43,6 +53,23 @@ export class Helios extends Device {
       [FrameResult.Fail]: 0,
       [FrameResult.Empty]: 0,
     },
+    lastFrame: {
+      points: 0,
+      result: FrameResult.Empty,
+      drawMs: 0,
+      maxJumpX: 0,
+      maxJumpY: 0,
+      maxJump: 0,
+      maxSpeed: 0,
+      maxAccel: 0,
+    },
+    allFrames: {
+      maxJumpX: 0,
+      maxJumpY: 0,
+      maxJump: 0,
+      maxSpeed: 0,
+      maxAccel: 0,
+    }
   };
 
   async start() {
@@ -91,7 +118,22 @@ export class Helios extends Device {
     super.setPointsRate(pointsRate);
     this.sendNextImmediate = true;
     this.stats.secondsPerPoint = 1 / pointsRate;
-    this.stats.microsecondsPerPoint = 1000000 * this.stats.secondsPerPoint;
+    this.stats.msPerPoint = 1000 / pointsRate;
+    this.stats.microsecondsPerPoint = 1000000 / pointsRate;
+
+    // Going from 0 to 1 in a single point means a velocity of 1 Screen Unit (SU)
+    // in secondsPerPoint amount of time. secondsPerPoint is  1 / pointsRate seconds,
+    // so 1 / (1 / pointsRate) is just pointsRate pointsRate SU/s.
+    //
+    // Max acceleration would be going across the screen from 0 to 1 in a
+    // single point and then back to 0 on the next point. That's a change in
+    // velocity of 2 * pointsRate SU/s in one secondsPerPoint
+    // amount of time, measured in SU/s/s.
+    //
+    // But SU/s/s isn't that useful of a measurement since that acceleration only
+    // applies for the duration of a single point, which is usually in microseconds (us).
+    // So let's keep the speed in SU/s but make acceleration in SU/s/us
+    this.stats.maxTheoreticalAccel = 2 * pointsRate / this.stats.microsecondsPerPoint;
   }
 
   sendFrame(points: Point[], pointsRate: number): FrameResult {
@@ -138,8 +180,13 @@ export class Helios extends Device {
       const points = scene.points;
       const result = this.sendFrame(points, this.pointsRate);
 
+      this.stats.lastFrame.points = points.length;
+      this.stats.lastFrame.result = result;
+      this.stats.lastFrame.drawMs = 1000 * points.length / this.pointsRate;
       this.stats.points[result] += points.length;
       ++this.stats.frames[result];
+
+      this.recordContentStats(points);
 
       switch (result) {
         case FrameResult.Fail:
@@ -189,6 +236,59 @@ export class Helios extends Device {
       avgFrameDeviceLimitUtilization,
       notReadyFramePercent,
     }
+  }
+
+  recordContentStats(framePoints: Point[]) {
+    let maxJumpX = 0;
+    let maxJumpY = 0;
+    let maxJump = 0;
+    let maxSpeed = 0;
+    let maxAccel = 0;
+
+    let lastJumpX = 0;
+    let lastJumpY = 0;
+
+    framePoints.forEach((point) => {
+      const jumpX = point.x - this.lastPoint.x;
+      const jumpXAbs = Math.abs(jumpX);
+
+      const jumpY = point.y - this.lastPoint.y;
+      const jumpYAbs = Math.abs(jumpY);
+
+      const largerJump = Math.max(jumpXAbs, jumpYAbs);
+
+      const largerSpeed = largerJump / this.stats.secondsPerPoint;
+
+      const jumpDiffX = Math.abs(jumpX - lastJumpX);
+      const jumpDiffY = Math.abs(jumpY - lastJumpY);
+      const largerJumpDiff = Math.max(jumpDiffX, jumpDiffY);
+
+      // Acceleration is mearued here in Screen Units per second per microsecond (SU/s/us).
+      const speedChange = largerJumpDiff / this.stats.secondsPerPoint;
+      const accel = speedChange / this.stats.microsecondsPerPoint;
+
+      maxJumpX = Math.max(maxJumpX, jumpXAbs);
+      maxJumpY = Math.max(maxJumpY, jumpYAbs);
+      maxJump = Math.max(maxJump, largerJump);
+      maxSpeed = Math.max(maxSpeed, largerSpeed);
+      maxAccel = Math.max(maxAccel, accel);
+
+      lastJumpX = jumpX;
+      lastJumpY = jumpY;
+      this.lastPoint = point;
+    });
+
+    this.stats.lastFrame.maxJumpX = maxJumpX;
+    this.stats.lastFrame.maxJumpY = maxJumpY;
+    this.stats.lastFrame.maxJump = maxJump;
+    this.stats.lastFrame.maxSpeed = maxSpeed;
+    this.stats.lastFrame.maxAccel = maxAccel;
+
+    this.stats.allFrames.maxJumpX = Math.max(this.stats.allFrames.maxJumpX, maxJumpX);
+    this.stats.allFrames.maxJumpY = Math.max(this.stats.allFrames.maxJumpY, maxJumpY);
+    this.stats.allFrames.maxJump = Math.max(this.stats.allFrames.maxJump, maxJump);
+    this.stats.allFrames.maxSpeed = Math.max(this.stats.allFrames.maxSpeed, maxSpeed);
+    this.stats.allFrames.maxAccel = Math.max(this.stats.allFrames.maxAccel, maxAccel);
   }
 
   getStats(): Object {
