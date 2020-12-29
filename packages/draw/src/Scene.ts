@@ -55,4 +55,8 @@ export class Scene {
       this.interval = undefined;
     }
   }
+
+  setResolution(resolution: number) {
+    this.resolution = resolution;
+  }
 }

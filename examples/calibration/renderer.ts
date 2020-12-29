@@ -1,6 +1,6 @@
 import { DAC } from '@laser-dac/core';
 import { getDevices } from '@laser-dac/device-selector';
-import { Scene, Rect, loadIldaFile, Ilda } from '@laser-dac/draw';
+import { Circle, Scene, Rect, loadIldaFile, Ilda } from '@laser-dac/draw';
 import * as path from 'path';
 
 interface IClient {
@@ -34,6 +34,7 @@ export class Renderer {
     this.pps = data.pps;
     this.dac.setPointsRate(this.pps);
     this.resolution = data.resolution;
+    this.scene.setResolution(this.resolution);
   }
 
   getParams() {
@@ -59,6 +60,14 @@ export class Renderer {
       color: [1, 1, 1]
     });
     this.scene.add(bounds);
+
+    const circle = new Circle({
+      x: 0.5,
+      y: 0.5,
+      radius: 0.25,
+      color: [1, 1, 1]
+    });
+    this.scene.add(circle);
   }
 
   async start() {
