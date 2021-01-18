@@ -244,9 +244,6 @@ export class Helios extends Device {
   }
 
   recordContentStats(framePoints: Point[]) {
-    if (this.lastPoint === undefined && framePoints.length) {
-      this.lastPoint = framePoints[0];
-    }
     let maxJumpX = 0;
     let maxJumpY = 0;
     let maxJump = 0;
@@ -256,11 +253,12 @@ export class Helios extends Device {
     let lastJumpX = 0;
     let lastJumpY = 0;
 
-    framePoints.forEach((point) => {
-      const jumpX = point.x - this.lastPoint.x;
+    framePoints.forEach((point: Point) => {
+      const lastPoint = this.lastPoint ?? point;
+      const jumpX = point.x - lastPoint.x;
       const jumpXAbs = Math.abs(jumpX);
 
-      const jumpY = point.y - this.lastPoint.y;
+      const jumpY = point.y - lastPoint.y;
       const jumpYAbs = Math.abs(jumpY);
 
       const largerJump = Math.max(jumpXAbs, jumpYAbs);
