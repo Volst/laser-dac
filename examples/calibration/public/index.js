@@ -6,6 +6,9 @@ const ws = new WebsocketClient();
 
 const ppsInput = document.getElementById('pps');
 const resolutionInput = document.getElementById('resolution');
+const blankingPointsInput = document.getElementById('blankingPoints');
+const maxWaitPointsInput = document.getElementById('maxWaitPoints');
+
 const statsTable = document.getElementById('stats-table');
 
 function sendMessage(msg) {
@@ -18,7 +21,9 @@ function sendFormValues() {
     type: 'UPDATEPARAMS',
     data: {
       pps: parseInt(ppsInput.value, 10),
-      resolution: parseInt(resolutionInput.value, 10)
+      resolution: parseInt(resolutionInput.value, 10),
+      blankingPoints: parseInt(blankingPointsInput.value, 10),
+      maxWaitPoints: parseInt(maxWaitPointsInput.value, 10)
     }
   });
 }
@@ -28,6 +33,8 @@ ws.onopen = function() {
 
   ppsInput.addEventListener('input', sendFormValues);
   resolutionInput.addEventListener('input', sendFormValues);
+  blankingPointsInput.addEventListener('input', sendFormValues);
+  maxWaitPointsInput.addEventListener('input', sendFormValues);
 };
 
 function displayStats(stats) {
@@ -37,6 +44,8 @@ function displayStats(stats) {
 function updateSettings(settings) {
   ppsInput.value = settings.pps;
   resolutionInput.value = settings.resolution;
+  blankingPointsInput.value = settings.blankingPoints;
+  maxWaitPointsInput.value = settings.maxWaitPoints;
 }
 
 ws.onmessage = function(ev) {

@@ -12,6 +12,8 @@ interface IClient {
 export class Renderer {
   pps = 25000;
   resolution = 70;
+  blankingPoints = 24;
+  maxWaitPoints = 10;
 
   dac: DAC;
   scene: Scene;
@@ -20,7 +22,9 @@ export class Renderer {
     this.dac = new DAC();
 
     this.scene = new Scene({
-      resolution: 70
+      resolution: this.resolution,
+      blankingPoints: this.blankingPoints,
+      maxWaitPoints: this.maxWaitPoints,
     });
 
     this.start();
@@ -34,13 +38,22 @@ export class Renderer {
     this.pps = data.pps;
     this.dac.setPointsRate(this.pps);
     this.resolution = data.resolution;
-    this.scene.setResolution(this.resolution);
+    this.blankingPoints = data.blankingPoints;
+    this.maxWaitPoints = data.maxWaitPoints;
+
+    this.scene.setOptions({
+      resolution: this.resolution,
+      blankingPoints: this.blankingPoints,
+      maxWaitPoints: this.maxWaitPoints,
+    });
   }
 
   getParams() {
     return {
       pps: this.pps,
       resolution: this.resolution,
+      blankingPoints: this.blankingPoints,
+      maxWaitPoints: this.maxWaitPoints,
     }
   }
 

@@ -63,7 +63,7 @@ export class Scene {
     }
   }
 
-  setResolution(resolution: number) {
-    this.options.resolution = resolution;
+  setOptions(options: Partial<SceneOptions>) {
+    this.options = Object.assign(this.options, options);
   }
 }
