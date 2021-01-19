@@ -1,7 +1,7 @@
 import { Shape } from './Shape';
 import { Color, Point } from './Point';
+import { SceneOptions } from './Scene';
 import { Wait } from './Wait';
-import { BLANKING_AMOUNT } from './constants';
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -26,15 +26,15 @@ export class Circle extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number): Point[] {
+  draw(options: SceneOptions): Point[] {
     const circumference = 2.0 * this.radius * Math.PI;
-    const pointCount = Math.round(circumference * resolution);
+    const pointCount = Math.round(circumference * options.resolution);
 
     const points: Point[] = new Wait({
       x: this.x + this.radius,
       y: this.y,
       color: [0, 0, 0],
-      amount: BLANKING_AMOUNT
+      amount: options.blankingPoints
     }).draw();
 
     // If there are less then 3 points just return blank
@@ -62,7 +62,7 @@ export class Circle extends Shape {
         x: this.x + this.radius,
         y: this.y,
         color: [0, 0, 0],
-        amount: BLANKING_AMOUNT
+        amount: options.blankingPoints
       }).draw()
     );
   }

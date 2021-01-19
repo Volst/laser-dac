@@ -1,14 +1,10 @@
 import { DAC } from '@laser-dac/core';
-import { Simulator } from '@laser-dac/simulator';
-import { Helios } from '@laser-dac/helios';
+import { getDevices } from '@laser-dac/device-selector';
 import { Scene, Rect, Path, Line } from '@laser-dac/draw';
 
 (async () => {
   const dac = new DAC();
-  dac.use(new Simulator());
-  if (process.env.DEVICE) {
-    dac.use(new Helios());
-  }
+  dac.useAll(await getDevices());
   await dac.start();
 
   const scene = new Scene({

@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
+import { SceneOptions } from './Scene';
 import { Line } from './Line';
 import { Wait } from './Wait';
 import { CubicCurve } from './CubicCurve';
@@ -7,7 +8,6 @@ import { SVGPathData } from 'svg-pathdata';
 import { CommandM, SVGCommand } from 'svg-pathdata/lib/types';
 import { QuadCurve } from './QuadCurve';
 import { flatten } from './helpers';
-import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 import arcToBezier = require('svg-arc-to-cubic-bezier');
 
 interface PathOptions {
@@ -31,8 +31,8 @@ export class Path extends Shape {
   // Works exactly like SVG path. Learn everything about it: https://css-tricks.com/svg-path-syntax-illustrated-guide/
   path: string;
 
-  waitAmount: number;
-  blankingAmount: number;
+  waitAmount: number | undefined;
+  blankingAmount: number | undefined;
 
   constructor(options: PathOptions) {
     super();
@@ -43,8 +43,8 @@ export class Path extends Shape {
     this.color = options.color;
     this.path = options.path;
 
-    this.waitAmount = options.waitAmount || MAX_WAIT_AMOUNT;
-    this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
+    this.waitAmount = options.waitAmount;
+    this.blankingAmount = options.blankingAmount;
   }
 
   transformSize = (command: SVGCommand) => {
@@ -76,7 +76,7 @@ export class Path extends Shape {
     return command;
   };
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const pathData = new SVGPathData(this.path)
       // Transforms relative commands to absolute so we don't have to implement relative commands at all!
       .toAbs()
@@ -94,6 +94,12 @@ export class Path extends Shape {
     let prevX = 0;
     let prevY = 0;
 
+    // Any shapes should be constructed with undefined blankingAmount
+    // if this.blankingAmount is undefined. This will cause drawing to
+    // use the value from SceneOptions at render time. The same goes
+    // for waitAmount.
+    const blankingAmount = this.blankingAmount ?? options.blankingPoints;
+
     const points = pathData.commands.reduce(
       (accumulator: Point[], command: SVGCommand) => {
         let commandPoints: Point[] = [];
@@ -103,7 +109,7 @@ export class Path extends Shape {
             commandPoints = new Wait({
               x: command.x,
               y: command.y,
-              amount: this.blankingAmount
+              amount: blankingAmount
             }).draw();
 
             lastMoveCommand = command;
@@ -122,7 +128,7 @@ export class Path extends Shape {
               color: this.color,
               waitAmount: this.waitAmount,
               blankingAmount: this.blankingAmount
-            }).draw(resolution);
+            }).draw(options);
             prevX = toX;
             prevY = toY;
             break;
@@ -140,7 +146,7 @@ export class Path extends Shape {
                 control: { x: command.x2, y: command.y2 }
               },
               color: this.color
-            }).draw(resolution);
+            }).draw(options);
             prevX = command.x;
             prevY = command.y;
             break;
@@ -151,7 +157,7 @@ export class Path extends Shape {
               to: { x: command.x, y: command.y },
               control: { x: command.x1, y: command.y1 },
               color: this.color
-            }).draw(resolution);
+            }).draw(options);
             prevX = command.x;
             prevY = command.y;
             break;
@@ -184,7 +190,7 @@ export class Path extends Shape {
                   control: { x: curve.x2, y: curve.y2 }
                 },
                 color: this.color
-              }).draw(resolution);
+              }).draw(options);
               curvePrevX = curve.x;
               curvePrevY = curve.y;
               Array.prototype.push.apply(commandPoints, curvePoints);
@@ -206,7 +212,7 @@ export class Path extends Shape {
               blankAfter: true,
               waitAmount: this.waitAmount,
               blankingAmount: this.blankingAmount
-            }).draw(resolution);
+            }).draw(options);
             prevX = lastMoveCommand.x;
             prevY = lastMoveCommand.y;
             break;

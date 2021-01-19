@@ -70,10 +70,17 @@ export function setShutter(dacNum: number, shutterValue: boolean): number {
   return HeliosLib.SetShutter(dacNum, shutterValue);
 }
 
+export enum FrameMode {
+  QueueLoop = 0,
+  ImmediateLoop = 1,
+  QueueSingle = 2,
+  ImmediateSingle = 3
+}
+
 export function writeFrame(
   dacNum: number,
   pps: number,
-  flags: 0 | 1,
+  flags: FrameMode,
   points: any[],
   numOfPoints: number
 ): number {

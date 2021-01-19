@@ -1,11 +1,8 @@
 import { Shape } from './Shape';
-import { Color } from './Point';
+import { SceneOptions } from './Scene';
+import { Color, Point } from './Point';
 import { Line } from './Line';
 import { Wait } from './Wait';
-import { MAX_WAIT_AMOUNT } from './constants';
-
-//
-const WAIT_AMOUNT = MAX_WAIT_AMOUNT / 2;
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -33,7 +30,8 @@ export class Rect extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
+    const waitAmount = options.maxWaitPoints / 2;
     return [
       // Top.
       ...new Line({
@@ -41,13 +39,13 @@ export class Rect extends Shape {
         to: { x: this.x + this.width, y: this.y },
         color: this.color,
         blankBefore: true
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x + this.width,
         y: this.y,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Right.
@@ -55,13 +53,13 @@ export class Rect extends Shape {
         from: { x: this.x + this.width, y: this.y },
         to: { x: this.x + this.width, y: this.y + this.height },
         color: this.color
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x + this.width,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Bottom.
@@ -69,13 +67,13 @@ export class Rect extends Shape {
         from: { x: this.x + this.width, y: this.y + this.height },
         to: { x: this.x, y: this.y + this.height },
         color: this.color
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Left.
@@ -84,7 +82,7 @@ export class Rect extends Shape {
         to: { x: this.x, y: this.y },
         color: this.color,
         blankAfter: true
-      }).draw(resolution)
+      }).draw(options)
     ];
   }
 }

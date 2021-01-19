@@ -1,7 +1,7 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Wait } from './Wait';
-import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
+import { SceneOptions } from './Scene';
 
 interface Coordinates {
   x: number;
@@ -25,8 +25,8 @@ export class Line extends Shape {
   blankBefore: boolean;
   blankAfter: boolean;
 
-  waitAmount: number;
-  blankingAmount: number;
+  waitAmount: number | undefined;
+  blankingAmount: number | undefined;
 
   constructor(options: LineOptions) {
     super();
@@ -36,16 +36,18 @@ export class Line extends Shape {
     this.blankBefore = options.blankBefore || false;
     this.blankAfter = options.blankAfter || false;
 
-    this.waitAmount = options.waitAmount || MAX_WAIT_AMOUNT;
-    this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
+    this.waitAmount = options.waitAmount;
+    this.blankingAmount = options.blankingAmount;
   }
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const distanceX = this.from.x - this.to.x;
     const distanceY = this.from.y - this.to.y;
     // Calculate distance using the Pythagorean theorem.
     const distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-    const steps = Math.round(distance * resolution);
+    const steps = Math.round(distance * options.resolution);
+    const waitAmount = this.waitAmount ?? options.maxWaitPoints;
+    const blankingAmount = this.blankingAmount ?? options.blankingPoints;
 
     let points: Point[] = [];
 
@@ -55,7 +57,7 @@ export class Line extends Shape {
         x: this.from.x,
         y: this.from.y,
         color: [0, 0, 0],
-        amount: this.blankingAmount
+        amount: blankingAmount
       }).draw();
     }
 
@@ -77,7 +79,7 @@ export class Line extends Shape {
           x: this.to.x,
           y: this.to.y,
           color: this.color,
-          amount: this.waitAmount / 2
+          amount: waitAmount / 2
         }).draw()
       ];
     }

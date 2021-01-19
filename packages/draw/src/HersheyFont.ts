@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { Shape } from './Shape';
 import { Color, Point } from './Point';
 import { Path } from './Path';
+import { SceneOptions } from './Scene';
 
 interface HersheyCharacter {
   leftPos: number;
@@ -40,7 +41,7 @@ export class HersheyFont implements Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number): Point[] {
+  draw(options: SceneOptions): Point[] {
     const paths: string[] = [];
     let xpos = 0;
 
@@ -73,7 +74,7 @@ export class HersheyFont implements Shape {
       y: this.y,
       color: this.color,
       path: paths.join(' ')
-    }).draw(resolution);
+    }).draw(options);
   }
 }
 

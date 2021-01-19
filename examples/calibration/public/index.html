@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Laser Calibration</title>
+        <style>
+        </style>
+    </head>
+    <body>
+        <form id="calibration-form">
+          <label>PPS: <input id="pps" type="number" min="7" max="65535" value="" step="100"></label><br>
+          <label>Resolution: <input id="resolution" type="number" value="70"></label><br>
+          <label>Blanking Points: <input id="blankingPoints" type="number" min="0" max="100" value="24"></label><br>
+          <label>Max Wait Points: <input id="maxWaitPoints" type="number" min="0" max="50" value="10"></label><br>
+
+        </form>
+        <pre id="stats-table"></pre>
+        <script src="./index.js" type="module"></script>
+    </body>
+</html>
