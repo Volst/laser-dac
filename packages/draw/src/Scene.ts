@@ -7,11 +7,16 @@ export interface SceneOptions {
   // Decreasing this number will make drawing faster but less accurate, increasing will make it slower but more accurate.
   resolution: number;
   fps: number;
+  blankingPoints: number;
+  // This value determines how many times a Wait-point should be applied for the sharpest possible angles (360 degree angles).
+  maxWaitPoints: number;
 }
 
 const defaultOptions: SceneOptions = {
   resolution: 500,
   fps: 30,
+  blankingPoints: 24,
+  maxWaitPoints: 10,
 };
 
 type TransformFn = (points: Point[]) => Point[];
@@ -26,7 +31,7 @@ export class Scene {
   }
 
   add(shape: Shape, transformer?: TransformFn) {
-    let points = shape.draw(this.options.resolution);
+    let points = shape.draw(this.options);
     if (transformer) {
       points = transformer(points);
     }

@@ -3,10 +3,6 @@ import { SceneOptions } from './Scene';
 import { Color, Point } from './Point';
 import { Line } from './Line';
 import { Wait } from './Wait';
-import { MAX_WAIT_AMOUNT } from './constants';
-
-//
-const WAIT_AMOUNT = MAX_WAIT_AMOUNT / 2;
 
 // TODO: I don't like these options being duplicated in the class
 // I have a feeling there is a better way...
@@ -35,6 +31,7 @@ export class Rect extends Shape {
   }
 
   draw(options: SceneOptions): Point[] {
+    const waitAmount = options.maxWaitPoints / 2;
     return [
       // Top.
       ...new Line({
@@ -48,7 +45,7 @@ export class Rect extends Shape {
         x: this.x + this.width,
         y: this.y,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Right.
@@ -62,7 +59,7 @@ export class Rect extends Shape {
         x: this.x + this.width,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Bottom.
@@ -76,7 +73,7 @@ export class Rect extends Shape {
         x: this.x,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: waitAmount
       }).draw(),
 
       // Left.

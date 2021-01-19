@@ -5,7 +5,6 @@ import { parse, Node } from 'svg-parser';
 import { Path } from './Path';
 import { Color, Point } from './Point';
 import { hexToRgb, flatten } from './helpers';
-import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
 
 const DEFAULT_COLOR: Color = [0, 1, 0];
 const ALLOWED_NODES = ['path', 'polyline', 'polygon', 'rect', 'line'];
@@ -26,8 +25,8 @@ export class Svg extends Shape {
   size: number;
   file: Node;
   color: Color;
-  waitAmount: number;
-  blankingAmount: number;
+  waitAmount: number | undefined;
+  blankingAmount: number | undefined;
   private pathNodes: Node[] = [];
 
   constructor(options: SvgOptions) {
@@ -37,8 +36,8 @@ export class Svg extends Shape {
     this.file = options.file;
     this.color = options.color || DEFAULT_COLOR;
     this.size = options.size || 1;
-    this.waitAmount = options.waitAmount || MAX_WAIT_AMOUNT;
-    this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
+    this.waitAmount = options.waitAmount;
+    this.blankingAmount = options.blankingAmount;
   }
 
   parseViewBox(raw: string) {
