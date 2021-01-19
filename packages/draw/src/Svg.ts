@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { Shape } from './Shape';
+import { SceneOptions } from './Scene';
 import { parse, Node } from 'svg-parser';
 import { Path } from './Path';
 import { Color, Point } from './Point';
@@ -71,7 +72,7 @@ export class Svg extends Shape {
     }
   };
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const viewBox = this.parseViewBox(String(this.file.attributes.viewBox));
     const aspectRatio = viewBox.width / viewBox.height;
     const width = viewBox.width / this.size;
@@ -92,7 +93,7 @@ export class Svg extends Shape {
         height,
         waitAmount: this.waitAmount,
         blankingAmount: this.blankingAmount
-      }).draw(resolution);
+      }).draw(options);
     });
 
     return flatten(points) as Point[];

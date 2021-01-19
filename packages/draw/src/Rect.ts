@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
-import { Color } from './Point';
+import { SceneOptions } from './Scene';
+import { Color, Point } from './Point';
 import { Line } from './Line';
 import { Wait } from './Wait';
 import { MAX_WAIT_AMOUNT } from './constants';
@@ -33,7 +34,7 @@ export class Rect extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     return [
       // Top.
       ...new Line({
@@ -41,7 +42,7 @@ export class Rect extends Shape {
         to: { x: this.x + this.width, y: this.y },
         color: this.color,
         blankBefore: true
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x + this.width,
@@ -55,7 +56,7 @@ export class Rect extends Shape {
         from: { x: this.x + this.width, y: this.y },
         to: { x: this.x + this.width, y: this.y + this.height },
         color: this.color
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x + this.width,
@@ -69,7 +70,7 @@ export class Rect extends Shape {
         from: { x: this.x + this.width, y: this.y + this.height },
         to: { x: this.x, y: this.y + this.height },
         color: this.color
-      }).draw(resolution),
+      }).draw(options),
 
       ...new Wait({
         x: this.x,
@@ -84,7 +85,7 @@ export class Rect extends Shape {
         to: { x: this.x, y: this.y },
         color: this.color,
         blankAfter: true
-      }).draw(resolution)
+      }).draw(options)
     ];
   }
 }

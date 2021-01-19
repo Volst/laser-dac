@@ -2,7 +2,7 @@ import { Point } from './Point';
 import { Shape } from './Shape';
 import { clamp } from './helpers';
 
-interface SceneOptions {
+export interface SceneOptions {
   // This number sets the requested number of points from a perpendicular line drawn from one side of the projection to the other.
   // Decreasing this number will make drawing faster but less accurate, increasing will make it slower but more accurate.
   resolution: number;

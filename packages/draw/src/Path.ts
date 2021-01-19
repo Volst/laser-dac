@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
 import { Point, Color } from './Point';
+import { SceneOptions } from './Scene';
 import { Line } from './Line';
 import { Wait } from './Wait';
 import { CubicCurve } from './CubicCurve';
@@ -76,7 +77,7 @@ export class Path extends Shape {
     return command;
   };
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const pathData = new SVGPathData(this.path)
       // Transforms relative commands to absolute so we don't have to implement relative commands at all!
       .toAbs()
@@ -122,7 +123,7 @@ export class Path extends Shape {
               color: this.color,
               waitAmount: this.waitAmount,
               blankingAmount: this.blankingAmount
-            }).draw(resolution);
+            }).draw(options);
             prevX = toX;
             prevY = toY;
             break;
@@ -140,7 +141,7 @@ export class Path extends Shape {
                 control: { x: command.x2, y: command.y2 }
               },
               color: this.color
-            }).draw(resolution);
+            }).draw(options);
             prevX = command.x;
             prevY = command.y;
             break;
@@ -151,7 +152,7 @@ export class Path extends Shape {
               to: { x: command.x, y: command.y },
               control: { x: command.x1, y: command.y1 },
               color: this.color
-            }).draw(resolution);
+            }).draw(options);
             prevX = command.x;
             prevY = command.y;
             break;
@@ -184,7 +185,7 @@ export class Path extends Shape {
                   control: { x: curve.x2, y: curve.y2 }
                 },
                 color: this.color
-              }).draw(resolution);
+              }).draw(options);
               curvePrevX = curve.x;
               curvePrevY = curve.y;
               Array.prototype.push.apply(commandPoints, curvePoints);
@@ -206,7 +207,7 @@ export class Path extends Shape {
               blankAfter: true,
               waitAmount: this.waitAmount,
               blankingAmount: this.blankingAmount
-            }).draw(resolution);
+            }).draw(options);
             prevX = lastMoveCommand.x;
             prevY = lastMoveCommand.y;
             break;

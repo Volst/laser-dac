@@ -1,4 +1,5 @@
 import { Shape } from './Shape';
+import { SceneOptions } from './Scene';
 import { Point, Color } from './Point';
 import Bezier = require('bezier-js');
 
@@ -29,7 +30,7 @@ export class CubicCurve extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number): Point[] {
+  draw(options: SceneOptions): Point[] {
     const curve = new Bezier(
       this.from.x,
       this.from.y,
@@ -42,7 +43,7 @@ export class CubicCurve extends Shape {
     );
 
     const distance = curve.length();
-    const steps = Math.round(distance * resolution);
+    const steps = Math.round(distance * options.resolution);
     // When there are less than two steps, we can skip making a curve altogether.
     if (steps < 2) {
       return [new Point(this.to.x, this.to.y, this.color)];

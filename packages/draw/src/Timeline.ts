@@ -1,4 +1,6 @@
 import { Shape } from './Shape';
+import { Point } from './Point';
+import { SceneOptions } from './Scene';
 
 interface TimelineOptions {
   items: TimelineItem[];
@@ -41,10 +43,10 @@ export class Timeline extends Shape {
     return currentItem;
   }
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const item = this.getItem();
     if (item) {
-      return item.render().draw(resolution);
+      return item.render().draw(options);
     } else {
       return [];
     }

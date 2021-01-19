@@ -2,6 +2,7 @@ import { Shape } from './Shape';
 import { Point, Color } from './Point';
 import { Wait } from './Wait';
 import { BLANKING_AMOUNT, MAX_WAIT_AMOUNT } from './constants';
+import { SceneOptions } from './Scene';
 
 interface Coordinates {
   x: number;
@@ -40,12 +41,12 @@ export class Line extends Shape {
     this.blankingAmount = options.blankingAmount || BLANKING_AMOUNT;
   }
 
-  draw(resolution: number) {
+  draw(options: SceneOptions): Point[] {
     const distanceX = this.from.x - this.to.x;
     const distanceY = this.from.y - this.to.y;
     // Calculate distance using the Pythagorean theorem.
     const distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-    const steps = Math.round(distance * resolution);
+    const steps = Math.round(distance * options.resolution);
 
     let points: Point[] = [];
 

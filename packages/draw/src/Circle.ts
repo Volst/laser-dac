@@ -1,5 +1,6 @@
 import { Shape } from './Shape';
 import { Color, Point } from './Point';
+import { SceneOptions } from './Scene';
 import { Wait } from './Wait';
 import { BLANKING_AMOUNT } from './constants';
 
@@ -26,9 +27,9 @@ export class Circle extends Shape {
     this.color = options.color;
   }
 
-  draw(resolution: number): Point[] {
+  draw(options: SceneOptions): Point[] {
     const circumference = 2.0 * this.radius * Math.PI;
-    const pointCount = Math.round(circumference * resolution);
+    const pointCount = Math.round(circumference * options.resolution);
 
     const points: Point[] = new Wait({
       x: this.x + this.radius,
