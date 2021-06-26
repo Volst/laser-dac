@@ -78,15 +78,16 @@ export class LasercubeDevice {
   }
 
   currentFrame: any[] | null = null;
-  // TODO: document wat rnum is
-  rnum = 0;
+  // How many messages were sent to the data socket (needs to be sequential)
+  messageNum = 0;
+  // How many frames were sent to the data socket
   frameNum = 0;
 
   start() {
     this.sendCommand(Command.EnableBufferSizeResponseOnData, 0x1);
     this.sendCommand(Command.SetOutput, 0x1);
 
-    this.rnum = 0;
+    this.messageNum = 0;
     this.frameNum = 0;
     this.currentFrame = null;
     this.run();
@@ -99,22 +100,34 @@ export class LasercubeDevice {
     console.log('qqqq', this.currentFrame.length);
 
     while (this.currentFrame.length > 0) {
-      // TODO where does 5000 come from
+      // If the remote buffer is already partially full, wait a bit.
+      // When to wait determines your latency/stability tradeoff. The
+      // more of the buffer you use, the more easily you'll deal with
+      // network hiccups slowness but the farther you'll be scheduling
+      // stuff ahead of real time. On my LaserCube, the buffer is 6000
+      // points and 5000 (i.e. only trying to use the first 1000 slots
+      // in the buffer) was chosen through trial and error as
+      // providing good stable output but keeping latency around
+      // 1/30s. Could definitely be adjusted, and should really be
+      // based on self.info.rx_buffer_size. In any case, this block
+      // regulates how fast we're sending points.
       if (this.remoteBufFree < 5000) {
         await delay(1000 / this.dacRate);
         this.remoteBufFree += 100;
       }
-      let msg = Buffer.from([
+      // Limiting to 140 points per message keeps messages under 1500
+      // bytes, which is a common network MTU.
+      const firstPoints = this.currentFrame.splice(0, 140);
+      const msg = Buffer.from([
         Command.SampleData,
         0x00,
-        this.rnum % 0xff,
+        this.messageNum % 0xff,
         this.frameNum % 0xff,
+        // TODO: this is an array of buffers, is it even possible to do it like this?
+        ...firstPoints,
       ]);
-      const firstPoints = this.currentFrame.splice(0, 140);
-      const pointsBuffer = Buffer.from(firstPoints);
-      msg = Buffer.concat([msg, pointsBuffer]);
       this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
-      this.rnum += 1;
+      this.messageNum += 1;
     }
     this.frameNum += 1;
 
