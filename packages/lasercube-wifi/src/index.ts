@@ -23,7 +23,7 @@ export class LasercubeWifi extends Device {
   }
 
   async start() {
-    this.bind();
+    this.startSockets();
     const device = await this.search();
     if (!device) {
       return false;
@@ -41,9 +41,10 @@ export class LasercubeWifi extends Device {
     if (this.scanner) {
       this.scanner.stop();
     }
+    this.stopSockets();
   }
 
-  private bind() {
+  private startSockets() {
     this.cmdSocket.on('error', (err) => {
       console.log('cmdSocket error', err);
       this.cmdSocket.close();
@@ -59,6 +60,11 @@ export class LasercubeWifi extends Device {
     });
 
     this.dataSocket.bind(LasercubeWifi.dataPort);
+  }
+
+  private stopSockets() {
+    this.cmdSocket.close();
+    this.dataSocket.close();
   }
 
   // private convertPoint(p: IPoint) {

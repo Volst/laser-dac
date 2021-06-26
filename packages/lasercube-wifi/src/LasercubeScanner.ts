@@ -1,5 +1,6 @@
 import * as dgram from 'dgram';
 import { LasercubeWifi } from '.';
+import { Command } from './data';
 import { LasercubeDevice } from './LasercubeDevice';
 
 export interface IPoint {
@@ -10,12 +11,6 @@ export interface IPoint {
   b: number;
 }
 
-const CMD_GET_FULL_INFO = 0x77;
-// const CMD_ENABLE_BUFFER_SIZE_RESPONSE_ON_DATA = 0x78
-// const CMD_SET_OUTPUT = 0x80
-// const CMD_GET_RINGBUFFER_EMPTY_SAMPLE_COUNT = 0x8a
-// const CMD_SAMPLE_DATA = 0xa9
-
 export class LasercubeScanner {
   cmdSocket: dgram.Socket;
   dataSocket: dgram.Socket;
@@ -25,12 +20,14 @@ export class LasercubeScanner {
     this.dataSocket = dataSocket;
   }
 
+  listenerFunction?: (msg: Buffer, rinfo: dgram.RemoteInfo) => void;
+
   async search(): Promise<LasercubeDevice> {
     // TODO: add timeout
     return new Promise((resolve) => {
-      this.cmdSocket.on('message', (msg, rinfo) => {
+      this.listenerFunction = (msg, rinfo) => {
         console.log('scanner: received cmd message', msg, rinfo);
-        if (msg[0] === CMD_GET_FULL_INFO && msg.length > 1) {
+        if (msg[0] === Command.GetFullInfo && msg.length > 1) {
           this.stop();
           const device = new LasercubeDevice(
             rinfo.address,
@@ -40,8 +37,10 @@ export class LasercubeScanner {
           device.handleCmdMessage(msg, rinfo);
           resolve(device);
         }
-      });
+      };
+      this.cmdSocket.on('message', this.listenerFunction);
 
+      // All lasers in the network will respond to this message by sending their full information
       this.sendFullInfoMsg();
     });
   }
@@ -50,12 +49,13 @@ export class LasercubeScanner {
    * Send a message asking for all the information about the laser
    */
   sendFullInfoMsg() {
-    const msg = Buffer.from([CMD_GET_FULL_INFO]);
+    const msg = Buffer.from([Command.GetFullInfo]);
     this.cmdSocket.send(msg, LasercubeWifi.cmdPort, '255.255.255.255');
   }
 
   stop() {
-    // TODO
-    // this.cmdSocket.off('message', this.handleCmdMessage)
+    if (this.listenerFunction) {
+      this.cmdSocket.off('message', this.listenerFunction);
+    }
   }
 }
