@@ -1,140 +1,34 @@
 import * as dgram from 'dgram';
 import { Device } from '@laser-dac/core';
-import { IPoint } from './LasercubeConnection';
+import { IPoint, LasercubeScanner } from './LasercubeScanner';
 
 const DEFAULT_POINTS_RATE = 30000;
-
-type IDevice = {
-  ip: string;
-  serialNumber: string;
-};
-
-const CMD_GET_FULL_INFO = 0x77;
-// const CMD_ENABLE_BUFFER_SIZE_RESPONSE_ON_DATA = 0x78
-// const CMD_SET_OUTPUT = 0x80
-// const CMD_GET_RINGBUFFER_EMPTY_SAMPLE_COUNT = 0x8a
-// const CMD_SAMPLE_DATA = 0xa9
 
 export class LasercubeWifi extends Device {
   static cmdPort = 45457;
   static dataPort = 45458;
 
-  // connection?: EtherConn;
+  private cmdSocket = dgram.createSocket('udp4');
+  private dataSocket = dgram.createSocket('udp4');
 
-  find(limit: number, timeout: number): Promise<IDevice[]> {
-    const ips: string[] = [];
-    const devices: IDevice[] = [];
-
-    const cmdSocket = dgram.createSocket('udp4');
-    const dataSocket = dgram.createSocket('udp4');
-
-    return new Promise((resolve) => {
-      const timeouttimer = setTimeout(function () {
-        cmdSocket.close();
-        dataSocket.close();
-        resolve(devices);
-      }, timeout);
-
-      cmdSocket.on('message', function (msg, rinfo) {
-        console.log('received msg', msg, rinfo);
-        const ip = rinfo.address;
-        if (ips.indexOf(ip) != -1) return;
-        ips.push(ip);
-
-        devices.push({
-          ip: ip,
-          serialNumber: 'xxx',
-        });
-
-        if (devices.length >= limit) {
-          cmdSocket.close();
-          clearTimeout(timeouttimer);
-          resolve(devices);
-        }
-      });
-
-      cmdSocket.on('error', (err) => {
-        console.log('cmdSocket error', err);
-        cmdSocket.close();
-        clearTimeout(timeouttimer);
-        resolve(devices);
-      });
-
-      cmdSocket.on('listening', function () {
-        const address = cmdSocket.address();
-        console.log(
-          'cmdSocket listening ' + address.address + ':' + address.port
-        );
-      });
-
-      cmdSocket.bind(LasercubeWifi.cmdPort, undefined, function () {
-        cmdSocket.setBroadcast(true);
-      });
-
-      // Data socket
-      dataSocket.on('message', function (msg, rinfo) {
-        console.log('received msg', msg, rinfo);
-        const ip = rinfo.address;
-        if (ips.indexOf(ip) != -1) return;
-        ips.push(ip);
-
-        devices.push({
-          ip: ip,
-          serialNumber: 'xxx',
-        });
-
-        if (devices.length >= limit) {
-          dataSocket.close();
-          clearTimeout(timeouttimer);
-          resolve(devices);
-        }
-      });
-
-      dataSocket.on('error', (err) => {
-        console.log('dataSocket error', err);
-        dataSocket.close();
-        clearTimeout(timeouttimer);
-        resolve(devices);
-      });
-
-      dataSocket.on('listening', function () {
-        const address = dataSocket.address();
-        console.log(
-          'dataSocket listening ' + address.address + ':' + address.port
-        );
-      });
-
-      dataSocket.bind(LasercubeWifi.dataPort, undefined, function () {});
-
-      setTimeout(() => {
-        const msg = Buffer.from([CMD_GET_FULL_INFO]);
-        cmdSocket.send(
-          msg,
-          LasercubeWifi.cmdPort,
-          '255.255.255.255',
-          (a, b) => {
-            console.log('callback', a, b);
-          }
-        );
-      }, 1000);
-
-      // wait two seconds for data to come back...
-    });
-  }
+  scanner?: LasercubeScanner;
 
   async search() {
-    const device = await this.find(1, 10000);
+    this.scanner = new LasercubeScanner(this.cmdSocket, this.dataSocket);
+    const device = await this.scanner.search();
 
-    console.log('Search done', device);
+    console.log('Search done', !!device);
 
     return device;
   }
 
   async start() {
+    this.bind();
     const device = await this.search();
     if (!device) {
       return false;
     }
+    console.log('Started with device');
     // const conn = await EtherDream.connect(device.ip, device.port);
     // if (conn) {
     //   this.connection = conn;
@@ -144,13 +38,27 @@ export class LasercubeWifi extends Device {
   }
 
   stop() {
-    // if (this.connection) {
-    //   this.connection.sendEmergencyStop(() => {
-    //     if (this.connection) {
-    //       this.connection.close();
-    //     }
-    //   });
-    // }
+    if (this.scanner) {
+      this.scanner.stop();
+    }
+  }
+
+  private bind() {
+    this.cmdSocket.on('error', (err) => {
+      console.log('cmdSocket error', err);
+      this.cmdSocket.close();
+    });
+
+    this.cmdSocket.bind(LasercubeWifi.cmdPort, undefined, () => {
+      this.cmdSocket.setBroadcast(true);
+    });
+
+    this.dataSocket.on('error', (err) => {
+      console.log('dataSocket error', err);
+      this.dataSocket.close();
+    });
+
+    this.dataSocket.bind(LasercubeWifi.dataPort);
   }
 
   // private convertPoint(p: IPoint) {
