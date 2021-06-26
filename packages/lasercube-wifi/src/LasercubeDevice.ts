@@ -97,7 +97,6 @@ export class LasercubeDevice {
     if (!this.running) return;
 
     this.currentFrame = this.generateFrame();
-    console.log('qqqq', this.currentFrame.length);
 
     while (this.currentFrame.length > 0) {
       // If the remote buffer is already partially full, wait a bit.
@@ -115,18 +114,18 @@ export class LasercubeDevice {
         await delay(1000 / this.dacRate);
         this.remoteBufFree += 100;
       }
-      // Limiting to 140 points per message keeps messages under 1500
-      // bytes, which is a common network MTU.
-      const firstPoints = this.currentFrame.splice(0, 140);
-      const msg = Buffer.from([
+      const firstMsg = Buffer.from([
         Command.SampleData,
         0x00,
         this.messageNum % 0xff,
         this.frameNum % 0xff,
-        // TODO: this is an array of buffers, is it even possible to do it like this?
-        ...firstPoints,
       ]);
+      // Limiting to 140 points per message keeps messages under 1500
+      // bytes, which is a common network MTU.
+      const firstPoints = this.currentFrame.splice(0, 140);
+      const msg = Buffer.concat([firstMsg, ...firstPoints]);
       this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
+
       this.messageNum += 1;
     }
     this.frameNum += 1;

@@ -2,6 +2,8 @@
 
 This package makes Laser DAC compatible with the Laserdock. Currently macOS + Windows only.
 
+Only works for the USB version of the Laserdock / Lasercube (1W and 2W)! See also [Lasercube WiFi DAC](../lasercube-wifi).
+
 ```
 yarn add @laser-dac/laserdock
 npm i @laser-dac/laserdock
