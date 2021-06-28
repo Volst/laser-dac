@@ -24,11 +24,7 @@ export class LasercubeWifi extends Device {
 
   async search() {
     this.scanner = new LasercubeScanner(this.cmdSocket, this.dataSocket);
-    const device = await this.scanner.search();
-
-    console.log('Search done', !!device);
-
-    return device;
+    return await this.scanner.search();
   }
 
   async start() {

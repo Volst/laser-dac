@@ -26,7 +26,6 @@ export class LasercubeScanner {
     // TODO: add timeout
     return new Promise((resolve) => {
       this.listenerFunction = (msg, rinfo) => {
-        console.log('scanner: received cmd message', msg, rinfo);
         if (msg[0] === Command.GetFullInfo && msg.length > 1) {
           this.stop();
           const device = new LasercubeDevice(

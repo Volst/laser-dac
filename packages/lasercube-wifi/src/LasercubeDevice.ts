@@ -16,8 +16,8 @@ export class LasercubeDevice {
   running = true;
   // TODO: get up to date buffer info from lasercube
   remoteBufFree = 0;
+  dacRate = 30000;
   info: DeviceInfo | null = null;
-  dacRate = 30000; // TODO verify this
 
   constructor(
     address: string,
@@ -30,7 +30,6 @@ export class LasercubeDevice {
   }
 
   handleCmdMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
-    console.log('device: received cmd msg', msg, rinfo);
     if (msg[0] === Command.GetFullInfo) {
       const fields = struct.unpack('<xxBB?5xIIxHHBBB11xB26x', msg);
       this.info = {
@@ -43,7 +42,7 @@ export class LasercubeDevice {
         temperature: fields[8] as number,
       };
       this.remoteBufFree = this.info.rxBufferFree;
-      console.log('info', this.info);
+      this.dacRate = this.info.dacRate;
     } else if (msg[0] === Command.GetRingBufferEmptySampleCount) {
       console.log(
         'ring buffer empty sample count',
@@ -70,7 +69,7 @@ export class LasercubeDevice {
   private sendCommand(cmd: Command, value: number) {
     const msg = Buffer.from([cmd, value]);
     this.cmdSocket.send(msg, LasercubeWifi.cmdPort, this.address);
-    // TODO: the Python code sends it 2 times, should we also?
+    // Send it a second time to increase chances the message arrives
     this.cmdSocket.send(msg, LasercubeWifi.cmdPort, this.address);
   }
 
@@ -132,7 +131,8 @@ export class LasercubeDevice {
       // Limiting to 140 points per message keeps messages under 1500
       // bytes, which is a common network MTU.
       const firstPoints = frame.splice(0, 140);
-      // TODO: see how this transpiles and see if it's fast enough
+      this.remoteBufFree -= firstPoints.length;
+
       const msg = Buffer.concat([firstMsg, ...firstPoints]);
       this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
 
