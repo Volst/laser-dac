@@ -22,11 +22,15 @@ export class LasercubeScanner {
 
   listenerFunction?: (msg: Buffer, rinfo: dgram.RemoteInfo) => void;
 
-  async search(): Promise<LasercubeDevice> {
-    // TODO: add timeout
+  async search(timeout: number): Promise<LasercubeDevice | null> {
     return new Promise((resolve) => {
       this.listenerFunction = (msg, rinfo) => {
+        const timeoutTimer = setTimeout(() => {
+          this.stop();
+          resolve(null);
+        }, timeout);
         if (msg[0] === Command.GetFullInfo && msg.length > 1) {
+          clearTimeout(timeoutTimer);
           this.stop();
           const device = new LasercubeDevice(
             rinfo.address,

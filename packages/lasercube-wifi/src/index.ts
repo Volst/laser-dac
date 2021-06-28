@@ -24,7 +24,7 @@ export class LasercubeWifi extends Device {
 
   async search() {
     this.scanner = new LasercubeScanner(this.cmdSocket, this.dataSocket);
-    return await this.scanner.search();
+    return await this.scanner.search(4000);
   }
 
   async start() {
@@ -33,7 +33,7 @@ export class LasercubeWifi extends Device {
     if (!device) {
       return false;
     }
-    console.log('Started with device');
+
     this.device = device;
     this.device.start();
     return true;
@@ -43,12 +43,15 @@ export class LasercubeWifi extends Device {
     if (this.scanner) {
       this.scanner.stop();
     }
+    if (this.device) {
+      this.device.stop();
+    }
     this.stopSockets();
   }
 
   private startSockets() {
     this.cmdSocket.on('error', (err) => {
-      console.log('cmdSocket error', err);
+      console.error('Lasercube WiFi cmd socket error:', err);
       this.cmdSocket.close();
     });
 
@@ -57,7 +60,7 @@ export class LasercubeWifi extends Device {
     });
 
     this.dataSocket.on('error', (err) => {
-      console.log('dataSocket error', err);
+      console.error('Lasercube WiFi data socket error:', err);
       this.dataSocket.close();
     });
 
