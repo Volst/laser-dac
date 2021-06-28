@@ -5,6 +5,9 @@ import { Command, DeviceInfo } from './data';
 
 const delay = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
+type BufferFrame = Buffer[];
+type StreamFrameCallback = () => BufferFrame;
+
 export class LasercubeDevice {
   address: string;
   cmdSocket: dgram.Socket;
@@ -24,12 +27,6 @@ export class LasercubeDevice {
     this.address = address;
     this.cmdSocket = cmdSocket;
     this.dataSocket = dataSocket;
-
-    cmdSocket.on('message', this.handleCmdMessage);
-    dataSocket.on('message', this.handleDataMessage);
-
-    // TODO: this is temp
-    this.start();
   }
 
   handleCmdMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
@@ -62,7 +59,7 @@ export class LasercubeDevice {
     // console.log('device: received data msg', msg, rinfo);
   }
 
-  close() {
+  stop() {
     this.running = false;
     this.sendCommand(Command.EnableBufferSizeResponseOnData, 0x0);
     this.sendCommand(Command.SetOutput, 0x0);
@@ -77,28 +74,40 @@ export class LasercubeDevice {
     this.cmdSocket.send(msg, LasercubeWifi.cmdPort, this.address);
   }
 
-  currentFrame: any[] | null = null;
   // How many messages were sent to the data socket (needs to be sequential)
   messageNum = 0;
   // How many frames were sent to the data socket
   frameNum = 0;
 
   start() {
+    this.cmdSocket.on('message', this.handleCmdMessage);
+    this.dataSocket.on('message', this.handleDataMessage);
+
     this.sendCommand(Command.EnableBufferSizeResponseOnData, 0x1);
     this.sendCommand(Command.SetOutput, 0x1);
 
     this.messageNum = 0;
     this.frameNum = 0;
-    this.currentFrame = null;
+    this.streamCallback = null;
     this.run();
   }
 
+  streamFrames(callback: StreamFrameCallback) {
+    this.streamCallback = callback;
+  }
+
+  streamCallback: StreamFrameCallback | null = null;
+
   run = async () => {
     if (!this.running) return;
+    if (!this.streamCallback) {
+      await delay(0);
+      this.run();
+      return;
+    }
+    const frame = this.streamCallback();
 
-    this.currentFrame = this.generateFrame();
-
-    while (this.currentFrame.length > 0) {
+    while (frame.length > 0) {
       // If the remote buffer is already partially full, wait a bit.
       // When to wait determines your latency/stability tradeoff. The
       // more of the buffer you use, the more easily you'll deal with
@@ -122,7 +131,8 @@ export class LasercubeDevice {
       ]);
       // Limiting to 140 points per message keeps messages under 1500
       // bytes, which is a common network MTU.
-      const firstPoints = this.currentFrame.splice(0, 140);
+      const firstPoints = frame.splice(0, 140);
+      // TODO: see how this transpiles and see if it's fast enough
       const msg = Buffer.concat([firstMsg, ...firstPoints]);
       this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
 
@@ -134,57 +144,4 @@ export class LasercubeDevice {
     await delay(0);
     this.run();
   };
-
-  generateFrame() {
-    const frame = [];
-    for (let i = 0; i < 256; i++) {
-      const p = i / 256;
-      const seconds = Math.round(new Date().getTime() / 1000);
-      frame.push(
-        struct.pack(
-          '<HHHHH',
-          Math.round(
-            ((Math.sin(p * Math.PI * 2) *
-              (0.8 + Math.sin(p * 10 * Math.PI * 2 + seconds) * 0.1) *
-              0.7) /
-              2 +
-              0.5) *
-              0xfff
-          ),
-          Math.round(
-            ((Math.cos(p * Math.PI * 2) *
-              (0.8 + Math.sin(p * 10 * Math.PI * 2 + seconds) * 0.1) *
-              0.7) /
-              2 +
-              0.5) *
-              0xfff
-          ),
-          Math.round(
-            Math.pow(Math.sin((p + seconds * 1) * (Math.PI * 4)) / 2 + 0.5, 1) *
-              0x20f
-          ),
-          Math.round(
-            Math.pow(Math.sin((p + seconds * 2) * (Math.PI * 4)) / 2 + 0.5, 1) *
-              0x0ff
-          ),
-          Math.round(
-            Math.pow(Math.sin((p + seconds * 3) * (Math.PI * 4)) / 2 + 0.5, 1) *
-              0x080
-          )
-        )
-      );
-    }
-    return frame;
-  }
-
-  // generateFrame(p: IPoint) {
-  //   const x = p.x * 0xfff;
-  //   const y = p.x * 0xfff;
-  //   const r = p.r * 0x20f;
-  //   const g = p.g * 0x0ff;
-  //   const b = p.b * 0x080;
-  //   // TODO what is the maximum value for each?
-  //   struct.pack('<HHHHH', x, y, r, g, b);
-  //   return [];
-  // }
 }

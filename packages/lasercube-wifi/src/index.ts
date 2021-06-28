@@ -1,6 +1,14 @@
 import * as dgram from 'dgram';
 import { Device } from '@laser-dac/core';
 import { IPoint, LasercubeScanner } from './LasercubeScanner';
+import {
+  relativeToColorBlue,
+  relativeToColorGreen,
+  relativeToColorRed,
+  relativeToPosition,
+} from './convert';
+import * as struct from 'python-struct';
+import { LasercubeDevice } from './LasercubeDevice';
 
 const DEFAULT_POINTS_RATE = 30000;
 
@@ -12,6 +20,7 @@ export class LasercubeWifi extends Device {
   private dataSocket = dgram.createSocket('udp4');
 
   scanner?: LasercubeScanner;
+  device?: LasercubeDevice;
 
   async search() {
     this.scanner = new LasercubeScanner(this.cmdSocket, this.dataSocket);
@@ -29,12 +38,9 @@ export class LasercubeWifi extends Device {
       return false;
     }
     console.log('Started with device');
-    // const conn = await EtherDream.connect(device.ip, device.port);
-    // if (conn) {
-    //   this.connection = conn;
-    //   return true;
-    // }
-    return false;
+    this.device = device;
+    this.device.start();
+    return true;
   }
 
   stop() {
@@ -67,28 +73,29 @@ export class LasercubeWifi extends Device {
     this.dataSocket.close();
   }
 
-  // private convertPoint(p: IPoint) {
-  // return {
-  //   x: relativeToPosition(p.x),
-  //   y: relativeToPosition(p.y),
-  //   r: relativeToColor(p.r),
-  //   g: relativeToColor(p.g),
-  //   b: relativeToColor(p.b),
-  // };
-  // }
+  private convertPoint(p: IPoint) {
+    const x = relativeToPosition(p.x);
+    const y = relativeToPosition(p.y);
+    const r = relativeToColorRed(p.r);
+    const g = relativeToColorGreen(p.g);
+    const b = relativeToColorBlue(p.b);
+
+    // Pack it into a C++ compatible binary struct
+    return struct.pack('<HHHHH', x, y, r, g, b);
+  }
 
   stream(
     scene: { points: IPoint[] },
     pointsRate: number = DEFAULT_POINTS_RATE
   ) {
-    // if (!this.connection) {
-    //   throw new Error(
-    //     'No active connection to the Ether Dream, call start() first'
-    //   );
-    // }
-    // this.connection.streamFrames(pointsRate, (callback) => {
-    //   const points = scene.points.map(this.convertPoint);
-    //   callback(points);
-    // });
+    if (!this.device) {
+      console.error('No device found while streaming');
+      return;
+    }
+
+    this.device.streamFrames(() => {
+      const points = scene.points.map(this.convertPoint);
+      return points;
+    });
   }
 }
