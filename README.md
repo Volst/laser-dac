@@ -42,7 +42,11 @@ This package takes care of the communication to the [Helios DAC](http://pages.bi
 
 ### [`@laser-dac/laserdock`](./packages/laserdock)
 
-This package takes care of the communication to the [Laserdock](https://www.wickedlasers.com/laserdock).
+This package takes care of the communication to the [Laserdock](https://www.laseros.com/item/dongle/) (USB version only).
+
+### [`@laser-dac/lasercube-wifi`](./packages/lasercube-wifi)
+
+This package takes care of the communication to the [LaserCube WiFi](https://www.laseros.com) (network version only).
 
 ### [`@laser-dac/beyond`](./packages/beyond)
 

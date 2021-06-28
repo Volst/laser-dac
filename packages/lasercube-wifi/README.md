@@ -1,22 +1,22 @@
-# @laser-dac/laserdock
+# @laser-dac/lasercube-wifi
 
-This package makes Laser DAC compatible with the Laserdock. Currently macOS + Windows only.
-
-Only works for the USB version of the Laserdock / Lasercube (1W and 2W)! See also [Lasercube WiFi DAC](../lasercube-wifi).
+This package makes Laser DAC compatible with the LaserCube Wifi.
 
 ```
-yarn add @laser-dac/laserdock
-npm i @laser-dac/laserdock
+yarn add @laser-dac/lasercube-wifi
+npm i @laser-dac/lasercube-wifi
 ```
+
+Many thanks to @s4y for deciphering the LaserOS demo and [porting it to Python](https://gist.github.com/s4y/0675595c2ff5734e927d68caf652e3af).
 
 ## Usage
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { Laserdock } from '@laser-dac/laserdock';
+import { LaserCubeWifi } from '@laser-dac/lasercube-wifi';
 
 const dac = new DAC();
-dac.use(new Laserdock());
+dac.use(new LaserCubeWifi());
 const started = await dac.start();
 if (started) {
   const pps = 30000; // points per second
