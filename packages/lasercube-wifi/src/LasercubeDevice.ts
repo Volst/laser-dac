@@ -14,7 +14,7 @@ export class LasercubeDevice {
   dataSocket: dgram.Socket;
 
   running = true;
-  // TODO: get up to date buffer info from lasercube
+  // How much free buffer the device has
   remoteBufFree = 0;
   dacRate = 30000;
   info: DeviceInfo | null = null;
@@ -29,7 +29,7 @@ export class LasercubeDevice {
     this.dataSocket = dataSocket;
   }
 
-  handleCmdMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
+  handleCmdMessage = (msg: Buffer, rinfo: dgram.RemoteInfo) => {
     if (msg[0] === Command.GetFullInfo) {
       const fields = struct.unpack('<xxBB?5xIIxHHBBB11xB26x', msg);
       this.info = {
@@ -43,20 +43,14 @@ export class LasercubeDevice {
       };
       this.remoteBufFree = this.info.rxBufferFree;
       this.dacRate = this.info.dacRate;
-    } else if (msg[0] === Command.GetRingBufferEmptySampleCount) {
-      console.log(
-        'ring buffer empty sample count',
-        msg,
-        '--',
-        struct.unpack('<xxH', msg)[0]
-      );
+    }
+  };
+
+  handleDataMessage = (msg: Buffer, rinfo: dgram.RemoteInfo) => {
+    if (msg[0] === Command.GetRingBufferEmptySampleCount) {
       this.remoteBufFree = struct.unpack('<xxH', msg)[0] as number;
     }
-  }
-
-  handleDataMessage(msg: Buffer, rinfo: dgram.RemoteInfo) {
-    // console.log('device: received data msg', msg, rinfo);
-  }
+  };
 
   stop() {
     this.running = false;
@@ -119,7 +113,7 @@ export class LasercubeDevice {
       // based on self.info.rx_buffer_size. In any case, this block
       // regulates how fast we're sending points.
       if (this.remoteBufFree < 5000) {
-        await delay(1000 / this.dacRate);
+        await delay(100000 / this.dacRate);
         this.remoteBufFree += 100;
       }
       const firstMsg = Buffer.from([
@@ -140,8 +134,10 @@ export class LasercubeDevice {
     }
     this.frameNum += 1;
 
-    // TODO maybe delay is not necessary
-    await delay(0);
+    if (!frame.length) {
+      await delay(0);
+    }
+
     this.run();
   };
 }

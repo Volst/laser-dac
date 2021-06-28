@@ -16,6 +16,7 @@ export interface DeviceInfo {
   temperature: number;
 }
 
+// Possible commands to send or receive to the LaserCube
 export enum Command {
   GetFullInfo = 0x77,
   EnableBufferSizeResponseOnData = 0x78,
