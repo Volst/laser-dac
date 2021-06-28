@@ -4,7 +4,7 @@ const MAX_GREEN = 0x0ff;
 const MAX_BLUE = 0x080;
 
 export function relativeToPosition(n: number) {
-  return Math.floor(n * XY_RESOLUTION) * -1;
+  return Math.floor((1 - n) * XY_RESOLUTION);
 }
 
 export function relativeToColorRed(r: number) {

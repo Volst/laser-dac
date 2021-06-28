@@ -92,7 +92,7 @@ export class LasercubeWifi extends Device {
       return;
     }
 
-    this.device.streamFrames(() => {
+    this.device.streamFrames(pointsRate, () => {
       const points = scene.points.map(this.convertPoint);
       return points;
     });

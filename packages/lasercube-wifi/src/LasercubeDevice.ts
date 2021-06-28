@@ -85,7 +85,8 @@ export class LasercubeDevice {
     this.run();
   }
 
-  streamFrames(callback: StreamFrameCallback) {
+  streamFrames(dacRate: number, callback: StreamFrameCallback) {
+    this.dacRate = dacRate;
     this.streamCallback = callback;
   }
 
