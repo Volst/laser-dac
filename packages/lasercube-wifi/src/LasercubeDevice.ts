@@ -114,8 +114,9 @@ export class LasercubeDevice {
       // based on self.info.rx_buffer_size. In any case, this block
       // regulates how fast we're sending points.
       if (this.remoteBufFree < 5000) {
-        await delay(100000 / this.dacRate);
-        this.remoteBufFree += 100;
+        const buffWait = this.remoteBufFree < 1500 ? 200 : 120;
+        await delay((buffWait * 1000) / this.dacRate);
+        this.remoteBufFree += buffWait;
       }
       const firstMsg = Buffer.from([
         Command.SampleData,
