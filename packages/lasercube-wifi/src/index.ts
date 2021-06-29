@@ -52,7 +52,7 @@ export class LasercubeWifi extends Device {
   private startSockets() {
     this.cmdSocket.on('error', (err) => {
       console.error('Lasercube WiFi cmd socket error:', err);
-      this.cmdSocket.close();
+      this.stop();
     });
 
     this.cmdSocket.bind(LasercubeWifi.cmdPort, undefined, () => {
@@ -61,7 +61,7 @@ export class LasercubeWifi extends Device {
 
     this.dataSocket.on('error', (err) => {
       console.error('Lasercube WiFi data socket error:', err);
-      this.dataSocket.close();
+      this.stop();
     });
 
     this.dataSocket.bind(LasercubeWifi.dataPort);
