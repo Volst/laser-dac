@@ -13,10 +13,10 @@ Many thanks to @s4y for deciphering the LaserOS demo and [porting it to Python](
 
 ```js
 import { DAC } from '@laser-dac/core';
-import { LaserCubeWifi } from '@laser-dac/lasercube-wifi';
+import { LasercubeWifi } from '@laser-dac/lasercube-wifi';
 
 const dac = new DAC();
-dac.use(new LaserCubeWifi());
+dac.use(new LasercubeWifi());
 const started = await dac.start();
 if (started) {
   const pps = 30000; // points per second
