@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/lasercube-wifi",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "LaserCube Wifi interface for Node.js",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
