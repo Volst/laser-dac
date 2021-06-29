@@ -110,11 +110,9 @@ export class LasercubeDevice {
       // points and 5000 (i.e. only trying to use the first 1000 slots
       // in the buffer) was chosen through trial and error as
       // providing good stable output but keeping latency around
-      // 1/30s. Could definitely be adjusted, and should really be
-      // based on self.info.rx_buffer_size. In any case, this block
-      // regulates how fast we're sending points.
+      // 1/30s.
       if (this.remoteBufFree < 5000) {
-        const buffWait = this.remoteBufFree < 1500 ? 200 : 120;
+        const buffWait = this.remoteBufFree < 1500 ? 500 : 120;
         await delay((buffWait * 1000) / this.dacRate);
         this.remoteBufFree += buffWait;
       }
