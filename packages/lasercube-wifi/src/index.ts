@@ -68,8 +68,11 @@ export class LasercubeWifi extends Device {
   }
 
   private stopSockets() {
-    this.cmdSocket.close();
-    this.dataSocket.close();
+    try {
+      this.cmdSocket.close();
+      this.dataSocket.close();
+      // Ignore errors about socket already being closed
+    } catch {}
   }
 
   private convertPoint(p: IPoint) {
