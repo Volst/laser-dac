@@ -101,7 +101,7 @@ export class LasercubeDevice {
     }
     const frame = this.streamCallback();
 
-    while (frame.length > 0) {
+    while (frame.length > 0 && this.running) {
       // If the remote buffer is already partially full, wait a bit.
       // When to wait determines your latency/stability tradeoff. The
       // more of the buffer you use, the more easily you'll deal with
@@ -128,7 +128,11 @@ export class LasercubeDevice {
       this.remoteBufFree -= firstPoints.length;
 
       const msg = Buffer.concat([firstMsg, ...firstPoints]);
-      this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
+      try {
+        this.dataSocket.send(msg, LasercubeWifi.dataPort, this.address);
+      } catch {
+        // Ignore errors that happened during sending for now
+      }
 
       this.messageNum += 1;
     }
