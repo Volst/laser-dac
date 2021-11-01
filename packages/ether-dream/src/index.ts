@@ -17,19 +17,19 @@ export interface IDevice {
 export class EtherDream extends Device {
   connection?: EtherConn;
 
-  static _find = function(limit: number, timeout: number): Promise<IDevice[]> {
+  static _find = function (limit: number, timeout: number): Promise<IDevice[]> {
     const ips: string[] = [];
     const devices: IDevice[] = [];
 
     const server = dgram.createSocket('udp4');
 
-    return new Promise(resolve => {
-      const timeouttimer = setTimeout(function() {
+    return new Promise((resolve) => {
+      const timeouttimer = setTimeout(function () {
         server.close();
         resolve(devices);
       }, timeout);
 
-      server.on('message', function(msg, rinfo) {
+      server.on('message', function (msg, rinfo) {
         const ip = rinfo.address;
         if (ips.indexOf(ip) != -1) return;
         ips.push(ip);
@@ -53,7 +53,7 @@ export class EtherDream extends Device {
           port: 7765,
           name: name,
           hw_revision: msg[6],
-          sw_revision: msg[7]
+          sw_revision: msg[7],
         });
 
         if (devices.length >= limit) {
@@ -75,17 +75,17 @@ export class EtherDream extends Device {
     });
   };
 
-  static find = function() {
+  static find = function () {
     return EtherDream._find(99, 2000);
   };
 
-  static findFirst = function() {
+  static findFirst = function () {
     return EtherDream._find(1, 4000);
   };
 
-  static connect = function(ip: string, port: number) {
+  static connect = function (ip: string, port: number) {
     const conn = new EtherConn();
-    return conn.connect(ip, port).then(success => (success ? conn : null));
+    return conn.connect(ip, port).then((success) => (success ? conn : null));
   };
 
   async search() {
@@ -128,7 +128,7 @@ export class EtherDream extends Device {
       y: relativeToPosition(p.y),
       r: relativeToColor(p.r),
       g: relativeToColor(p.g),
-      b: relativeToColor(p.b)
+      b: relativeToColor(p.b),
     };
   }
 
@@ -141,7 +141,7 @@ export class EtherDream extends Device {
         'No active connection to the Ether Dream, call start() first'
       );
     }
-    this.connection.streamFrames(pointsRate, callback => {
+    this.connection.streamFrames(pointsRate, (callback) => {
       const points = scene.points.map(this.convertPoint);
       callback(points);
     });

@@ -27,22 +27,22 @@ function startMoving(e) {
     type: 'MOVE',
     data: {
       x,
-      y
-    }
+      y,
+    },
   });
 }
 
 function stopMoving() {
   isTouching = false;
   sendMessage({
-    type: 'REMOVE'
+    type: 'REMOVE',
   });
 }
 
 function triggerDoublePress(e) {
   console.log('TIRGGERED');
   sendMessage({
-    type: 'PRESS'
+    type: 'PRESS',
   });
 }
 
@@ -58,7 +58,7 @@ function doubletap() {
   mylatesttap = new Date().getTime();
 }
 
-ws.onopen = function() {
+ws.onopen = function () {
   console.log('Websocket connection opened.');
 
   document.removeEventListener('touchmove', startMoving);

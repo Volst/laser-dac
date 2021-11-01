@@ -1,14 +1,14 @@
 function WebSocketClient() {
   this.autoReconnectInterval = 1 * 1000; // ms
 }
-WebSocketClient.prototype.open = function(url) {
+WebSocketClient.prototype.open = function (url) {
   this.url = url;
   this.instance = new WebSocket(this.url);
   this.instance.onopen = this.onopen;
-  this.instance.onmessage = event => {
+  this.instance.onmessage = (event) => {
     this.onmessage(event);
   };
-  this.instance.onclose = e => {
+  this.instance.onclose = (e) => {
     switch (e.code) {
       case 1000: // CLOSE_NORMAL
         console.log('WebSocket: closed');
@@ -20,7 +20,7 @@ WebSocketClient.prototype.open = function(url) {
     }
     this.onclose(e);
   };
-  this.instance.onerror = e => {
+  this.instance.onerror = (e) => {
     switch (e.code) {
       case 'ECONNREFUSED':
         this.reconnect(e);
@@ -31,31 +31,31 @@ WebSocketClient.prototype.open = function(url) {
     }
   };
 };
-WebSocketClient.prototype.send = function(data, option) {
+WebSocketClient.prototype.send = function (data, option) {
   try {
     this.instance.send(data, option);
   } catch (e) {
     console.warn('Failed sending websocket msg', e);
   }
 };
-WebSocketClient.prototype.reconnect = function(e) {
+WebSocketClient.prototype.reconnect = function (e) {
   console.log(`WebSocketClient: retry in ${this.autoReconnectInterval}ms`, e);
   var that = this;
-  setTimeout(function() {
+  setTimeout(function () {
     console.log('WebSocketClient: reconnecting...');
     that.open(that.url);
   }, this.autoReconnectInterval);
 };
-WebSocketClient.prototype.onopen = function(e) {
+WebSocketClient.prototype.onopen = function (e) {
   console.log('WebSocketClient: open', arguments);
 };
-WebSocketClient.prototype.onmessage = function(e) {
+WebSocketClient.prototype.onmessage = function (e) {
   console.log('WebSocketClient: message', arguments);
 };
-WebSocketClient.prototype.onerror = function(e) {
+WebSocketClient.prototype.onerror = function (e) {
   console.log('WebSocketClient: error', arguments);
 };
-WebSocketClient.prototype.onclose = function(e) {
+WebSocketClient.prototype.onclose = function (e) {
   console.log('WebSocketClient: closed', arguments);
 };
 

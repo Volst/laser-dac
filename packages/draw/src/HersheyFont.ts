@@ -72,7 +72,7 @@ export class HersheyFont implements Shape {
       x: this.x,
       y: this.y,
       color: this.color,
-      path: paths.join(' ')
+      path: paths.join(' '),
     }).draw(resolution);
   }
 }
@@ -119,7 +119,7 @@ export function loadHersheyFont(path: string): HersheyCharacter[] {
       leftPos,
       rightPos,
       vertexCount,
-      vertices
+      vertices,
     };
   }
 

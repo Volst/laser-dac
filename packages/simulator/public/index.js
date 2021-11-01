@@ -69,7 +69,7 @@ function render() {
   // This rectangle will use the afterglow style from the code above.
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  points.forEach(function(point, i) {
+  points.forEach(function (point, i) {
     // To simulate the behaviour of an actual laser, controlling the color
     // of the lasers is faster than moving the scanners to a position.
     // "Accurate and Efficient Drawing Method for Laser Projection" describes this as:
@@ -116,7 +116,7 @@ requestAnimationFrame(render);
 const host = window.document.location.host.replace(/:.*/, '');
 const ws = new WebsocketClient();
 ws.open('ws://' + host + ':8080');
-ws.onmessage = function(event) {
+ws.onmessage = function (event) {
   const payload = JSON.parse(event.data);
   if (payload.type === 'POINTS') {
     if (options.forceTotalRender) {

@@ -74,15 +74,15 @@ export class Player {
     return new Line({
       from: {
         x: this.x,
-        y: this.y
+        y: this.y,
       },
       to: {
         x: this.x + PADDLE_WIDTH,
-        y: this.y
+        y: this.y,
       },
       color: [0, 1, 0],
       blankBefore: true,
-      blankAfter: true
+      blankAfter: true,
     });
   }
 }

@@ -51,7 +51,7 @@ export class Svg extends Shape {
       minX: parseFloat(values[0]),
       minY: parseFloat(values[1]),
       width: parseFloat(values[2]),
-      height: parseFloat(values[3])
+      height: parseFloat(values[3]),
     };
   }
 
@@ -80,7 +80,7 @@ export class Svg extends Shape {
     this.pathNodes = [];
     this.nodeWalker(this.file);
 
-    const points = this.pathNodes.map(_node => {
+    const points = this.pathNodes.map((_node) => {
       const node = convertToPath(_node);
       const color = node.attributes.stroke || node.attributes.fill;
       return new Path({
@@ -91,7 +91,7 @@ export class Svg extends Shape {
         width,
         height,
         waitAmount: this.waitAmount,
-        blankingAmount: this.blankingAmount
+        blankingAmount: this.blankingAmount,
       }).draw(resolution);
     });
 

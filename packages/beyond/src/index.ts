@@ -46,7 +46,7 @@ export class Beyond extends Device {
       repCount: 0,
       focus: 0,
       status: 0,
-      zero: 0
+      zero: 0,
     };
   }
 

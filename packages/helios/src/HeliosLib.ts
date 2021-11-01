@@ -11,7 +11,7 @@ const HeliosPoint = Struct({
   r: 'uint8',
   g: 'uint8',
   b: 'uint8',
-  i: 'uint8'
+  i: 'uint8',
 });
 
 const HeliosPointArray = ArrayType(HeliosPoint);
@@ -51,7 +51,7 @@ const HeliosLib = ffi.Library(libPath, {
   //points: pointer to point data. See point structure documentation in HeliosDac.h
   //numOfPoints: number of points in the frame
   //returns 1 if successful
-  WriteFrame: ['int', ['uint', 'int', 'uint', HeliosPointArray, 'int']]
+  WriteFrame: ['int', ['uint', 'int', 'uint', HeliosPointArray, 'int']],
 });
 
 export function openDevices(): number {

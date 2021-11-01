@@ -23,7 +23,7 @@ function finderCenterPoint(points: Point[]): [number, number] {
   let highestY = 0;
 
   // I'm 100% sure there is a better, faster and shorter way to do this.
-  points.forEach(point => {
+  points.forEach((point) => {
     if (!isBlankingPoint(point)) {
       if (point.x < lowestX) {
         lowestX = point.x;
@@ -45,11 +45,11 @@ function finderCenterPoint(points: Point[]): [number, number] {
 }
 
 export function rotate(angle: number, pivotPoint?: [number, number]) {
-  return function(points: Point[]) {
+  return function (points: Point[]) {
     const pivot = pivotPoint ? pivotPoint : finderCenterPoint(points);
     const pivotX = pivot[0];
     const pivotY = pivot[1];
-    return points.map(point => {
+    return points.map((point) => {
       // Would love to use `const [pivotX, pivotY]` but this has negative perf implications with V8
       const newPoints = rotateXY(pivotX, pivotY, point.x, point.y, angle);
       point.x = newPoints[0];

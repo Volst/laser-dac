@@ -6,7 +6,7 @@ export function throttle(
 ): (...args: any) => void {
   let inThrottle: boolean;
   const context = this;
-  return function() {
+  return function () {
     const args = arguments;
     if (!inThrottle) {
       func.apply(context, args as any);

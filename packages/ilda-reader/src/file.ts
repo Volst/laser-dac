@@ -5,7 +5,7 @@ export enum SectionTypes {
   TRUECOLOR_TABLE = 3,
   TREE_DIMENSIONAL_TRUECOLOR = 4,
   TWO_DIMENSIONAL_TRUECOLOR = 5,
-  UNKNOWN = 99
+  UNKNOWN = 99,
 }
 
 export interface Point {

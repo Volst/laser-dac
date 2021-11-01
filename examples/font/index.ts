@@ -14,7 +14,7 @@ function renderText(text: string) {
       x: 0.1,
       y: 0.4,
       color: [1, 0, 0],
-      charWidth: 0.08
+      charWidth: 0.08,
     });
 }
 
@@ -23,17 +23,17 @@ const textAnimation = new Timeline({
   items: [
     {
       duration: 2000,
-      render: renderText('Play')
+      render: renderText('Play'),
     },
     {
       duration: 2000,
-      render: renderText('This')
+      render: renderText('This'),
     },
     {
       duration: 2000,
-      render: renderText('Game')
-    }
-  ]
+      render: renderText('Game'),
+    },
+  ],
 });
 
 (async () => {

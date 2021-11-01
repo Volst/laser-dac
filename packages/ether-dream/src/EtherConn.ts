@@ -3,7 +3,7 @@ import { parseStandardResponse } from './parse';
 import {
   writeUnsignedInt16,
   writeUnsignedInt32,
-  writeSignedInt16
+  writeSignedInt16,
 } from './write';
 
 const STANDARD_RESPONSE_SIZE = 22;
@@ -78,16 +78,16 @@ export class EtherConn {
       this.client = net.connect(
         {
           host: ip,
-          port: port
+          port: port,
         },
-        function() {
+        function () {
           //'connect' listener
           console.log('SOCKET CONNECT: client connected');
           // self.sendPing(function() {
           //	callback(true);
           // });
 
-          self.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+          self.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
             const st = parseStandardResponse(data);
             // console.log('got connect response', st);
             self.handleStandardResponse(st);
@@ -99,26 +99,26 @@ export class EtherConn {
         }
       );
 
-      this.client.on('data', function(data) {
+      this.client.on('data', function (data) {
         // console.log('SOCKET got ' + data.length + ' bytes');
         // console.log('SOCKET DATA:', data.toString(), data.length, self.currentcommand);
         // console.log('\n\n');
         for (let i = 0; i < data.length; i++) {
           self.inputqueue.push(data[i]);
         }
-        setTimeout(function() {
+        setTimeout(function () {
           self._popinputqueue();
         }, 0);
       });
 
-      this.client.on('error', function(data) {
+      this.client.on('error', function (data) {
         console.log('SOCKET ERROR:', data.toString());
-        setTimeout(function() {
+        setTimeout(function () {
           resolve(false);
         }, 0);
       });
 
-      this.client.on('end', function() {
+      this.client.on('end', function () {
         console.log('SOCKET END: client disconnected');
       });
     });
@@ -143,7 +143,7 @@ export class EtherConn {
     const _this = this;
     const cmd = 'p';
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       _this.preparesent = true;
@@ -168,7 +168,7 @@ export class EtherConn {
     const lwm = 0;
     const cmd = 'b' + writeUnsignedInt16(lwm) + writeUnsignedInt32(rate);
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       _this.beginsent = true;
@@ -182,7 +182,7 @@ export class EtherConn {
     const lwm = 0;
     const cmd = 'u' + writeUnsignedInt16(lwm) + writeUnsignedInt32(rate);
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       _this.beginsent = true;
@@ -195,7 +195,7 @@ export class EtherConn {
     const _this = this;
     const cmd = 's';
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       callback();
@@ -206,7 +206,7 @@ export class EtherConn {
     const _this = this;
     const cmd = '\xFF';
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       callback();
@@ -218,7 +218,7 @@ export class EtherConn {
     const _this = this;
     const cmd = '?';
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       callback();
@@ -243,7 +243,7 @@ export class EtherConn {
       cmd += writeUnsignedInt16(p.u2 || 0);
     }
     this._send(cmd);
-    this.waitForResponse(STANDARD_RESPONSE_SIZE, function(data) {
+    this.waitForResponse(STANDARD_RESPONSE_SIZE, function (data) {
       const st = parseStandardResponse(data);
       _this.handleStandardResponse(st);
       if (_this.valid) {
@@ -270,13 +270,13 @@ export class EtherConn {
     const _this = this;
     // console.log('Send ' + framedata.length + ' points to DAC');
     if (framedata.length > 0) {
-      this.sendPoints(framedata, function() {
-        setTimeout(function() {
+      this.sendPoints(framedata, function () {
+        setTimeout(function () {
           _this.pollStream();
         }, 0);
       });
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         _this.pollStream();
       }, 0);
     }
@@ -285,14 +285,14 @@ export class EtherConn {
   pollStream() {
     const _this = this;
     if (this.playback_state == 0) {
-      this.sendPrepare(function() {
+      this.sendPrepare(function () {
         // prepare first.
         setTimeout(_this.pollStream.bind(_this), 0);
       });
     } else if (!this.valid) {
-      setTimeout(function() {
-        _this.sendPrepare(function() {
-          _this.sendBegin(_this.rate!, function() {
+      setTimeout(function () {
+        _this.sendPrepare(function () {
+          _this.sendBegin(_this.rate!, function () {
             setTimeout(_this.pollStream.bind(_this), 0);
           });
         });
@@ -307,7 +307,7 @@ export class EtherConn {
           0
         );
       } else {
-        this.sendPing(function() {
+        this.sendPing(function () {
           setTimeout(_this.pollStream.bind(_this), 0);
         });
       }
@@ -318,7 +318,7 @@ export class EtherConn {
     const _this = this;
     this.streamSource = pointSource;
     this.rate = rate;
-    this.sendStop(function() {
+    this.sendStop(function () {
       setTimeout(_this.pollStream.bind(_this), 0);
     });
   }
@@ -335,7 +335,7 @@ export class EtherConn {
 
     function innerStream(numpoints: number, pointcallback: Function) {
       if (_this.frameBuffer!.length < numpoints) {
-        _this.frameSource!(function(points: IPoint[]) {
+        _this.frameSource!(function (points: IPoint[]) {
           for (let i = 0; i < points.length; i++) {
             _this.frameBuffer!.push(points[i]);
           }

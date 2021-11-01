@@ -18,7 +18,7 @@ export function parseStandardResponse(data: number[]) {
     source_flags: parseUInt16(data[10], data[11]),
     buffer_fullness: parseUInt16(data[12], data[13]),
     point_rate: parseUInt32(data[14], data[15], data[16], data[17]),
-    point_count: parseUInt32(data[18], data[19], data[20], data[21])
+    point_count: parseUInt32(data[18], data[19], data[20], data[21]),
   };
   const st = {
     // dac_response
@@ -33,7 +33,7 @@ export function parseStandardResponse(data: number[]) {
       ',raw=' +
       data,
     // dac_status
-    status
+    status,
   };
   return st;
 }

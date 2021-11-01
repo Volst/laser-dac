@@ -24,7 +24,7 @@ const rect = new Rect({
   height: 0.2,
   x: 0.4,
   y: 0.4,
-  color: [0, 1, 0]
+  color: [0, 1, 0],
 });
 
 scene.add(rect);
@@ -42,11 +42,10 @@ With the `Path()` class you are able to draw a specific path, the exact same way
 
 ```js
 const cross = new Path({
-  path:
-    'M0.2 0.2 h0.1 v0.1 h0.1 v0.1 h-0.1 v0.1 h-0.1 v-0.1 h-0.1 v-0.1 h0.1 z',
+  path: 'M0.2 0.2 h0.1 v0.1 h0.1 v0.1 h-0.1 v0.1 h-0.1 v-0.1 h-0.1 v-0.1 h0.1 z',
   color: [0, 1, 0],
   x: 0.1,
-  y: 0.1
+  y: 0.1,
 });
 
 scene.add(cross);
@@ -62,7 +61,7 @@ const rect = new Rect({
   height: 0.2,
   x: 0.4,
   y: 0.4,
-  color: [0, 1, 0]
+  color: [0, 1, 0],
 });
 
 scene.add(rect);
@@ -93,7 +92,7 @@ const circle = new Circle({
   radius: 0.2,
   x: 0.5,
   y: 0.5,
-  color: [0, 1, 0]
+  color: [0, 1, 0],
 });
 
 scene.add(circle);
@@ -110,7 +109,7 @@ const ilda = new Ilda({
   file: boeing,
   frame: 0,
   x: 0,
-  y: 0
+  y: 0,
 });
 scene.add(ilda);
 ```
@@ -131,7 +130,7 @@ const text = new HersheyFont({
   y: 0,
   color: [1, 0, 0],
   spacingFactor: 1.0,
-  charWidth: 0.1
+  charWidth: 0.1,
 });
 ```
 
@@ -147,7 +146,7 @@ const logoFile = loadIldaFile(path.resolve(__dirname, './logo.svg'));
 const logo = new Svg({
   file: logoFile,
   x: 0,
-  y: 0
+  y: 0,
 });
 scene.add(logo);
 ```

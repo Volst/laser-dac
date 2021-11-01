@@ -55,7 +55,7 @@ export class Line extends Shape {
         x: this.from.x,
         y: this.from.y,
         color: [0, 0, 0],
-        amount: this.blankingAmount
+        amount: this.blankingAmount,
       }).draw();
     }
 
@@ -77,8 +77,8 @@ export class Line extends Shape {
           x: this.to.x,
           y: this.to.y,
           color: this.color,
-          amount: this.waitAmount / 2
-        }).draw()
+          amount: this.waitAmount / 2,
+        }).draw(),
       ];
     }
 

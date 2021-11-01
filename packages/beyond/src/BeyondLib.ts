@@ -13,7 +13,7 @@ const BeyondPoint = Struct({
   repCount: 'uchar',
   focus: 'uchar',
   status: 'uchar',
-  zero: 'uchar'
+  zero: 'uchar',
 });
 
 const BeyondPointArray = ArrayType(BeyondPoint);
@@ -34,10 +34,10 @@ const BeyondLib = ffi.Library(libPath, {
   // Params: char* imageName, int numPointsInFrame, void* firstPoint, void* zoneArrayPtr, int scanRate
   ldbSendFrameToImage: [
     'int',
-    ['string', 'int', BeyondPointArray, ZoneIndiceArray, 'int']
+    ['string', 'int', BeyondPointArray, ZoneIndiceArray, 'int'],
   ],
   ldbCreateZoneImage: ['int', ['int', 'string']],
-  ldbDeleteZoneImage: ['int', ['string']]
+  ldbDeleteZoneImage: ['int', ['string']],
 });
 
 export function ldbCreate(): number {

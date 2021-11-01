@@ -34,7 +34,7 @@ export class Circle extends Shape {
       x: this.x + this.radius,
       y: this.y,
       color: [0, 0, 0],
-      amount: BLANKING_AMOUNT
+      amount: BLANKING_AMOUNT,
     }).draw();
 
     // If there are less then 3 points just return blank
@@ -62,7 +62,7 @@ export class Circle extends Shape {
         x: this.x + this.radius,
         y: this.y,
         color: [0, 0, 0],
-        amount: BLANKING_AMOUNT
+        amount: BLANKING_AMOUNT,
       }).draw()
     );
   }

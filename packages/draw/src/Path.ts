@@ -103,7 +103,7 @@ export class Path extends Shape {
             commandPoints = new Wait({
               x: command.x,
               y: command.y,
-              amount: this.blankingAmount
+              amount: this.blankingAmount,
             }).draw();
 
             lastMoveCommand = command;
@@ -121,7 +121,7 @@ export class Path extends Shape {
               to: { x: toX, y: toY },
               color: this.color,
               waitAmount: this.waitAmount,
-              blankingAmount: this.blankingAmount
+              blankingAmount: this.blankingAmount,
             }).draw(resolution);
             prevX = toX;
             prevY = toY;
@@ -132,14 +132,14 @@ export class Path extends Shape {
               from: {
                 x: prevX,
                 y: prevY,
-                control: { x: command.x1, y: command.y1 }
+                control: { x: command.x1, y: command.y1 },
               },
               to: {
                 x: command.x,
                 y: command.y,
-                control: { x: command.x2, y: command.y2 }
+                control: { x: command.x2, y: command.y2 },
               },
-              color: this.color
+              color: this.color,
             }).draw(resolution);
             prevX = command.x;
             prevY = command.y;
@@ -150,7 +150,7 @@ export class Path extends Shape {
               from: { x: prevX, y: prevY },
               to: { x: command.x, y: command.y },
               control: { x: command.x1, y: command.y1 },
-              color: this.color
+              color: this.color,
             }).draw(resolution);
             prevX = command.x;
             prevY = command.y;
@@ -167,23 +167,23 @@ export class Path extends Shape {
               ry: command.rY,
               xAxisRotation: command.xRot,
               largeArcFlag: command.lArcFlag,
-              sweepFlag: command.sweepFlag
+              sweepFlag: command.sweepFlag,
             });
             let curvePrevX = prevX;
             let curvePrevY = prevY;
-            curves.forEach(curve => {
+            curves.forEach((curve) => {
               const curvePoints = new CubicCurve({
                 from: {
                   x: curvePrevX,
                   y: curvePrevY,
-                  control: { x: curve.x1, y: curve.y1 }
+                  control: { x: curve.x1, y: curve.y1 },
                 },
                 to: {
                   x: curve.x,
                   y: curve.y,
-                  control: { x: curve.x2, y: curve.y2 }
+                  control: { x: curve.x2, y: curve.y2 },
                 },
-                color: this.color
+                color: this.color,
               }).draw(resolution);
               curvePrevX = curve.x;
               curvePrevY = curve.y;
@@ -205,7 +205,7 @@ export class Path extends Shape {
               color: this.color,
               blankAfter: true,
               waitAmount: this.waitAmount,
-              blankingAmount: this.blankingAmount
+              blankingAmount: this.blankingAmount,
             }).draw(resolution);
             prevX = lastMoveCommand.x;
             prevY = lastMoveCommand.y;
@@ -248,7 +248,7 @@ export class Path extends Shape {
             x: lastPoint.x,
             y: lastPoint.y,
             color: [lastPoint.r, lastPoint.g, lastPoint.b],
-            amount: Math.floor(this.waitAmount * relativeAngle)
+            amount: Math.floor(this.waitAmount * relativeAngle),
           });
           wait = waitShape.draw();
         }

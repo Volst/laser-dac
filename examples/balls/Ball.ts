@@ -60,6 +60,6 @@ export class Ball {
       x: this.x,
       y: this.y,
       radius: this.radius,
-      color: [0, 1, 0]
+      color: [0, 1, 0],
     });
 }

@@ -54,7 +54,7 @@ export class Ilda extends Shape {
         y: y + convertCoordinate(point.y) * size,
         r: color !== undefined && !isBlank ? color[0] : point.r,
         g: color !== undefined && !isBlank ? color[1] : point.g,
-        b: color !== undefined && !isBlank ? color[2] : point.b
+        b: color !== undefined && !isBlank ? color[2] : point.b,
       };
     });
   }
