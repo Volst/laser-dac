@@ -1,4 +1,4 @@
-import { Rect } from '@laser-dac/draw';
+import { Circle } from '@laser-dac/draw';
 import Victor = require('victor');
 
 interface BallOptions {
@@ -12,8 +12,8 @@ export class Ball {
   x: number;
   y: number;
   vector: Victor = new Victor(
-    (Math.random() - 0.5) / 200,
-    (Math.random() - 0.5) / 200
+    (Math.random() - 0.5) / 2,
+    (Math.random() - 0.5) / 2
   );
 
   constructor(options: BallOptions) {
@@ -22,9 +22,9 @@ export class Ball {
     this.radius = options.radius;
   }
 
-  update = () => {
-    this.x += this.vector.x;
-    this.y += this.vector.y;
+  update = (timeStep: number) => {
+    this.x += this.vector.x * timeStep;
+    this.y += this.vector.y * timeStep;
 
     this.updateBounds();
   };
@@ -32,31 +32,34 @@ export class Ball {
   updateBounds = () => {
     // Left bound.
     if (this.x - this.radius <= 0) {
+      this.x = this.radius;
       this.vector.invertX();
     }
 
     // Right bound.
-    if (this.x + this.radius >= 1) {
+    if (this.x + this.radius > 1) {
+      this.x = 1 - this.radius;
       this.vector.invertX();
     }
 
     // Top bound.
     if (this.y - this.radius <= 0) {
+      this.y = this.radius;
       this.vector.invertY();
     }
 
     // Bottom bound.
-    if (this.y + this.radius >= 1) {
+    if (this.y + this.radius > 1) {
+      this.y = 1 - this.radius;
       this.vector.invertY();
     }
   };
 
   draw = () =>
-    new Rect({
-      x: this.x - this.radius,
-      y: this.y - this.radius,
-      width: this.radius * 2,
-      height: this.radius * 2,
+    new Circle({
+      x: this.x,
+      y: this.y,
+      radius: this.radius,
       color: [0, 1, 0]
     });
 }
