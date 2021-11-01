@@ -8,6 +8,9 @@ import {
 
 const STANDARD_RESPONSE_SIZE = 22;
 const PLAYBACK_IDLE = 0;
+const LIGHT_ENGINE_READY = 0;
+const LIGHT_ENGINE_ESTOP = 3;
+// How many points are queued up in the buffer. Seems to be a limit of 1799.
 const MAX_FULLNESS = 1799;
 
 type HandlerCallbackFn = (data: number[]) => void;
@@ -34,14 +37,11 @@ export class EtherConn {
   client?: net.Socket;
   inputqueue: number[] = [];
   inputhandlerqueue: { size: number; callback: HandlerCallbackFn }[] = [];
-  timer = 0;
-  acks = 0;
   fullness = 0;
-  points_in_buffer = 0;
-  playback_state = 0;
-  playsent = false;
-  beginsent = false;
-  preparesent = false;
+  playbackState = PLAYBACK_IDLE;
+  lightEngineState = 0;
+  beginSent = false;
+  prepareSent = false;
   valid = true;
   rate?: number;
   streamCallback?: StreamFrameCallback;
@@ -89,7 +89,6 @@ export class EtherConn {
             resolve(true);
           });
 
-          // self._popqueue();
           self._popinputqueue();
 
           self.running = true;
@@ -147,17 +146,18 @@ export class EtherConn {
     // console.log('send prepare command');
     this._send('p');
     await this.waitForResponse();
-    this.preparesent = true;
+    this.prepareSent = true;
   }
 
   handleStandardResponse(data: pstdReturnType) {
     this.fullness = data.status.buffer_fullness;
-    this.playback_state = data.status.playback_state;
+    this.playbackState = data.status.playback_state;
+    this.lightEngineState = data.status.light_engine_state;
     this.valid = data.response == 'a';
     if (data.status.playback_flags == 2) {
       console.error('Laser buffer underrun.');
       // buffer underrun flagged.
-      this.beginsent = false;
+      this.beginSent = false;
     }
   }
 
@@ -170,7 +170,7 @@ export class EtherConn {
     const cmd = 'b' + writeUnsignedInt16(lwm) + writeUnsignedInt32(rate);
     this._send(cmd);
     await this.waitForResponse();
-    this.beginsent = true;
+    this.beginSent = true;
   }
 
   async sendUpdate(rate: number) {
@@ -179,7 +179,7 @@ export class EtherConn {
     const cmd = 'u' + writeUnsignedInt16(lwm) + writeUnsignedInt32(rate);
     this._send(cmd);
     await this.waitForResponse();
-    this.beginsent = true;
+    this.beginSent = true;
   }
 
   async sendStop() {
@@ -190,6 +190,11 @@ export class EtherConn {
 
   async sendEmergencyStop() {
     this._send('\xFF');
+    await this.waitForResponse();
+  }
+
+  async clearEmergencyStop() {
+    this._send('c');
     await this.waitForResponse();
   }
 
@@ -219,7 +224,7 @@ export class EtherConn {
     const data = await this.waitForResponse();
     if (this.valid) {
       console.log('points sent.');
-      if (!this.beginsent) {
+      if (!this.beginSent) {
         await this.sendBegin(this.rate!);
       }
     } else {
@@ -253,8 +258,14 @@ export class EtherConn {
     const frame = this.streamCallback();
 
     // If not yet playing, send the prepare command first
-    if (this.playback_state === PLAYBACK_IDLE) {
+    if (this.playbackState === PLAYBACK_IDLE) {
       await this.sendPrepare();
+    }
+
+    // Disable the emergency stop if enabled
+    if (this.lightEngineState === LIGHT_ENGINE_ESTOP) {
+      console.log('Disabling estop');
+      await this.clearEmergencyStop();
     }
 
     let cap = Math.max(0, MAX_FULLNESS - this.fullness);
@@ -273,14 +284,11 @@ export class EtherConn {
   close() {
     this.inputqueue = [];
     this.inputhandlerqueue = [];
-    this.timer = 0;
-    this.acks = 0;
     this.fullness = 0;
-    this.points_in_buffer = 0;
-    this.playback_state = 0;
-    this.playsent = false;
-    this.beginsent = false;
-    this.preparesent = false;
+    this.playbackState = PLAYBACK_IDLE;
+    this.lightEngineState = LIGHT_ENGINE_READY;
+    this.beginSent = false;
+    this.prepareSent = false;
     this.valid = true;
     this.running = false;
     // On purpose do not clear `streamCallback` so it is easy to reconnect
