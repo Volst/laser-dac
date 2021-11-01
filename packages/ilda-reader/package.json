@@ -26,6 +26,6 @@
     "prepublishOnly": "npm run -s build"
   },
   "devDependencies": {
-    "ts-node": "^8.0.2"
+    "ts-node": "^10.4.0"
   }
 }
