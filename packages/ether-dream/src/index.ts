@@ -1,5 +1,5 @@
 import * as dgram from 'dgram';
-import { EtherConn, StreamSourceFn, IPoint } from './EtherConn';
+import { EtherConn, IPoint } from './EtherConn';
 import { twohex } from './parse';
 import { Device } from '@laser-dac/core';
 import { relativeToPosition, relativeToColor } from './convert';
@@ -83,9 +83,10 @@ export class EtherDream extends Device {
     return EtherDream._find(1, 4000);
   };
 
-  static connect = function (ip: string, port: number) {
+  static connect = async function (ip: string, port: number) {
     const conn = new EtherConn();
-    return conn.connect(ip, port).then((success) => (success ? conn : null));
+    const success = await conn.connect(ip, port);
+    return success ? conn : null;
   };
 
   async search() {
@@ -112,13 +113,12 @@ export class EtherDream extends Device {
     return false;
   }
 
-  stop() {
+  async stop() {
     if (this.connection) {
-      this.connection.sendEmergencyStop(() => {
-        if (this.connection) {
-          this.connection.close();
-        }
-      });
+      await this.connection.sendEmergencyStop();
+      if (this.connection) {
+        this.connection.close();
+      }
     }
   }
 
@@ -141,11 +141,11 @@ export class EtherDream extends Device {
         'No active connection to the Ether Dream, call start() first'
       );
     }
-    this.connection.streamFrames(pointsRate, (callback) => {
+    this.connection.streamFrames(pointsRate, () => {
       const points = scene.points.map(this.convertPoint);
-      callback(points);
+      return points;
     });
   }
 }
 
-export { EtherConn, StreamSourceFn, IPoint };
+export { EtherConn, IPoint };

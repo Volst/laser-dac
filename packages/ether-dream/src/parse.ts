@@ -25,13 +25,6 @@ export function parseStandardResponse(data: number[]) {
     response,
     command: String.fromCharCode(data[1]),
     success: response == 'a',
-    str:
-      'resp=' +
-      response +
-      ',fullness=' +
-      status.buffer_fullness +
-      ',raw=' +
-      data,
     // dac_status
     status,
   };
