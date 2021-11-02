@@ -9,7 +9,7 @@ export function relativeToX(n: number) {
 
 // Helios has 0 Y at the bottom, but laser-dac has 0 Y at the top.
 export function relativeToY(n: number) {
-  return Math.min(Math.floor((1 - n) * XY_RESOLUTION, XY_RESOLUTION);
+  return Math.min(Math.floor((1 - n) * XY_RESOLUTION), XY_RESOLUTION);
 }
 
 export function relativeToColor(n: number) {
