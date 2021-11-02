@@ -7,7 +7,7 @@ test('render blanking point', () => {
     g: 0,
     b: 0,
     x: 0.1,
-    y: 0.2
+    y: 0.2,
   });
 });
 
@@ -18,7 +18,7 @@ test('render green point', () => {
     g: 1,
     b: 0,
     x: 0,
-    y: 0
+    y: 0,
   });
 });
 
@@ -29,7 +29,7 @@ test('render red point', () => {
     g: 0,
     b: 0,
     x: 0,
-    y: 0
+    y: 0,
   });
 });
 
@@ -40,7 +40,7 @@ test('render blue point', () => {
     g: 0,
     b: 1,
     x: 0,
-    y: 0
+    y: 0,
   });
 });
 
@@ -51,7 +51,7 @@ test('render point in exactly the middle', () => {
     g: 0,
     b: 0,
     x: 0.5,
-    y: 0.5
+    y: 0.5,
   });
 });
 
@@ -62,6 +62,6 @@ test('render point in bottom right', () => {
     g: 0,
     b: 0,
     x: 1,
-    y: 1
+    y: 1,
   });
 });

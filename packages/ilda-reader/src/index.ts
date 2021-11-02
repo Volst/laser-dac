@@ -13,7 +13,7 @@ export function fromByteArray(arr: ByteArray) {
       name: '',
       type: p.readLong(),
       points: [],
-      colors: []
+      colors: [],
     };
     switch (section.type) {
       case SectionTypes.THREE_DIMENSIONAL:
@@ -30,7 +30,7 @@ export function fromByteArray(arr: ByteArray) {
             z,
             r: rgb.r,
             g: rgb.g,
-            b: rgb.b
+            b: rgb.b,
           };
           section.points.push(point);
         }
@@ -46,7 +46,7 @@ export function fromByteArray(arr: ByteArray) {
             y,
             r: rgb.r,
             g: rgb.g,
-            b: rgb.b
+            b: rgb.b,
           };
           section.points.push(point);
         }
@@ -57,7 +57,7 @@ export function fromByteArray(arr: ByteArray) {
           const color = {
             r: p.readByte(),
             g: p.readByte(),
-            b: p.readByte()
+            b: p.readByte(),
           };
           section.colors.push(color);
         }
@@ -70,7 +70,7 @@ export function fromByteArray(arr: ByteArray) {
           const color = {
             r: p.readByte(),
             g: p.readByte(),
-            b: p.readByte()
+            b: p.readByte(),
           };
           section.colors.push(color);
         }
@@ -91,7 +91,7 @@ export function fromByteArray(arr: ByteArray) {
             z,
             r,
             g,
-            b
+            b,
           };
           section.points.push(point);
         }
@@ -110,7 +110,7 @@ export function fromByteArray(arr: ByteArray) {
             y,
             r,
             g,
-            b
+            b,
           };
           section.points.push(point);
         }

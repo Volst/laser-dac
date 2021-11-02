@@ -80,6 +80,6 @@ export class Ball {
       y: this.y - RADIUS,
       width: RADIUS * 2,
       height: RADIUS * 2,
-      color: [0, 1, 0]
+      color: [0, 1, 0],
     });
 }

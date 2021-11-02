@@ -3,7 +3,7 @@ import * as laserdockLib from './LaserdockLib';
 import {
   relativeToPosition,
   relativeToRedGreen,
-  relativeToBlue
+  relativeToBlue,
 } from './convert';
 
 const MAX_POINTS = 4095;
@@ -36,7 +36,7 @@ export class Laserdock extends Device {
       x: relativeToPosition(p.x),
       y: relativeToPosition(1 - p.y),
       rg: relativeToRedGreen(p.r, p.g),
-      b: relativeToBlue(p.b)
+      b: relativeToBlue(p.b),
     };
   }
 

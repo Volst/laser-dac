@@ -13,7 +13,7 @@ const SOURCE_CORNERS: QuadPoints = [
   maximumPosition,
   maximumPosition,
   minimumPosition,
-  maximumPosition
+  maximumPosition,
 ];
 
 interface Coordinates {
@@ -27,7 +27,7 @@ export function distort(
   bottomRight: Coordinates,
   bottomLeft: Coordinates
 ) {
-  return function(points: Point[]) {
+  return function (points: Point[]) {
     const destinationCorners: QuadPoints = [
       topLeft.x,
       topLeft.y,
@@ -36,11 +36,11 @@ export function distort(
       bottomRight.x,
       bottomRight.y,
       bottomLeft.x,
-      bottomLeft.y
+      bottomLeft.y,
     ];
     const perspective = changePerspective(SOURCE_CORNERS, destinationCorners);
 
-    return points.map(point => {
+    return points.map((point) => {
       const coordinates = perspective(point.x, point.y);
       point.x = coordinates[0];
       point.y = coordinates[1];

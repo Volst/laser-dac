@@ -4,14 +4,14 @@ export const XY_RESOLUTION = 4095;
 export const COLOR_RESOLUTION = 255;
 
 export function relativeToX(n: number) {
-  return Math.floor(n * XY_RESOLUTION);
+  return Math.min(Math.floor(n * XY_RESOLUTION), XY_RESOLUTION);
 }
 
 // Helios has 0 Y at the bottom, but laser-dac has 0 Y at the top.
 export function relativeToY(n: number) {
-  return Math.floor((1 - n) * XY_RESOLUTION);
+  return Math.min(Math.floor((1 - n) * XY_RESOLUTION, XY_RESOLUTION);
 }
 
 export function relativeToColor(n: number) {
-  return Math.floor(n * COLOR_RESOLUTION);
+  return Math.min(Math.floor(n * COLOR_RESOLUTION), COLOR_RESOLUTION);
 }

@@ -22,7 +22,7 @@ export class Renderer {
   }
 
   updateClientPosition(id: string, x: number, y: number) {
-    const client = this.activeClients.find(client => client.id === id);
+    const client = this.activeClients.find((client) => client.id === id);
     if (client) {
       client.x = x;
       client.y = y;
@@ -30,13 +30,13 @@ export class Renderer {
       this.activeClients.push({
         id,
         x,
-        y
+        y,
       });
     }
   }
 
   removeClient(id: string) {
-    const index = this.activeClients.findIndex(client => client.id === id);
+    const index = this.activeClients.findIndex((client) => client.id === id);
     if (index >= 0) {
       this.activeClients.splice(index, 1);
     }
@@ -65,7 +65,7 @@ export class Renderer {
           x: client.x,
           y: client.y,
           width: 0.1,
-          height: 0.1
+          height: 0.1,
         });
 
         scene.add(rect);
@@ -73,7 +73,7 @@ export class Renderer {
 
       const horse = new Ilda({
         file: horseFile,
-        frame: horseFrame
+        frame: horseFrame,
       });
       scene.add(horse);
       horseFrame += 1;
@@ -82,7 +82,7 @@ export class Renderer {
       if (self.isPressed) {
         const boom = new Ilda({
           file: boomFile,
-          frame: boomFrame
+          frame: boomFrame,
         });
         scene.add(boom);
         if (boomFrame > boomFile.sections.length - 2) {

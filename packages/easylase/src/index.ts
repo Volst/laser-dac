@@ -43,7 +43,7 @@ export class Easylase extends Device {
       deepblue: 0,
       yellow: 0,
       cyan: 0,
-      user4: 0
+      user4: 0,
     };
   }
 

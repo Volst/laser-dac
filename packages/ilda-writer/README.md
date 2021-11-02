@@ -32,10 +32,10 @@ const sections = [
         color: 0,
         x: -4214,
         y: 2011,
-        z: 0
-      }
-    ]
-  }
+        z: 0,
+      },
+    ],
+  },
 ];
 
 const byteArray = toByteArray(sections);
@@ -60,10 +60,10 @@ const sections = [
         y: 2011,
         r: 255,
         g: 0,
-        b: 0
-      }
-    ]
-  }
+        b: 0,
+      },
+    ],
+  },
 ];
 
 const byteArray = toByteArray(sections);

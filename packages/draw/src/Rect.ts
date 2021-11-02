@@ -40,42 +40,42 @@ export class Rect extends Shape {
         from: { x: this.x, y: this.y },
         to: { x: this.x + this.width, y: this.y },
         color: this.color,
-        blankBefore: true
+        blankBefore: true,
       }).draw(resolution),
 
       ...new Wait({
         x: this.x + this.width,
         y: this.y,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: WAIT_AMOUNT,
       }).draw(),
 
       // Right.
       ...new Line({
         from: { x: this.x + this.width, y: this.y },
         to: { x: this.x + this.width, y: this.y + this.height },
-        color: this.color
+        color: this.color,
       }).draw(resolution),
 
       ...new Wait({
         x: this.x + this.width,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: WAIT_AMOUNT,
       }).draw(),
 
       // Bottom.
       ...new Line({
         from: { x: this.x + this.width, y: this.y + this.height },
         to: { x: this.x, y: this.y + this.height },
-        color: this.color
+        color: this.color,
       }).draw(resolution),
 
       ...new Wait({
         x: this.x,
         y: this.y + this.height,
         color: this.color,
-        amount: WAIT_AMOUNT
+        amount: WAIT_AMOUNT,
       }).draw(),
 
       // Left.
@@ -83,8 +83,8 @@ export class Rect extends Shape {
         from: { x: this.x, y: this.y + this.height },
         to: { x: this.x, y: this.y },
         color: this.color,
-        blankAfter: true
-      }).draw(resolution)
+        blankAfter: true,
+      }).draw(resolution),
     ];
   }
 }

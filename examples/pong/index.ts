@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 const wss = new WebSocketServer({ server });
 
 server.on('request', app);
-server.listen(PORT, function() {
+server.listen(PORT, function () {
   console.log(`Started Pong Interactive demo on http://localhost:${PORT}`);
 });
 

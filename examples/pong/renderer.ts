@@ -11,11 +11,11 @@ export const AREA_HEIGHT = 0.2;
 export class Renderer {
   playerTop = new Player({
     position: 'top',
-    isUser: false
+    isUser: false,
   });
   playerBottom = new Player({
     position: 'bottom',
-    isUser: true
+    isUser: true,
   });
   constructor() {
     this.start();
@@ -36,8 +36,8 @@ export class Renderer {
     const ball = new Ball({
       players: {
         top: this.playerTop,
-        bottom: this.playerBottom
-      }
+        bottom: this.playerBottom,
+      },
     });
     const scene = new Scene({ resolution: 600 });
     const self = this;
@@ -51,7 +51,7 @@ export class Renderer {
         height: AREA_HEIGHT,
         x: 0.5 - AREA_WIDTH / 2,
         y: 0.5 - AREA_HEIGHT / 2,
-        color: [0, 1, 0]
+        color: [0, 1, 0],
       });
       scene.add(boudingRect);
 

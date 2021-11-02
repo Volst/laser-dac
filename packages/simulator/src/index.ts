@@ -27,7 +27,7 @@ export class Simulator extends Device {
       this.wss = new WebSocketServer({ server: this.server });
 
       this.server.on('request', app);
-      this.server.listen(PORT, function() {
+      this.server.listen(PORT, function () {
         console.log(`Started simulator on http://localhost:${PORT}`);
         resolve(true);
       });
@@ -71,15 +71,15 @@ export class Simulator extends Device {
     }
 
     this.interval = setInterval(() => {
-      innerStream(REQUESTED_POINTS_COUNT, streamPoints => {
+      innerStream(REQUESTED_POINTS_COUNT, (streamPoints) => {
         this.sendPointsToSimulator(streamPoints);
       });
     }, STREAM_INTERVAL);
   }
 
   private sendToSimulator(data: any) {
-    this.wss!.clients.forEach(client => {
-      client.send(JSON.stringify(data), function() {
+    this.wss!.clients.forEach((client) => {
+      client.send(JSON.stringify(data), function () {
         // Ignore errors for now
       });
     });
@@ -94,7 +94,7 @@ export class Simulator extends Device {
     (numpoints: number, totalPoints: number) => {
       this.sendToSimulator({
         type: 'POINTS_INFO',
-        data: { numpoints, totalPoints }
+        data: { numpoints, totalPoints },
       });
     },
     400

@@ -10,17 +10,17 @@ function sendMessage(msg) {
 
 function moveToLeft() {
   sendMessage({
-    type: 'LEFT'
+    type: 'LEFT',
   });
 }
 
 function moveToRight() {
   sendMessage({
-    type: 'RIGHT'
+    type: 'RIGHT',
   });
 }
 
-ws.onopen = function() {
+ws.onopen = function () {
   console.log('Websocket connection opened.');
 
   const $left = document.getElementById('left');

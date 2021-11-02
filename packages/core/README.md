@@ -24,8 +24,8 @@ if (started) {
   const scene = {
     points: [
       { x: 0.1, y: 0.5, r: 1, g: 0, b: 0 },
-      { x: 0.9, y: 0.5, r: 1, g: 0, b: 0 }
-    ]
+      { x: 0.9, y: 0.5, r: 1, g: 0, b: 0 },
+    ],
   };
   dac.stream(scene, pps, fps);
 }

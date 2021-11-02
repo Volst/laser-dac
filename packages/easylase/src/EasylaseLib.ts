@@ -26,7 +26,7 @@ const EasylasePoint = Struct({
   deepblue: 'ushort',
   yellow: 'ushort',
   cyan: 'ushort',
-  user4: 'ushort'
+  user4: 'ushort',
 });
 
 const EasylasePointArray = ArrayType(EasylasePoint);
@@ -48,8 +48,8 @@ const EasylaseLib = ffi.Library(libPath, {
   jmLaserIsDeviceReady: ['int', ['int']],
   jmLaserWriteFrame: [
     'int',
-    ['int', EasylasePointArray, 'uint', 'uint', 'uint']
-  ]
+    ['int', EasylasePointArray, 'uint', 'uint', 'uint'],
+  ],
 });
 
 export function enumerateDevices(): number {

@@ -15,14 +15,14 @@ const logoFile = loadSvgFile(path.resolve(__dirname, './logo.svg'));
   await dac.start();
 
   const scene = new Scene({
-    resolution: 150
+    resolution: 150,
   });
 
   const logo = new Svg({
     file: logoFile,
     x: 0,
     y: 0.3,
-    size: 0.6
+    size: 0.6,
   });
 
   function renderFrame() {

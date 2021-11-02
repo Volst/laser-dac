@@ -30,7 +30,7 @@ export class Timeline extends Shape {
     const now = Date.now();
     const diffInMs = now - this.started;
     let currentMs = 0;
-    const currentItem = this.items.find(item => {
+    const currentItem = this.items.find((item) => {
       const oldMs = currentMs;
       const newMs = (currentMs += item.duration);
       return diffInMs >= oldMs && diffInMs <= newMs;

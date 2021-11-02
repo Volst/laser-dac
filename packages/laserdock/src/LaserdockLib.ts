@@ -9,7 +9,7 @@ const LaserdockPoint = Struct({
   rg: 'uint16',
   b: 'uint16',
   x: 'uint16',
-  y: 'uint16'
+  y: 'uint16',
 });
 
 const LaserdockPointArray = ArrayType(LaserdockPoint);
@@ -27,7 +27,7 @@ const LaserdockLib = ffi.Library(libPath, {
   nodeDisableOutput: ['int', []],
   nodeSetDacRate: ['int', ['uint32']],
   nodeClearRingbuffer: ['int', []],
-  nodeSendSamples: ['int', [LaserdockPointArray, 'uint32']]
+  nodeSendSamples: ['int', [LaserdockPointArray, 'uint32']],
 });
 
 export function init(): number {

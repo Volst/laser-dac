@@ -76,10 +76,10 @@ var Common = {
   extend: function extend(target) {
     this.each(
       ARR_SLICE.call(arguments, 1),
-      function(obj) {
+      function (obj) {
         var keys = this.isObject(obj) ? Object.keys(obj) : [];
         keys.forEach(
-          function(key) {
+          function (key) {
             if (!this.isUndefined(obj[key])) {
               target[key] = obj[key];
             }
@@ -93,10 +93,10 @@ var Common = {
   defaults: function defaults(target) {
     this.each(
       ARR_SLICE.call(arguments, 1),
-      function(obj) {
+      function (obj) {
         var keys = this.isObject(obj) ? Object.keys(obj) : [];
         keys.forEach(
-          function(key) {
+          function (key) {
             if (this.isUndefined(target[key])) {
               target[key] = obj[key];
             }
@@ -109,7 +109,7 @@ var Common = {
   },
   compose: function compose() {
     var toCall = ARR_SLICE.call(arguments);
-    return function() {
+    return function () {
       var args = ARR_SLICE.call(arguments);
       for (var i = toCall.length - 1; i >= 0; i--) {
         args = [toCall[i].apply(this, args)];
@@ -144,7 +144,7 @@ var Common = {
   },
   debounce: function debounce(func, threshold, callImmediately) {
     var timeout = void 0;
-    return function() {
+    return function () {
       var obj = this;
       var args = arguments;
       function delayed() {
@@ -169,20 +169,20 @@ var Common = {
   isNull: function isNull(obj) {
     return obj === null;
   },
-  isNaN: (function(_isNaN) {
+  isNaN: (function (_isNaN) {
     function isNaN(_x) {
       return _isNaN.apply(this, arguments);
     }
-    isNaN.toString = function() {
+    isNaN.toString = function () {
       return _isNaN.toString();
     };
     return isNaN;
-  })(function(obj) {
+  })(function (obj) {
     return isNaN(obj);
   }),
   isArray:
     Array.isArray ||
-    function(obj) {
+    function (obj) {
       return obj.constructor === Array;
     },
   isObject: function isObject(obj) {
@@ -199,7 +199,7 @@ var Common = {
   },
   isFunction: function isFunction(obj) {
     return Object.prototype.toString.call(obj) === '[object Function]';
-  }
+  },
 };
 
 var INTERPRETATIONS = [
@@ -223,10 +223,10 @@ var INTERPRETATIONS = [
                 test[3].toString() +
                 test[3].toString(),
               0
-            )
+            ),
           };
         },
-        write: colorToString
+        write: colorToString,
       },
       SIX_CHAR_HEX: {
         read: function read(original) {
@@ -236,10 +236,10 @@ var INTERPRETATIONS = [
           }
           return {
             space: 'HEX',
-            hex: parseInt('0x' + test[1].toString(), 0)
+            hex: parseInt('0x' + test[1].toString(), 0),
           };
         },
-        write: colorToString
+        write: colorToString,
       },
       CSS_RGB: {
         read: function read(original) {
@@ -251,10 +251,10 @@ var INTERPRETATIONS = [
             space: 'RGB',
             r: parseFloat(test[1]),
             g: parseFloat(test[2]),
-            b: parseFloat(test[3])
+            b: parseFloat(test[3]),
           };
         },
-        write: colorToString
+        write: colorToString,
       },
       CSS_RGBA: {
         read: function read(original) {
@@ -269,12 +269,12 @@ var INTERPRETATIONS = [
             r: parseFloat(test[1]),
             g: parseFloat(test[2]),
             b: parseFloat(test[3]),
-            a: parseFloat(test[4])
+            a: parseFloat(test[4]),
           };
         },
-        write: colorToString
-      }
-    }
+        write: colorToString,
+      },
+    },
   },
   {
     litmus: Common.isNumber,
@@ -284,14 +284,14 @@ var INTERPRETATIONS = [
           return {
             space: 'HEX',
             hex: original,
-            conversionName: 'HEX'
+            conversionName: 'HEX',
           };
         },
         write: function write(color) {
           return color.hex;
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     litmus: Common.isArray,
@@ -305,12 +305,12 @@ var INTERPRETATIONS = [
             space: 'RGB',
             r: original[0],
             g: original[1],
-            b: original[2]
+            b: original[2],
           };
         },
         write: function write(color) {
           return [color.r, color.g, color.b];
-        }
+        },
       },
       RGBA_ARRAY: {
         read: function read(original) {
@@ -320,14 +320,14 @@ var INTERPRETATIONS = [
             r: original[0],
             g: original[1],
             b: original[2],
-            a: original[3]
+            a: original[3],
           };
         },
         write: function write(color) {
           return [color.r, color.g, color.b, color.a];
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     litmus: Common.isObject,
@@ -345,7 +345,7 @@ var INTERPRETATIONS = [
               r: original.r,
               g: original.g,
               b: original.b,
-              a: original.a
+              a: original.a,
             };
           }
           return false;
@@ -355,9 +355,9 @@ var INTERPRETATIONS = [
             r: color.r,
             g: color.g,
             b: color.b,
-            a: color.a
+            a: color.a,
           };
-        }
+        },
       },
       RGB_OBJ: {
         read: function read(original) {
@@ -370,7 +370,7 @@ var INTERPRETATIONS = [
               space: 'RGB',
               r: original.r,
               g: original.g,
-              b: original.b
+              b: original.b,
             };
           }
           return false;
@@ -379,9 +379,9 @@ var INTERPRETATIONS = [
           return {
             r: color.r,
             g: color.g,
-            b: color.b
+            b: color.b,
           };
-        }
+        },
       },
       HSVA_OBJ: {
         read: function read(original) {
@@ -396,7 +396,7 @@ var INTERPRETATIONS = [
               h: original.h,
               s: original.s,
               v: original.v,
-              a: original.a
+              a: original.a,
             };
           }
           return false;
@@ -406,9 +406,9 @@ var INTERPRETATIONS = [
             h: color.h,
             s: color.s,
             v: color.v,
-            a: color.a
+            a: color.a,
           };
-        }
+        },
       },
       HSV_OBJ: {
         read: function read(original) {
@@ -421,7 +421,7 @@ var INTERPRETATIONS = [
               space: 'HSV',
               h: original.h,
               s: original.s,
-              v: original.v
+              v: original.v,
             };
           }
           return false;
@@ -430,12 +430,12 @@ var INTERPRETATIONS = [
           return {
             h: color.h,
             s: color.s,
-            v: color.v
+            v: color.v,
           };
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 ];
 var result = void 0;
 var toReturn = void 0;
@@ -443,9 +443,9 @@ var interpret = function interpret() {
   toReturn = false;
   var original =
     arguments.length > 1 ? Common.toArray(arguments) : arguments[0];
-  Common.each(INTERPRETATIONS, function(family) {
+  Common.each(INTERPRETATIONS, function (family) {
     if (family.litmus(original)) {
-      Common.each(family.conversions, function(conversion, conversionName) {
+      Common.each(family.conversions, function (conversion, conversionName) {
         result = conversion.read(original);
         if (toReturn === false && result !== false) {
           toReturn = result;
@@ -468,13 +468,18 @@ var ColorMath = {
     var p = v * (1.0 - s);
     var q = v * (1.0 - f * s);
     var t = v * (1.0 - (1.0 - f) * s);
-    var c = [[v, t, p], [q, v, p], [p, v, t], [p, q, v], [t, p, v], [v, p, q]][
-      hi
-    ];
+    var c = [
+      [v, t, p],
+      [q, v, p],
+      [p, v, t],
+      [p, q, v],
+      [t, p, v],
+      [v, p, q],
+    ][hi];
     return {
       r: c[0] * 255,
       g: c[1] * 255,
-      b: c[2] * 255
+      b: c[2] * 255,
     };
   },
   rgb_to_hsv: function rgb_to_hsv(r, g, b) {
@@ -489,7 +494,7 @@ var ColorMath = {
       return {
         h: NaN,
         s: 0,
-        v: 0
+        v: 0,
       };
     }
     if (r === max) {
@@ -506,7 +511,7 @@ var ColorMath = {
     return {
       h: h * 360,
       s: s,
-      v: max / 255
+      v: max / 255,
     };
   },
   rgb_to_hex: function rgb_to_hex(r, g, b) {
@@ -523,15 +528,15 @@ var ColorMath = {
       (value << (tmpComponent = componentIndex * 8)) |
       (hex & ~(0xff << tmpComponent))
     );
-  }
+  },
 };
 
 var _typeof =
   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
-    ? function(obj) {
+    ? function (obj) {
         return typeof obj;
       }
-    : function(obj) {
+    : function (obj) {
         return obj &&
           typeof Symbol === 'function' &&
           obj.constructor === Symbol &&
@@ -540,13 +545,13 @@ var _typeof =
           : typeof obj;
       };
 
-var classCallCheck = function(instance, Constructor) {
+var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError('Cannot call a class as a function');
   }
 };
 
-var createClass = (function() {
+var createClass = (function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -557,7 +562,7 @@ var createClass = (function() {
     }
   }
 
-  return function(Constructor, protoProps, staticProps) {
+  return function (Constructor, protoProps, staticProps) {
     if (protoProps) defineProperties(Constructor.prototype, protoProps);
     if (staticProps) defineProperties(Constructor, staticProps);
     return Constructor;
@@ -589,7 +594,7 @@ var get = function get(object, property, receiver) {
   }
 };
 
-var inherits = function(subClass, superClass) {
+var inherits = function (subClass, superClass) {
   if (typeof superClass !== 'function' && superClass !== null) {
     throw new TypeError(
       'Super expression must either be null or a function, not ' +
@@ -602,8 +607,8 @@ var inherits = function(subClass, superClass) {
       value: subClass,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (superClass)
     Object.setPrototypeOf
@@ -611,7 +616,7 @@ var inherits = function(subClass, superClass) {
       : (subClass.__proto__ = superClass);
 };
 
-var possibleConstructorReturn = function(self, call) {
+var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError(
       "this hasn't been initialised - super() hasn't been called"
@@ -623,7 +628,7 @@ var possibleConstructorReturn = function(self, call) {
     : self;
 };
 
-var Color = (function() {
+var Color = (function () {
   function Color() {
     classCallCheck(this, Color);
     this.__state = interpret.apply(this, arguments);
@@ -637,20 +642,20 @@ var Color = (function() {
       key: 'toString',
       value: function toString() {
         return colorToString(this);
-      }
+      },
     },
     {
       key: 'toHexString',
       value: function toHexString() {
         return colorToString(this, true);
-      }
+      },
     },
     {
       key: 'toOriginal',
       value: function toOriginal() {
         return this.__state.conversion.write(this);
-      }
-    }
+      },
+    },
   ]);
   return Color;
 })();
@@ -669,7 +674,7 @@ function defineRGBComponent(target, component, componentHexIndex) {
         this.__state.space = 'RGB';
       }
       this.__state[component] = v;
-    }
+    },
   });
 }
 function defineHSVComponent(target, component) {
@@ -687,10 +692,10 @@ function defineHSVComponent(target, component) {
         this.__state.space = 'HSV';
       }
       this.__state[component] = v;
-    }
+    },
   });
 }
-Color.recalculateRGB = function(color, component, componentHexIndex) {
+Color.recalculateRGB = function (color, component, componentHexIndex) {
   if (color.__state.space === 'HEX') {
     color.__state[component] = ColorMath.component_from_hex(
       color.__state.hex,
@@ -705,11 +710,11 @@ Color.recalculateRGB = function(color, component, componentHexIndex) {
     throw new Error('Corrupted color state');
   }
 };
-Color.recalculateHSV = function(color) {
+Color.recalculateHSV = function (color) {
   var result = ColorMath.rgb_to_hsv(color.r, color.g, color.b);
   Common.extend(color.__state, {
     s: result.s,
-    v: result.v
+    v: result.v,
   });
   if (!Common.isNaN(result.h)) {
     color.__state.h = result.h;
@@ -730,7 +735,7 @@ Object.defineProperty(Color.prototype, 'a', {
   },
   set: function set$$1(v) {
     this.__state.a = v;
-  }
+  },
 });
 Object.defineProperty(Color.prototype, 'hex', {
   get: function get$$1() {
@@ -742,10 +747,10 @@ Object.defineProperty(Color.prototype, 'hex', {
   set: function set$$1(v) {
     this.__state.space = 'HEX';
     this.__state.hex = v;
-  }
+  },
 });
 
-var Controller = (function() {
+var Controller = (function () {
   function Controller(object, property) {
     classCallCheck(this, Controller);
     this.initialValue = object[property];
@@ -761,14 +766,14 @@ var Controller = (function() {
       value: function onChange(fnc) {
         this.__onChange = fnc;
         return this;
-      }
+      },
     },
     {
       key: 'onFinishChange',
       value: function onFinishChange(fnc) {
         this.__onFinishChange = fnc;
         return this;
-      }
+      },
     },
     {
       key: 'setValue',
@@ -779,26 +784,26 @@ var Controller = (function() {
         }
         this.updateDisplay();
         return this;
-      }
+      },
     },
     {
       key: 'getValue',
       value: function getValue() {
         return this.object[this.property];
-      }
+      },
     },
     {
       key: 'updateDisplay',
       value: function updateDisplay() {
         return this;
-      }
+      },
     },
     {
       key: 'isModified',
       value: function isModified() {
         return this.initialValue !== this.getValue();
-      }
-    }
+      },
+    },
   ]);
   return Controller;
 })();
@@ -806,11 +811,11 @@ var Controller = (function() {
 var EVENT_MAP = {
   HTMLEvents: ['change'],
   MouseEvents: ['click', 'mousemove', 'mousedown', 'mouseup', 'mouseover'],
-  KeyboardEvents: ['keydown']
+  KeyboardEvents: ['keydown'],
 };
 var EVENT_MAP_INV = {};
-Common.each(EVENT_MAP, function(v, k) {
-  Common.each(v, function(e) {
+Common.each(EVENT_MAP, function (v, k) {
+  Common.each(v, function (e) {
     EVENT_MAP_INV[e] = k;
   });
 });
@@ -829,10 +834,10 @@ var dom = {
   makeSelectable: function makeSelectable(elem, selectable) {
     if (elem === undefined || elem.style === undefined) return;
     elem.onselectstart = selectable
-      ? function() {
+      ? function () {
           return false;
         }
-      : function() {};
+      : function () {};
     elem.style.MozUserSelect = selectable ? 'auto' : 'none';
     elem.style.KhtmlUserSelect = selectable ? 'auto' : 'none';
     elem.unselectable = selectable ? 'on' : 'off';
@@ -895,7 +900,7 @@ var dom = {
           shiftKey: false,
           metaKey: false,
           keyCode: undefined,
-          charCode: undefined
+          charCode: undefined,
         });
         init(
           eventType,
@@ -1014,10 +1019,10 @@ var dom = {
   },
   isActive: function isActive(elem) {
     return elem === document.activeElement && (elem.type || elem.href);
-  }
+  },
 };
 
-var BooleanController = (function(_Controller) {
+var BooleanController = (function (_Controller) {
   inherits(BooleanController, _Controller);
   function BooleanController(object, property) {
     classCallCheck(this, BooleanController);
@@ -1054,7 +1059,7 @@ var BooleanController = (function(_Controller) {
         }
         this.__prev = this.getValue();
         return toReturn;
-      }
+      },
     },
     {
       key: 'updateDisplay',
@@ -1073,13 +1078,13 @@ var BooleanController = (function(_Controller) {
           'updateDisplay',
           this
         ).call(this);
-      }
-    }
+      },
+    },
   ]);
   return BooleanController;
 })(Controller);
 
-var OptionController = (function(_Controller) {
+var OptionController = (function (_Controller) {
   inherits(OptionController, _Controller);
   function OptionController(object, property, opts) {
     classCallCheck(this, OptionController);
@@ -1094,19 +1099,19 @@ var OptionController = (function(_Controller) {
     _this2.__select = document.createElement('select');
     if (Common.isArray(options)) {
       var map = {};
-      Common.each(options, function(element) {
+      Common.each(options, function (element) {
         map[element] = element;
       });
       options = map;
     }
-    Common.each(options, function(value, key) {
+    Common.each(options, function (value, key) {
       var opt = document.createElement('option');
       opt.innerHTML = key;
       opt.setAttribute('value', value);
       _this.__select.appendChild(opt);
     });
     _this2.updateDisplay();
-    dom.bind(_this2.__select, 'change', function() {
+    dom.bind(_this2.__select, 'change', function () {
       var desiredValue = this.options[this.selectedIndex].value;
       _this.setValue(desiredValue);
     });
@@ -1127,7 +1132,7 @@ var OptionController = (function(_Controller) {
           this.__onFinishChange.call(this, this.getValue());
         }
         return toReturn;
-      }
+      },
     },
     {
       key: 'updateDisplay',
@@ -1140,13 +1145,13 @@ var OptionController = (function(_Controller) {
           'updateDisplay',
           this
         ).call(this);
-      }
-    }
+      },
+    },
   ]);
   return OptionController;
 })(Controller);
 
-var StringController = (function(_Controller) {
+var StringController = (function (_Controller) {
   inherits(StringController, _Controller);
   function StringController(object, property) {
     classCallCheck(this, StringController);
@@ -1170,7 +1175,7 @@ var StringController = (function(_Controller) {
     dom.bind(_this2.__input, 'keyup', onChange);
     dom.bind(_this2.__input, 'change', onChange);
     dom.bind(_this2.__input, 'blur', onBlur);
-    dom.bind(_this2.__input, 'keydown', function(e) {
+    dom.bind(_this2.__input, 'keydown', function (e) {
       if (e.keyCode === 13) {
         this.blur();
       }
@@ -1192,8 +1197,8 @@ var StringController = (function(_Controller) {
           'updateDisplay',
           this
         ).call(this);
-      }
-    }
+      },
+    },
   ]);
   return StringController;
 })(Controller);
@@ -1205,7 +1210,7 @@ function numDecimals(x) {
   }
   return 0;
 }
-var NumberController = (function(_Controller) {
+var NumberController = (function (_Controller) {
   inherits(NumberController, _Controller);
   function NumberController(object, property, params) {
     classCallCheck(this, NumberController);
@@ -1254,21 +1259,21 @@ var NumberController = (function(_Controller) {
           'setValue',
           this
         ).call(this, _v);
-      }
+      },
     },
     {
       key: 'min',
       value: function min(minValue) {
         this.__min = minValue;
         return this;
-      }
+      },
     },
     {
       key: 'max',
       value: function max(maxValue) {
         this.__max = maxValue;
         return this;
-      }
+      },
     },
     {
       key: 'step',
@@ -1277,8 +1282,8 @@ var NumberController = (function(_Controller) {
         this.__impliedStep = stepValue;
         this.__precision = numDecimals(stepValue);
         return this;
-      }
-    }
+      },
+    },
   ]);
   return NumberController;
 })(Controller);
@@ -1287,7 +1292,7 @@ function roundToDecimal(value, decimals) {
   var tenTo = Math.pow(10, decimals);
   return Math.round(value * tenTo) / tenTo;
 }
-var NumberControllerBox = (function(_NumberController) {
+var NumberControllerBox = (function (_NumberController) {
   inherits(NumberControllerBox, _NumberController);
   function NumberControllerBox(object, property, params) {
     classCallCheck(this, NumberControllerBox);
@@ -1335,7 +1340,7 @@ var NumberControllerBox = (function(_NumberController) {
     dom.bind(_this2.__input, 'change', onChange);
     dom.bind(_this2.__input, 'blur', onBlur);
     dom.bind(_this2.__input, 'mousedown', onMouseDown);
-    dom.bind(_this2.__input, 'keydown', function(e) {
+    dom.bind(_this2.__input, 'keydown', function (e) {
       if (e.keyCode === 13) {
         _this.__truncationSuspended = true;
         this.blur();
@@ -1360,8 +1365,8 @@ var NumberControllerBox = (function(_NumberController) {
           'updateDisplay',
           this
         ).call(this);
-      }
-    }
+      },
+    },
   ]);
   return NumberControllerBox;
 })(NumberController);
@@ -1369,7 +1374,7 @@ var NumberControllerBox = (function(_NumberController) {
 function map(v, i1, i2, o1, o2) {
   return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
 }
-var NumberControllerSlider = (function(_NumberController) {
+var NumberControllerSlider = (function (_NumberController) {
   inherits(NumberControllerSlider, _NumberController);
   function NumberControllerSlider(object, property, min, max, step) {
     classCallCheck(this, NumberControllerSlider);
@@ -1447,13 +1452,13 @@ var NumberControllerSlider = (function(_NumberController) {
           'updateDisplay',
           this
         ).call(this);
-      }
-    }
+      },
+    },
   ]);
   return NumberControllerSlider;
 })(NumberController);
 
-var FunctionController = (function(_Controller) {
+var FunctionController = (function (_Controller) {
   inherits(FunctionController, _Controller);
   function FunctionController(object, property, text) {
     classCallCheck(this, FunctionController);
@@ -1467,7 +1472,7 @@ var FunctionController = (function(_Controller) {
     var _this = _this2;
     _this2.__button = document.createElement('div');
     _this2.__button.innerHTML = text === undefined ? 'Fire' : text;
-    dom.bind(_this2.__button, 'click', function(e) {
+    dom.bind(_this2.__button, 'click', function (e) {
       e.preventDefault();
       _this.fire();
       return false;
@@ -1487,13 +1492,13 @@ var FunctionController = (function(_Controller) {
         if (this.__onFinishChange) {
           this.__onFinishChange.call(this, this.getValue());
         }
-      }
-    }
+      },
+    },
   ]);
   return FunctionController;
 })(Controller);
 
-var ColorController = (function(_Controller) {
+var ColorController = (function (_Controller) {
   inherits(ColorController, _Controller);
   function ColorController(object, property) {
     classCallCheck(this, ColorController);
@@ -1522,19 +1527,19 @@ var ColorController = (function(_Controller) {
     _this2.__input = document.createElement('input');
     _this2.__input.type = 'text';
     _this2.__input_textShadow = '0 1px 1px ';
-    dom.bind(_this2.__input, 'keydown', function(e) {
+    dom.bind(_this2.__input, 'keydown', function (e) {
       if (e.keyCode === 13) {
         onBlur.call(this);
       }
     });
     dom.bind(_this2.__input, 'blur', onBlur);
-    dom.bind(_this2.__selector, 'mousedown', function() {
-      dom.addClass(this, 'drag').bind(window, 'mouseup', function() {
+    dom.bind(_this2.__selector, 'mousedown', function () {
+      dom.addClass(this, 'drag').bind(window, 'mouseup', function () {
         dom.removeClass(_this.__selector, 'drag');
       });
     });
-    dom.bind(_this2.__selector, 'touchstart', function() {
-      dom.addClass(this, 'drag').bind(window, 'touchend', function() {
+    dom.bind(_this2.__selector, 'touchstart', function () {
+      dom.addClass(this, 'drag').bind(window, 'touchend', function () {
         dom.removeClass(_this.__selector, 'drag');
       });
     });
@@ -1544,7 +1549,7 @@ var ColorController = (function(_Controller) {
       height: '102px',
       padding: '3px',
       backgroundColor: '#222',
-      boxShadow: '0px 1px 3px rgba(0,0,0,0.3)'
+      boxShadow: '0px 1px 3px rgba(0,0,0,0.3)',
     });
     Common.extend(_this2.__field_knob.style, {
       position: 'absolute',
@@ -1554,14 +1559,14 @@ var ColorController = (function(_Controller) {
         _this2.__field_knob_border + (_this2.__color.v < 0.5 ? '#fff' : '#000'),
       boxShadow: '0px 1px 3px rgba(0,0,0,0.5)',
       borderRadius: '12px',
-      zIndex: 1
+      zIndex: 1,
     });
     Common.extend(_this2.__hue_knob.style, {
       position: 'absolute',
       width: '15px',
       height: '2px',
       borderRight: '4px solid #fff',
-      zIndex: 1
+      zIndex: 1,
     });
     Common.extend(_this2.__saturation_field.style, {
       width: '100px',
@@ -1569,12 +1574,12 @@ var ColorController = (function(_Controller) {
       border: '1px solid #555',
       marginRight: '3px',
       display: 'inline-block',
-      cursor: 'pointer'
+      cursor: 'pointer',
     });
     Common.extend(valueField.style, {
       width: '100%',
       height: '100%',
-      background: 'none'
+      background: 'none',
     });
     linearGradient(valueField, 'top', 'rgba(0,0,0,0)', '#000');
     Common.extend(_this2.__hue_field.style, {
@@ -1584,7 +1589,7 @@ var ColorController = (function(_Controller) {
       cursor: 'ns-resize',
       position: 'absolute',
       top: '3px',
-      right: '3px'
+      right: '3px',
     });
     hueGradient(_this2.__hue_field);
     Common.extend(_this2.__input.style, {
@@ -1593,7 +1598,7 @@ var ColorController = (function(_Controller) {
       color: '#fff',
       border: 0,
       fontWeight: 'bold',
-      textShadow: _this2.__input_textShadow + 'rgba(0,0,0,0.7)'
+      textShadow: _this2.__input_textShadow + 'rgba(0,0,0,0.7)',
     });
     dom.bind(_this2.__saturation_field, 'mousedown', fieldDown);
     dom.bind(_this2.__saturation_field, 'touchstart', fieldDown);
@@ -1706,7 +1711,7 @@ var ColorController = (function(_Controller) {
           var mismatch = false;
           Common.each(
             Color.COMPONENTS,
-            function(component) {
+            function (component) {
               if (
                 !Common.isUndefined(i[component]) &&
                 !Common.isUndefined(this.__color.__state[component]) &&
@@ -1738,7 +1743,7 @@ var ColorController = (function(_Controller) {
             flip +
             ',' +
             flip +
-            ')'
+            ')',
         });
         this.__hue_knob.style.marginTop =
           (1 - this.__color.h / 360) * 100 + 'px';
@@ -1762,17 +1767,17 @@ var ColorController = (function(_Controller) {
             _flip +
             ',' +
             _flip +
-            ',.7)'
+            ',.7)',
         });
-      }
-    }
+      },
+    },
   ]);
   return ColorController;
 })(Controller);
 var vendors = ['-moz-', '-o-', '-webkit-', '-ms-', ''];
 function linearGradient(elem, x, a, b) {
   elem.style.background = '';
-  Common.each(vendors, function(vendor) {
+  Common.each(vendors, function (vendor) {
     elem.style.cssText +=
       'background: ' +
       vendor +
@@ -1817,7 +1822,7 @@ var css = {
     try {
       head.appendChild(injected);
     } catch (e) {}
-  }
+  },
 };
 
 var saveDialogContents =
@@ -1850,12 +1855,12 @@ var ControllerFactory = function ControllerFactory(object, property) {
       return new NumberControllerBox(object, property, {
         min: arguments[2],
         max: arguments[3],
-        step: arguments[4]
+        step: arguments[4],
       });
     }
     return new NumberControllerBox(object, property, {
       min: arguments[2],
-      max: arguments[3]
+      max: arguments[3],
     });
   }
   if (Common.isString(initialValue)) {
@@ -1881,7 +1886,7 @@ var requestAnimationFrame$1 =
   window.msRequestAnimationFrame ||
   requestAnimationFrame;
 
-var CenteredDiv = (function() {
+var CenteredDiv = (function () {
   function CenteredDiv() {
     classCallCheck(this, CenteredDiv);
     this.backgroundElement = document.createElement('div');
@@ -1893,7 +1898,7 @@ var CenteredDiv = (function() {
       zIndex: '1000',
       opacity: 0,
       WebkitTransition: 'opacity 0.2s linear',
-      transition: 'opacity 0.2s linear'
+      transition: 'opacity 0.2s linear',
     });
     dom.makeFullscreen(this.backgroundElement);
     this.backgroundElement.style.position = 'fixed';
@@ -1904,12 +1909,12 @@ var CenteredDiv = (function() {
       zIndex: '1001',
       opacity: 0,
       WebkitTransition: '-webkit-transform 0.2s ease-out, opacity 0.2s linear',
-      transition: 'transform 0.2s ease-out, opacity 0.2s linear'
+      transition: 'transform 0.2s ease-out, opacity 0.2s linear',
     });
     document.body.appendChild(this.backgroundElement);
     document.body.appendChild(this.domElement);
     var _this = this;
-    dom.bind(this.backgroundElement, 'click', function() {
+    dom.bind(this.backgroundElement, 'click', function () {
       _this.hide();
     });
   }
@@ -1923,12 +1928,12 @@ var CenteredDiv = (function() {
         this.domElement.style.opacity = 0;
         this.domElement.style.webkitTransform = 'scale(1.1)';
         this.layout();
-        Common.defer(function() {
+        Common.defer(function () {
           _this.backgroundElement.style.opacity = 1;
           _this.domElement.style.opacity = 1;
           _this.domElement.style.webkitTransform = 'scale(1)';
         });
-      }
+      },
     },
     {
       key: 'hide',
@@ -1947,7 +1952,7 @@ var CenteredDiv = (function() {
         this.backgroundElement.style.opacity = 0;
         this.domElement.style.opacity = 0;
         this.domElement.style.webkitTransform = 'scale(1.1)';
-      }
+      },
     },
     {
       key: 'layout',
@@ -1956,8 +1961,8 @@ var CenteredDiv = (function() {
           window.innerWidth / 2 - dom.getWidth(this.domElement) / 2 + 'px';
         this.domElement.style.top =
           window.innerHeight / 2 - dom.getHeight(this.domElement) / 2 + 'px';
-      }
-    }
+      },
+    },
   ]);
   return CenteredDiv;
 })();
@@ -1971,7 +1976,7 @@ var CSS_NAMESPACE = 'dg';
 var HIDE_KEY_CODE = 72;
 var CLOSE_BUTTON_HEIGHT = 20;
 var DEFAULT_DEFAULT_PRESET_NAME = 'Default';
-var SUPPORTS_LOCAL_STORAGE = (function() {
+var SUPPORTS_LOCAL_STORAGE = (function () {
   try {
     return !!window.localStorage;
   } catch (e) {
@@ -1998,11 +2003,11 @@ var GUI = function GUI(pars) {
   params = Common.defaults(params, {
     closeOnTop: false,
     autoPlace: true,
-    width: GUI.DEFAULT_WIDTH
+    width: GUI.DEFAULT_WIDTH,
   });
   params = Common.defaults(params, {
     resizable: params.autoPlace,
-    hideable: params.autoPlace
+    hideable: params.autoPlace,
   });
   if (!Common.isUndefined(params.load)) {
     if (params.preset) {
@@ -2027,22 +2032,22 @@ var GUI = function GUI(pars) {
     parent: {
       get: function get$$1() {
         return params.parent;
-      }
+      },
     },
     scrollable: {
       get: function get$$1() {
         return params.scrollable;
-      }
+      },
     },
     autoPlace: {
       get: function get$$1() {
         return params.autoPlace;
-      }
+      },
     },
     closeOnTop: {
       get: function get$$1() {
         return params.closeOnTop;
-      }
+      },
     },
     preset: {
       get: function get$$1() {
@@ -2059,7 +2064,7 @@ var GUI = function GUI(pars) {
         }
         setPresetSelectIndex(this);
         _this.revert();
-      }
+      },
     },
     width: {
       get: function get$$1() {
@@ -2068,7 +2073,7 @@ var GUI = function GUI(pars) {
       set: function set$$1(v) {
         params.width = v;
         setWidth(_this, v);
-      }
+      },
     },
     name: {
       get: function get$$1() {
@@ -2079,7 +2084,7 @@ var GUI = function GUI(pars) {
         if (titleRow) {
           titleRow.innerHTML = params.name;
         }
-      }
+      },
     },
     closed: {
       get: function get$$1() {
@@ -2096,12 +2101,12 @@ var GUI = function GUI(pars) {
         if (_this.__closeButton) {
           _this.__closeButton.innerHTML = v ? GUI.TEXT_OPEN : GUI.TEXT_CLOSED;
         }
-      }
+      },
     },
     load: {
       get: function get$$1() {
         return params.load;
-      }
+      },
     },
     useLocalStorage: {
       get: function get$$1() {
@@ -2117,8 +2122,8 @@ var GUI = function GUI(pars) {
           }
           localStorage.setItem(getLocalStorageHash(_this, 'isLocal'), bool);
         }
-      }
-    }
+      },
+    },
   });
   if (Common.isUndefined(params.parent)) {
     params.closed = false;
@@ -2146,7 +2151,7 @@ var GUI = function GUI(pars) {
       dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BOTTOM);
       this.domElement.appendChild(this.__closeButton);
     }
-    dom.bind(this.__closeButton, 'click', function() {
+    dom.bind(this.__closeButton, 'click', function () {
       _this.closed = !_this.closed;
     });
   } else {
@@ -2184,7 +2189,7 @@ var GUI = function GUI(pars) {
       setWidth(_this, params.width);
     }
   }
-  this.__resizeHandler = function() {
+  this.__resizeHandler = function () {
     _this.onResizeDebounced();
   };
   dom.bind(window, 'resize', this.__resizeHandler);
@@ -2210,7 +2215,7 @@ var GUI = function GUI(pars) {
   function resetWidth() {
     var root = _this.getRoot();
     root.width += 1;
-    Common.defer(function() {
+    Common.defer(function () {
       root.width -= 1;
     });
   }
@@ -2218,9 +2223,9 @@ var GUI = function GUI(pars) {
     resetWidth();
   }
 };
-GUI.toggleHide = function() {
+GUI.toggleHide = function () {
   hide = !hide;
-  Common.each(hideableGuis, function(gui) {
+  Common.each(hideableGuis, function (gui) {
     gui.domElement.style.display = hide ? 'none' : '';
   });
 };
@@ -2237,7 +2242,7 @@ GUI.CLASS_DRAG = 'drag';
 GUI.DEFAULT_WIDTH = 245;
 GUI.TEXT_CLOSED = 'Close Controls';
 GUI.TEXT_OPEN = 'Open Controls';
-GUI._keydownHandler = function(e) {
+GUI._keydownHandler = function (e) {
   if (
     document.activeElement.type !== 'text' &&
     (e.which === HIDE_KEY_CODE || e.keyCode === HIDE_KEY_CODE)
@@ -2249,19 +2254,19 @@ dom.bind(window, 'keydown', GUI._keydownHandler, false);
 Common.extend(GUI.prototype, {
   add: function add(object, property) {
     return _add(this, object, property, {
-      factoryArgs: Array.prototype.slice.call(arguments, 2)
+      factoryArgs: Array.prototype.slice.call(arguments, 2),
     });
   },
   addColor: function addColor(object, property) {
     return _add(this, object, property, {
-      color: true
+      color: true,
     });
   },
   remove: function remove(controller) {
     this.__ul.removeChild(controller.__li);
     this.__controllers.splice(this.__controllers.indexOf(controller), 1);
     var _this = this;
-    Common.defer(function() {
+    Common.defer(function () {
       _this.onResize();
     });
   },
@@ -2276,7 +2281,7 @@ Common.extend(GUI.prototype, {
       autoPlaceContainer.removeChild(this.domElement);
     }
     var _this = this;
-    Common.each(this.__folders, function(subfolder) {
+    Common.each(this.__folders, function (subfolder) {
       _this.removeFolder(subfolder);
     });
     dom.unbind(window, 'keydown', GUI._keydownHandler, false);
@@ -2308,10 +2313,10 @@ Common.extend(GUI.prototype, {
     }
     removeListeners(folder);
     var _this = this;
-    Common.each(folder.__folders, function(subfolder) {
+    Common.each(folder.__folders, function (subfolder) {
       folder.removeFolder(subfolder);
     });
-    Common.defer(function() {
+    Common.defer(function () {
       _this.onResize();
     });
   },
@@ -2326,7 +2331,7 @@ Common.extend(GUI.prototype, {
     if (root.scrollable) {
       var top = dom.getOffset(root.__ul).top;
       var h = 0;
-      Common.each(root.__ul.childNodes, function(node) {
+      Common.each(root.__ul.childNodes, function (node) {
         if (!(root.autoPlace && node === root.__save_row)) {
           h += dom.getHeight(node);
         }
@@ -2341,7 +2346,7 @@ Common.extend(GUI.prototype, {
       }
     }
     if (root.__resize_handle) {
-      Common.defer(function() {
+      Common.defer(function () {
         root.__resize_handle.style.height = root.__ul.offsetHeight + 'px';
       });
     }
@@ -2349,7 +2354,7 @@ Common.extend(GUI.prototype, {
       root.__closeButton.style.width = root.width + 'px';
     }
   },
-  onResizeDebounced: Common.debounce(function() {
+  onResizeDebounced: Common.debounce(function () {
     this.onResize();
   }, 50),
   remember: function remember() {
@@ -2361,7 +2366,7 @@ Common.extend(GUI.prototype, {
       throw new Error('You can only call remember on a top level GUI.');
     }
     var _this = this;
-    Common.each(Array.prototype.slice.call(arguments), function(object) {
+    Common.each(Array.prototype.slice.call(arguments), function (object) {
       if (_this.__rememberedObjects.length === 0) {
         addSaveMenu(_this);
       }
@@ -2391,7 +2396,7 @@ Common.extend(GUI.prototype, {
       toReturn.remembered[this.preset] = getCurrentPreset(this);
     }
     toReturn.folders = {};
-    Common.each(this.__folders, function(element, key) {
+    Common.each(this.__folders, function (element, key) {
       toReturn.folders[key] = element.getSaveObject();
     });
     return toReturn;
@@ -2420,7 +2425,7 @@ Common.extend(GUI.prototype, {
   revert: function revert(gui) {
     Common.each(
       this.__controllers,
-      function(controller) {
+      function (controller) {
         if (!this.getRoot().load.remembered) {
           controller.setValue(controller.initialValue);
         } else {
@@ -2432,7 +2437,7 @@ Common.extend(GUI.prototype, {
       },
       this
     );
-    Common.each(this.__folders, function(folder) {
+    Common.each(this.__folders, function (folder) {
       folder.revert(folder);
     });
     if (!gui) {
@@ -2447,13 +2452,13 @@ Common.extend(GUI.prototype, {
     }
   },
   updateDisplay: function updateDisplay() {
-    Common.each(this.__controllers, function(controller) {
+    Common.each(this.__controllers, function (controller) {
       controller.updateDisplay();
     });
-    Common.each(this.__folders, function(folder) {
+    Common.each(this.__folders, function (folder) {
       folder.updateDisplay();
     });
-  }
+  },
 });
 function addRow(gui, newDom, liBefore) {
   var li = document.createElement('li');
@@ -2492,7 +2497,7 @@ function augmentController(gui, li, controller) {
         controller.remove();
         return _add(gui, controller.object, controller.property, {
           before: nextSibling,
-          factoryArgs: [Common.toArray(arguments)]
+          factoryArgs: [Common.toArray(arguments)],
         });
       }
       if (Common.isArray(_options) || Common.isObject(_options)) {
@@ -2500,7 +2505,7 @@ function augmentController(gui, li, controller) {
         controller.remove();
         return _add(gui, controller.object, controller.property, {
           before: _nextSibling,
-          factoryArgs: [_options]
+          factoryArgs: [_options],
         });
       }
     },
@@ -2515,20 +2520,20 @@ function augmentController(gui, li, controller) {
     remove: function remove() {
       controller.__gui.remove(controller);
       return controller;
-    }
+    },
   });
   if (controller instanceof NumberControllerSlider) {
     var box = new NumberControllerBox(controller.object, controller.property, {
       min: controller.__min,
       max: controller.__max,
-      step: controller.__step
+      step: controller.__step,
     });
     Common.each(
       ['updateDisplay', 'onChange', 'onFinishChange', 'step'],
-      function(method) {
+      function (method) {
         var pc = controller[method];
         var pb = box[method];
-        controller[method] = box[method] = function() {
+        controller[method] = box[method] = function () {
           var args = Array.prototype.slice.call(arguments);
           pb.apply(box, args);
           return pc.apply(controller, args);
@@ -2553,7 +2558,7 @@ function augmentController(gui, li, controller) {
         controller.remove();
         var newController = _add(gui, controller.object, controller.property, {
           before: controller.__li.nextElementSibling,
-          factoryArgs: [controller.__min, controller.__max, controller.__step]
+          factoryArgs: [controller.__min, controller.__max, controller.__step],
         });
         newController.name(oldName);
         if (wasListening) newController.listen();
@@ -2561,51 +2566,39 @@ function augmentController(gui, li, controller) {
       }
       return returned;
     };
-    controller.min = Common.compose(
-      r,
-      controller.min
-    );
-    controller.max = Common.compose(
-      r,
-      controller.max
-    );
+    controller.min = Common.compose(r, controller.min);
+    controller.max = Common.compose(r, controller.max);
   } else if (controller instanceof BooleanController) {
-    dom.bind(li, 'click', function() {
+    dom.bind(li, 'click', function () {
       dom.fakeEvent(controller.__checkbox, 'click');
     });
-    dom.bind(controller.__checkbox, 'click', function(e) {
+    dom.bind(controller.__checkbox, 'click', function (e) {
       e.stopPropagation();
     });
   } else if (controller instanceof FunctionController) {
-    dom.bind(li, 'click', function() {
+    dom.bind(li, 'click', function () {
       dom.fakeEvent(controller.__button, 'click');
     });
-    dom.bind(li, 'mouseover', function() {
+    dom.bind(li, 'mouseover', function () {
       dom.addClass(controller.__button, 'hover');
     });
-    dom.bind(li, 'mouseout', function() {
+    dom.bind(li, 'mouseout', function () {
       dom.removeClass(controller.__button, 'hover');
     });
   } else if (controller instanceof ColorController) {
     dom.addClass(li, 'color');
-    controller.updateDisplay = Common.compose(
-      function(val) {
-        li.style.borderLeftColor = controller.__color.toString();
-        return val;
-      },
-      controller.updateDisplay
-    );
+    controller.updateDisplay = Common.compose(function (val) {
+      li.style.borderLeftColor = controller.__color.toString();
+      return val;
+    }, controller.updateDisplay);
     controller.updateDisplay();
   }
-  controller.setValue = Common.compose(
-    function(val) {
-      if (gui.getRoot().__preset_select && controller.isModified()) {
-        markPresetModified(gui.getRoot(), true);
-      }
-      return val;
-    },
-    controller.setValue
-  );
+  controller.setValue = Common.compose(function (val) {
+    if (gui.getRoot().__preset_select && controller.isModified()) {
+      markPresetModified(gui.getRoot(), true);
+    }
+    return val;
+  }, controller.setValue);
 }
 function recallSavedValue(gui, controller) {
   var root = gui.getRoot();
@@ -2711,13 +2704,13 @@ function addSaveMenu(gui) {
   dom.addClass(button3, 'revert');
   var select = (gui.__preset_select = document.createElement('select'));
   if (gui.load && gui.load.remembered) {
-    Common.each(gui.load.remembered, function(value, key) {
+    Common.each(gui.load.remembered, function (value, key) {
       addPresetOption(gui, key, key === gui.preset);
     });
   } else {
     addPresetOption(gui, DEFAULT_DEFAULT_PRESET_NAME, false);
   }
-  dom.bind(select, 'change', function() {
+  dom.bind(select, 'change', function () {
     for (var index = 0; index < gui.__preset_select.length; index++) {
       gui.__preset_select[index].innerHTML = gui.__preset_select[index].value;
     }
@@ -2737,18 +2730,18 @@ function addSaveMenu(gui) {
       localStorageCheckBox.setAttribute('checked', 'checked');
     }
     showHideExplain(gui, explain);
-    dom.bind(localStorageCheckBox, 'change', function() {
+    dom.bind(localStorageCheckBox, 'change', function () {
       gui.useLocalStorage = !gui.useLocalStorage;
       showHideExplain(gui, explain);
     });
   }
   var newConstructorTextArea = document.getElementById('dg-new-constructor');
-  dom.bind(newConstructorTextArea, 'keydown', function(e) {
+  dom.bind(newConstructorTextArea, 'keydown', function (e) {
     if (e.metaKey && (e.which === 67 || e.keyCode === 67)) {
       SAVE_DIALOGUE.hide();
     }
   });
-  dom.bind(gears, 'click', function() {
+  dom.bind(gears, 'click', function () {
     newConstructorTextArea.innerHTML = JSON.stringify(
       gui.getSaveObject(),
       undefined,
@@ -2758,16 +2751,16 @@ function addSaveMenu(gui) {
     newConstructorTextArea.focus();
     newConstructorTextArea.select();
   });
-  dom.bind(button, 'click', function() {
+  dom.bind(button, 'click', function () {
     gui.save();
   });
-  dom.bind(button2, 'click', function() {
+  dom.bind(button2, 'click', function () {
     var presetName = prompt('Enter a new preset name.');
     if (presetName) {
       gui.saveAs(presetName);
     }
   });
-  dom.bind(button3, 'click', function() {
+  dom.bind(button3, 'click', function () {
     gui.revert();
   });
 }
@@ -2779,7 +2772,7 @@ function addResizeHandle(gui) {
     marginLeft: '-3px',
     height: '200px',
     cursor: 'ew-resize',
-    position: 'absolute'
+    position: 'absolute',
   });
   function drag(e) {
     e.preventDefault();
@@ -2819,10 +2812,10 @@ function setWidth(gui, w) {
 }
 function getCurrentPreset(gui, useInitialValues) {
   var toReturn = {};
-  Common.each(gui.__rememberedObjects, function(val, index) {
+  Common.each(gui.__rememberedObjects, function (val, index) {
     var savedValues = {};
     var controllerMap = gui.__rememberedObjectIndecesToControllers[index];
-    Common.each(controllerMap, function(controller, property) {
+    Common.each(controllerMap, function (controller, property) {
       savedValues[property] = useInitialValues
         ? controller.initialValue
         : controller.getValue();
@@ -2840,11 +2833,11 @@ function setPresetSelectIndex(gui) {
 }
 function updateDisplays(controllerArray) {
   if (controllerArray.length !== 0) {
-    requestAnimationFrame$1.call(window, function() {
+    requestAnimationFrame$1.call(window, function () {
       updateDisplays(controllerArray);
     });
   }
-  Common.each(controllerArray, function(c) {
+  Common.each(controllerArray, function (c) {
     c.updateDisplay();
   });
 }
@@ -2852,7 +2845,7 @@ function updateDisplays(controllerArray) {
 var color = {
   Color: Color,
   math: ColorMath,
-  interpret: interpret
+  interpret: interpret,
 };
 var controllers = {
   Controller: Controller,
@@ -2863,7 +2856,7 @@ var controllers = {
   NumberControllerBox: NumberControllerBox,
   NumberControllerSlider: NumberControllerSlider,
   FunctionController: FunctionController,
-  ColorController: ColorController
+  ColorController: ColorController,
 };
 var dom$1 = { dom: dom };
 var gui = { GUI: GUI };
@@ -2873,7 +2866,7 @@ var index = {
   controllers: controllers,
   dom: dom$1,
   gui: gui,
-  GUI: GUI$1
+  GUI: GUI$1,
 };
 
 export { color, controllers, dom$1 as dom, gui, GUI$1 as GUI };

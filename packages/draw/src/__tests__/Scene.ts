@@ -24,7 +24,7 @@ test('draw a shape on the scene', () => {
 });
 
 function transformer(points: Point[]) {
-  points.forEach(point => (point.x += 10));
+  points.forEach((point) => (point.x += 10));
   return points;
 }
 

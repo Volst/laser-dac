@@ -35,7 +35,7 @@ export class Helios extends Device {
       r: relativeToColor(p.r),
       g: relativeToColor(p.g),
       b: relativeToColor(p.b),
-      i: INTENSITY
+      i: INTENSITY,
     };
   }
 

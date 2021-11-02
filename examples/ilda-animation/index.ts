@@ -21,7 +21,7 @@ const boeing = loadIldaFile(path.resolve(__dirname, './boeing.ild'));
       file: boeing,
       frame,
       x: 0,
-      y: 0
+      y: 0,
     });
 
     scene.add(ilda);
