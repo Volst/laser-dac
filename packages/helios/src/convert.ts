@@ -1,6 +1,6 @@
-// The Helios DAC firmware uses 12-bit integers for the resolution, ranging from 0 to 4096.
+// The Helios DAC firmware uses 12-bit integers for the resolution, ranging from 0 to 4095.
 // Source: https://github.com/Grix/helios_dac/blob/master/sdk/HeliosDac.h
-export const XY_RESOLUTION = 4096;
+export const XY_RESOLUTION = 4095;
 export const COLOR_RESOLUTION = 255;
 
 export function relativeToPosition(n: number) {
