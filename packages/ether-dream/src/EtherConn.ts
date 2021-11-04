@@ -10,8 +10,6 @@ const STANDARD_RESPONSE_SIZE = 22;
 const PLAYBACK_IDLE = 0;
 const LIGHT_ENGINE_READY = 0;
 const LIGHT_ENGINE_ESTOP = 3;
-// How many points are queued up in the buffer. Seems to be a limit of 1799.
-const MAX_FULLNESS = 1799;
 
 type HandlerCallbackFn = (data: number[]) => void;
 type pstdReturnType = ReturnType<typeof parseStandardResponse>;
@@ -48,6 +46,10 @@ export class EtherConn {
   running = false;
   ip?: string;
   port?: number;
+
+  // Maximum points to fill buffer with
+  // https://github.com/sebleedelisle/ofxLaser/blob/42d733489947c95cc83505f5708e89309f7d856f/src/dacs/ofxLaserDacEtherdream.cpp#L37
+  dacBufferSize = 1200;
 
   _send(sendcommand: string) {
     this.client!.write(Buffer.from(sendcommand, 'binary'));
@@ -258,7 +260,7 @@ export class EtherConn {
     const frame = this.streamCallback();
 
     // If not yet playing, send the prepare command first
-    if (this.playbackState === PLAYBACK_IDLE) {
+    if (!this.prepareSent && this.playbackState === PLAYBACK_IDLE) {
       await this.sendPrepare();
     }
 
@@ -268,14 +270,14 @@ export class EtherConn {
       await this.clearEmergencyStop();
     }
 
-    let cap = Math.max(0, MAX_FULLNESS - this.fullness);
-    console.log('Asking for ' + cap + ' items..');
+    let cap = Math.max(0, this.dacBufferSize - this.fullness);
     if (cap < 100) {
       await delay(5);
       cap += 150;
     }
 
-    const points = frame.splice(0, cap);
+    const points = frame.slice(0, cap);
+    console.log('Asking for ' + cap + ' items.. sending:', points.length);
     await this.sendPoints(points);
 
     this.run();

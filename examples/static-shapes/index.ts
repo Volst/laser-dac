@@ -1,13 +1,13 @@
 import { DAC } from '@laser-dac/core';
 import { Simulator } from '@laser-dac/simulator';
-import { Helios } from '@laser-dac/helios';
+import { EtherDream } from '@laser-dac/ether-dream';
 import { Scene, Rect, Path, Line } from '@laser-dac/draw';
 
 (async () => {
   const dac = new DAC();
   dac.use(new Simulator());
   if (process.env.DEVICE) {
-    dac.use(new Helios());
+    dac.use(new EtherDream());
   }
   await dac.start();
 
@@ -27,7 +27,7 @@ import { Scene, Rect, Path, Line } from '@laser-dac/draw';
     // Should draw this cross: https://codepen.io/chrisnager/pen/armzk
     const cross = new Path({
       path: 'M2 1 h1 v1 h1 v1 h-1 v1 h-1 v-1 h-1 v-1 h1 z',
-      color: [0, 1, 0],
+      color: [1, 0, 0],
       width: 5,
       height: 5,
     });
@@ -35,7 +35,7 @@ import { Scene, Rect, Path, Line } from '@laser-dac/draw';
 
     const smile = new Path({
       path: 'M0.5,0.8c0,0,0,0.1,0.1,0.1c0.1,0,0.1-0.1,0.1-0.1',
-      color: [0, 1, 1],
+      color: [1, 0, 0],
     });
     scene.add(smile);
 
