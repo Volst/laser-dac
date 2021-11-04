@@ -1,7 +1,7 @@
 export const XY_RESOLUTION = 4095;
-const MAX_RED = 0x20f;
-const MAX_GREEN = 0x0ff;
-const MAX_BLUE = 0x080;
+const MAX_RED = 4095;
+const MAX_GREEN = 4095;
+const MAX_BLUE = 4095;
 
 export function relativeToPosition(n: number) {
   return Math.floor((1 - n) * XY_RESOLUTION);
