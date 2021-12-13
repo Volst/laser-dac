@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/simulator",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A simulator for laser DACs",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
@@ -24,7 +24,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@laser-dac/core": "^0.4.1",
+    "@laser-dac/core": "^0.4.2",
     "@types/express": "^4.16.0",
     "@types/ws": "^8.2.0",
     "express": "^4.15.2",

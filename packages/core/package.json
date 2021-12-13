@@ -1,6 +1,6 @@
 {
   "name": "@laser-dac/core",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Control your show laser via Node.js!",
   "license": "MIT",
   "author": "Kees Kluskens <kees@volst.nl>",
