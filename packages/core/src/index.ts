@@ -1,6 +1,8 @@
 const DEFAULT_POINTS_RATE = 30000;
 const DEFAULT_FPS = 30;
 
+const shutdownCallbacks: {(): void;}[] = [];
+
 export interface Point {
   x: number;
   y: number;
@@ -17,6 +19,9 @@ export abstract class Device {
   abstract start(): Promise<boolean>;
   abstract stop(): void;
   abstract stream(scene: Scene, pointsRate: number, fps: number): void;
+  // This is for any last-minute synchronous cleanup so the laser doesn't
+  // stay on after the program stops.
+  onShutdownSync(): void {};
 }
 
 export class DAC {
@@ -24,6 +29,7 @@ export class DAC {
 
   use(device: Device) {
     this.devices.push(device);
+    shutdownCallbacks.push(device.onShutdownSync);
   }
 
   remove(device: Device) {
@@ -59,3 +65,42 @@ export class DAC {
     }
   }
 }
+
+function exitHandler(options: any, exitCode: any) {
+  if (options.cleanup) {
+    console.info("Cleaning up");
+    shutdownCallbacks.forEach((fn) => fn());
+  }
+
+  if (exitCode || exitCode === 0) {
+    console.info(exitCode);
+  }
+
+  if (options.exit) {
+    process.exit();
+  }
+}
+
+// Based on an answer from
+// https://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
+function gracefulShutdown() {
+  // Prevent the program from closing instantly.
+  process.stdin.resume();
+
+  // Do something when app is closing.
+  process.on('exit', exitHandler.bind(null, {cleanup: true}));
+
+  // Catch ctrl+c event.
+  process.on('SIGINT', exitHandler.bind(null, {exit: true}));
+
+  process.on('SIGTERM', exitHandler.bind(null, {exit: true}));
+
+  // Catch "kill pid" (for example: nodemon restart).
+  process.on('SIGUSR1', exitHandler.bind(null, {exit: true}));
+  process.on('SIGUSR2', exitHandler.bind(null, {exit: true}));
+
+  // Catch uncaught exceptions.
+  process.on('uncaughtException', exitHandler.bind(null, {exit: true}));
+}
+
+gracefulShutdown();
