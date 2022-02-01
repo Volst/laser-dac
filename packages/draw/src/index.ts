@@ -8,4 +8,6 @@ export { HersheyFont, loadHersheyFont } from './HersheyFont';
 export { Timeline } from './Timeline';
 export { rotate } from './transformers/rotate';
 export { distort } from './transformers/distort';
+export { bound } from './transformers/bound';
+export { compositor } from './transformers/compositor';
 export { Svg, loadSvgFile } from './Svg';
