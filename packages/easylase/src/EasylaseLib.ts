@@ -37,7 +37,10 @@ const libPath = path
   // dont'get placed inside the "app.asar" bundle, but instead get placed in a separate directory called "app.asar.unpacked"
   .replace('app.asar', 'app.asar.unpacked');
 
-const EasylaseLib = ffi.Library(libPath, {
+// Even Windows 64-bit is called win32 here.
+const isSupported = process.platform === "win32";
+
+const EasylaseLib = isSupported && ffi.Library(libPath, {
   jmLaserEnumerateDevices: ['int', []],
   jmLaserStopOutput: ['int', ['int']],
   jmLaserCloseDevice: ['int', ['int']],

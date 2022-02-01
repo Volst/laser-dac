@@ -17,6 +17,10 @@ export abstract class Device {
   abstract start(): Promise<boolean>;
   abstract stop(): void;
   abstract stream(scene: Scene, pointsRate: number, fps: number): void;
+
+  isSupported(): boolean {
+    return true;
+  };
 }
 
 export class DAC {
@@ -24,6 +28,10 @@ export class DAC {
 
   use(device: Device) {
     this.devices.push(device);
+  }
+
+  useAll(devices: Device[]) {
+    devices.forEach((device) => this.use(device));
   }
 
   remove(device: Device) {
